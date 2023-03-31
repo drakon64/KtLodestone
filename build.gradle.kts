@@ -10,6 +10,12 @@ repositories {
 }
 
 dependencies {
+    val ktorVersion = "2.2.4"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-java:$ktorVersion")
+
+    implementation("org.jsoup:jsoup:1.15.4")
+
     testImplementation(kotlin("test"))
 }
 
