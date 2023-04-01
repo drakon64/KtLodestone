@@ -1,6 +1,8 @@
 package cloud.drakon.ktlodestone
 
+import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.Character
+import cloud.drakon.ktlodestone.profile.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompany
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompanyIconLayers
 import cloud.drakon.ktlodestone.profile.guardiandeity.GuardianDeity
@@ -21,10 +23,13 @@ object KtLodestone {
     private val activeClassJobLevelRegex = """\d+""".toRegex()
 
     suspend fun getCharacter(id: Int): Character = coroutineScope {
-        val character = Jsoup.parse(
+        val request =
             ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/")
-                .body() as String
-        )
+        val character = when (request.status.value) {
+            200  -> Jsoup.parse(request.body() as String)
+            404  -> throw CharacterNotFoundException("Character not found.")
+            else -> throw LodestoneException("Unknown error.")
+        }
 
         val activeClassJob = async {
             character.select(".character__class_icon > img:nth-child(1)")
