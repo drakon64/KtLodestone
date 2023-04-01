@@ -46,8 +46,9 @@ object KtLodestone {
                 .attr("src")
         }
 
-        val bio =
-            async { character.select(".character__selfintroduction").first() !!.text() }
+        val bio = async {
+            character.select(".character__selfintroduction").first() !!.text()
+        }
 
         val freeCompanyId = async {
             character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
