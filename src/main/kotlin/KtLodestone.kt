@@ -22,6 +22,12 @@ object KtLodestone {
 
     private val activeClassJobLevelRegex = """\d+""".toRegex()
 
+    /**
+     * Gets a character from The Lodestone
+     * @param id The Lodestone character ID
+     * @throws CharacterNotFoundException The character could not be found
+     * @throws LodestoneException An error was returned by The Lodestone
+     */
     suspend fun getCharacter(id: Int): Character = coroutineScope {
         val request =
             ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/")
