@@ -62,11 +62,11 @@ object KtLodestone {
                         .first()
                         ?.attr("src")
                         .toString(),
-                    middle = character.select("div.character__freecompany__crest > div > img:nth-child(1)")
+                    middle = character.select("div.character__freecompany__crest > div > img:nth-child(2)")
                         .first()
                         ?.attr("src")
                         .toString(),
-                    top = character.select("div.character__freecompany__crest > div > img:nth-child(1)")
+                    top = character.select("div.character__freecompany__crest > div > img:nth-child(3)")
                         .first()
                         ?.attr("src")
                         .toString()
