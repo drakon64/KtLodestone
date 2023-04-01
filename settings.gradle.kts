@@ -1,1 +1,1 @@
-rootProject.name = "KtLodestone"
+rootProject.name = "ktlodestone"
