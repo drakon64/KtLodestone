@@ -1,12 +1,12 @@
 package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.profile.Character
-import cloud.drakon.ktlodestone.profile.GuardianDeity
-import cloud.drakon.ktlodestone.profile.Town
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompany
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompanyIconLayers
+import cloud.drakon.ktlodestone.profile.guardiandeity.GuardianDeity
 import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeam
 import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeamIconLayers
+import cloud.drakon.ktlodestone.profile.town.Town
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.java.Java
@@ -16,25 +16,16 @@ import org.jsoup.Jsoup
 object KtLodestone {
     private val ktorClient = HttpClient(Java)
 
+    private val activeClassJobLevelRegex = """\d+""".toRegex()
+
     suspend fun getCharacter(id: Int): Character {
         val character = Jsoup.parse(
             ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/")
                 .body() as String
         )
 
-        return Character(
-            activeClassJob = character.select(".character__class_icon > img:nth-child(1)")
-                .first() !!
-                .attr("src"),
-            activeClassJobLevel = character.select(".character__class__data > p:nth-child(1)")
-                .first() !!
-                .text()
-                .toByte(),
-            avatar = character.select(".frame__chara__face > img:nth-child(1)")
-                .first() !!
-                .attr("src"),
-            bio = character.select(".character__selfintroduction").first() !!.text(),
-            freeCompany = FreeCompany(
+        val freeCompany: FreeCompany? = try {
+            FreeCompany(
                 id = character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
                     .first() !!
                     .attr("href"), iconLayers = FreeCompanyIconLayers(
@@ -48,10 +39,52 @@ object KtLodestone {
                         .first() !!
                         .attr("src")
                 )
-            ),
-            grandCompany = character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
+            )
+        } catch (e: NullPointerException) {
+            null
+        } // TODO: Handle this in a better way
+        val grandCompany: String? = try {
+            character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
                 .first() !!
-                .text(),
+                .text()
+        } catch (e: NullPointerException) {
+            null
+        } // TODO: Handle this in a better way
+        val pvpTeam: PvpTeam? = try {
+            PvpTeam(
+                name = character.select(".character__pvpteam__name > h4:nth-child(2) > a:nth-child(1)")
+                    .first() !!
+                    .attr("href"), iconLayers = PvpTeamIconLayers(
+                    bottom = character.select(".character__pvpteam__crest__image img:nth-child(1)")
+                        .first() !!
+                        .attr("src"),
+                    middle = character.select(".character__pvpteam__crest__image img:nth-child(2)")
+                        .first() !!
+                        .attr("src"),
+                    top = character.select(".character__pvpteam__crest__image img:nth-child(3)")
+                        .first() !!
+                        .attr("src")
+                )
+            )
+        } catch (e: NullPointerException) {
+            null
+        } // TODO: Handle this in a better way
+
+        return Character(
+            activeClassJob = character.select(".character__class_icon > img:nth-child(1)")
+                .first() !!
+                .attr("src"),
+            activeClassJobLevel = activeClassJobLevelRegex.find(
+                character.select(".character__class__data > p:nth-child(1)")
+                    .first() !!
+                    .text()
+            ) !!.value.toByte(),
+            avatar = character.select(".frame__chara__face > img:nth-child(1)")
+                .first() !!
+                .attr("src"),
+            bio = character.select(".character__selfintroduction").first() !!.text(),
+            freeCompany = freeCompany,
+            grandCompany = grandCompany,
             guardianDeity = GuardianDeity(
                 name = character.select("p.character-block__name:nth-child(4)")
                     .first() !!
@@ -67,21 +100,7 @@ object KtLodestone {
             portrait = character.select(".js__image_popup > img:nth-child(1)")
                 .first() !!
                 .attr("src"),
-            pvpTeam = PvpTeam(
-                name = character.select(".character__pvpteam__name > h4:nth-child(2) > a:nth-child(1)")
-                    .first() !!
-                    .attr("href"), iconLayers = PvpTeamIconLayers(
-                    bottom = character.select(".character__pvpteam__crest__image img:nth-child(1)")
-                        .first() !!
-                        .attr("src"),
-                    middle = character.select(".character__pvpteam__crest__image img:nth-child(2)")
-                        .first() !!
-                        .attr("src"),
-                    top = character.select(".character__pvpteam__crest__image img:nth-child(3)")
-                        .first() !!
-                        .attr("src")
-                )
-            ),
+            pvpTeam = pvpTeam,
             raceClanGender = character.select("div.character-block:nth-child(1) > div:nth-child(2) > p:nth-child(2)")
                 .first() !!
                 .text(),
