@@ -14,8 +14,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     permissions:
-      pages: write
       id-token: write
+      packages: write
+      pages: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -34,6 +35,7 @@ jobs:
       - name: Publish
         uses: gradle/gradle-build-action@v2.3.3
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SONATYPE_PRIVATE_KEY }}
