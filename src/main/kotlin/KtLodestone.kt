@@ -24,52 +24,6 @@ object KtLodestone {
                 .body() as String
         )
 
-        val freeCompany: FreeCompany? = try {
-            FreeCompany(
-                id = character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
-                    .first() !!
-                    .attr("href"), iconLayers = FreeCompanyIconLayers(
-                    bottom = character.select("div.character__freecompany__crest > div > img:nth-child(1)")
-                        .first() !!
-                        .attr("src"),
-                    middle = character.select("div.character__freecompany__crest > div > img:nth-child(1)")
-                        .first() !!
-                        .attr("src"),
-                    top = character.select("div.character__freecompany__crest > div > img:nth-child(1)")
-                        .first() !!
-                        .attr("src")
-                )
-            )
-        } catch (e: NullPointerException) {
-            null
-        } // TODO: Handle this in a better way
-        val grandCompany: String? = try {
-            character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
-                .first() !!
-                .text()
-        } catch (e: NullPointerException) {
-            null
-        } // TODO: Handle this in a better way
-        val pvpTeam: PvpTeam? = try {
-            PvpTeam(
-                name = character.select(".character__pvpteam__name > h4:nth-child(2) > a:nth-child(1)")
-                    .first() !!
-                    .attr("href"), iconLayers = PvpTeamIconLayers(
-                    bottom = character.select(".character__pvpteam__crest__image img:nth-child(1)")
-                        .first() !!
-                        .attr("src"),
-                    middle = character.select(".character__pvpteam__crest__image img:nth-child(2)")
-                        .first() !!
-                        .attr("src"),
-                    top = character.select(".character__pvpteam__crest__image img:nth-child(3)")
-                        .first() !!
-                        .attr("src")
-                )
-            )
-        } catch (e: NullPointerException) {
-            null
-        } // TODO: Handle this in a better way
-
         return Character(
             activeClassJob = character.select(".character__class_icon > img:nth-child(1)")
                 .first() !!
@@ -83,8 +37,28 @@ object KtLodestone {
                 .first() !!
                 .attr("src"),
             bio = character.select(".character__selfintroduction").first() !!.text(),
-            freeCompany = freeCompany,
-            grandCompany = grandCompany,
+            freeCompany = FreeCompany(
+                id = character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
+                    .first()
+                    ?.attr("href")
+                    .toString(), iconLayers = FreeCompanyIconLayers(
+                    bottom = character.select("div.character__freecompany__crest > div > img:nth-child(1)")
+                        .first()
+                        ?.attr("src")
+                        .toString(),
+                    middle = character.select("div.character__freecompany__crest > div > img:nth-child(1)")
+                        .first()
+                        ?.attr("src")
+                        .toString(),
+                    top = character.select("div.character__freecompany__crest > div > img:nth-child(1)")
+                        .first()
+                        ?.attr("src")
+                        .toString()
+                )
+            ),
+            grandCompany = character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
+                .first()
+                ?.text(),
             guardianDeity = GuardianDeity(
                 name = character.select("p.character-block__name:nth-child(4)")
                     .first() !!
@@ -100,12 +74,30 @@ object KtLodestone {
             portrait = character.select(".js__image_popup > img:nth-child(1)")
                 .first() !!
                 .attr("src"),
-            pvpTeam = pvpTeam,
+            pvpTeam = PvpTeam(
+                name = character.select(".character__pvpteam__name > h4:nth-child(2) > a:nth-child(1)")
+                    .first()
+                    ?.attr("href")
+                    .toString(), iconLayers = PvpTeamIconLayers(
+                    bottom = character.select(".character__pvpteam__crest__image img:nth-child(1)")
+                        .first()
+                        ?.attr("src")
+                        .toString(),
+                    middle = character.select(".character__pvpteam__crest__image img:nth-child(2)")
+                        .first()
+                        ?.attr("src")
+                        .toString(),
+                    top = character.select(".character__pvpteam__crest__image img:nth-child(3)")
+                        .first()
+                        ?.attr("src")
+                        .toString()
+                )
+            ),
             raceClanGender = character.select("div.character-block:nth-child(1) > div:nth-child(2) > p:nth-child(2)")
                 .first() !!
                 .text(),
             server = character.select("p.frame__chara__world").first() !!.text(),
-            title = character.select(".frame__chara__title").first() !!.text(),
+            title = character.select(".frame__chara__title").first()?.text().toString(),
             town = Town(
                 name = character.select("div.character-block:nth-child(3) > div:nth-child(2) > p:nth-child(2)")
                     .first() !!
