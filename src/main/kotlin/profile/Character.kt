@@ -19,6 +19,6 @@ class Character(
     val pvpTeam: PvpTeam?,
     val raceClanGender: String,
     val server: String,
-    val title: String,
+    val title: String?,
     val town: Town,
 )
