@@ -22,7 +22,7 @@ object KtLodestone {
 
     private val activeClassJobLevelRegex = """\d+""".toRegex()
     private val serverRegex = """\S+""".toRegex()
-    private val dcRegex = """\[(\w+)\]""".toRegex()
+    private val dcRegex = """(?<=\[)\w+(?=\])""".toRegex()
 
     /**
      * Gets a character from The Lodestone
