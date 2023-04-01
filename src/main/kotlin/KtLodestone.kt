@@ -21,6 +21,8 @@ object KtLodestone {
     private val ktorClient = HttpClient(Java)
 
     private val activeClassJobLevelRegex = """\d+""".toRegex()
+    private val serverRegex = """\S+""".toRegex()
+    private val dcRegex = """\[(\w+)\]""".toRegex()
 
     /**
      * Gets a character from The Lodestone
@@ -193,9 +195,10 @@ object KtLodestone {
                 .text()
         }
 
-        val server = async {
-            character.select("p.frame__chara__world").first() !!.text()
-        }
+        val serverDc =
+            async { character.select("p.frame__chara__world").first() !!.text() }
+        val server = async { serverRegex.find(serverDc.await()) !!.value }
+        val dc = async { dcRegex.find(serverDc.await()) !!.value }
 
         val title = async {
             character.select(".frame__chara__title").first()?.text().toString()
@@ -231,6 +234,7 @@ object KtLodestone {
             pvpTeam.await(),
             raceClanGender.await(),
             server.await(),
+            dc.await(),
             title.await(),
             town.await()
         )
