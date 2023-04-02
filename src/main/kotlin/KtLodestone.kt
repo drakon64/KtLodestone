@@ -1,8 +1,8 @@
 package cloud.drakon.ktlodestone
 
+import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.Character
-import cloud.drakon.ktlodestone.profile.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompany
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompanyIconLayers
 import cloud.drakon.ktlodestone.profile.guardiandeity.GuardianDeity
@@ -27,16 +27,16 @@ object KtLodestone {
     /**
      * Gets a character from The Lodestone
      * @param id The Lodestone character ID
-     * @throws CharacterNotFoundException The character could not be found
-     * @throws LodestoneException An error was returned by The Lodestone
+     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
+     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
     suspend fun getCharacter(id: Int): Character = coroutineScope {
         val request =
             ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/")
         val character = when (request.status.value) {
             200  -> Jsoup.parse(request.body() as String)
-            404  -> throw CharacterNotFoundException("Character not found.")
-            else -> throw LodestoneException("Unknown error.")
+            404  -> throw CharacterNotFoundException("Thrown when a character could not be found on The Lodestone.")
+            else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
         }
 
         val activeClassJob = async {
