@@ -47,6 +47,7 @@ object KtLodestone {
                         .first() !!
                         .attr("src")) {
                         "https://img.finalfantasyxiv.com/lds/h/P/V01m8YRBYcIs5vgbRtpDiqltSE.png" -> "Black Mage"
+                        "https://img.finalfantasyxiv.com/lds/h/8/hg8ofSSOKzqng290No55trV4mI.png" -> "Gunbreaker"
                         "https://img.finalfantasyxiv.com/lds/h/E/vmtbIlf6Uv8rVp2YFCWA25X0dc.png" -> "Machinist"
                         "https://img.finalfantasyxiv.com/lds/h/q/s3MlLUKmRAHy0pH57PnFStHmIw.png" -> "Red Mage"
                         else -> throw ClassJobException("Unknown class/job")
