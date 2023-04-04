@@ -15,7 +15,6 @@ import io.ktor.client.engine.java.Java
 import io.ktor.client.request.get
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
 import org.jsoup.Jsoup
 
 object KtLodestone {
@@ -23,6 +22,11 @@ object KtLodestone {
 
     object Character {
         private val activeClassJobLevelRegex = """\d+""".toRegex()
+        private val grandCompanyRegex = """\w+""".toRegex()
+        private val grandCompanyRankRegex = """(?<=\/ ).*""".toRegex()
+        private val raceRegex = """^[^<]*""".toRegex()
+        private val clanRegex = """(?<=<br>\n).*?(?= /)""".toRegex()
+        private val genderRegex = """(?<=/ ).*""".toRegex()
         private val serverRegex = """\S+""".toRegex()
         private val dcRegex = """(?<=\[)\w+(?=\])""".toRegex()
 
@@ -102,10 +106,30 @@ object KtLodestone {
                     }
                 }
 
-                val grandCompany = async {
+                val grandCompanySelect = async {
                     character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
                         .first()
                         ?.text()
+                }
+                val grandCompany = async {
+                    if (grandCompanySelect.await() != null) {
+                        grandCompanyRegex.find(
+                            grandCompanySelect.await() !!
+                        ) !!.value
+
+                    } else {
+                        null
+                    }
+                }
+                val grandCompanyRank = async {
+                    if (grandCompanySelect.await() != null) {
+                        grandCompanyRankRegex.find(
+                            grandCompanySelect.await() !!
+                        ) !!.value
+
+                    } else {
+                        null
+                    }
                 }
 
                 val guardianDeityName = async {
@@ -198,7 +222,16 @@ object KtLodestone {
                 val raceClanGender = async {
                     character.select("div.character-block:nth-child(1) > div:nth-child(2) > p:nth-child(2)")
                         .first() !!
-                        .text()
+                        .html()
+                }
+                val race = async {
+                    raceRegex.find(raceClanGender.await()) !!.value
+                }
+                val clan = async {
+                    clanRegex.find(raceClanGender.await()) !!.value
+                }
+                val gender = async {
+                    genderRegex.find(raceClanGender.await()) !!.value
                 }
 
                 val serverDc = async {
@@ -283,12 +316,15 @@ object KtLodestone {
                     bio.await(),
                     freeCompany.await(),
                     grandCompany.await(),
+                    grandCompanyRank.await(),
                     guardianDeity.await(),
                     name.await(),
                     nameday.await(),
                     portrait.await(),
                     pvpTeam.await(),
-                    raceClanGender.await(),
+                    race.await(),
+                    clan.await(),
+                    gender.await(),
                     server.await(),
                     dc.await(),
                     title.await(),
