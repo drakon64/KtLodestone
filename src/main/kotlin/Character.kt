@@ -35,7 +35,7 @@ object Character {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getCharacter(id: Int): Character = coroutineScope {
+    suspend fun getCharacter(id: Int) = coroutineScope {
         val request =
             ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/")
         val character = when (request.status.value) {
@@ -128,146 +128,143 @@ object Character {
         )
     }
 
-    private suspend fun getActiveClassJob(character: Document): String =
-        coroutineScope {
-            val classJobUrl =
-                character.select(".character__class_icon > img:nth-child(1)")
+    private suspend fun getActiveClassJob(character: Document) = coroutineScope {
+        val classJobUrl =
+            character.select(".character__class_icon > img:nth-child(1)")
+                .first() !!
+                .attr("src")
+
+        val classJob = mapOf(
+            "https://img.finalfantasyxiv.com/lds/h/E/d0Tx-vhnsMYfYpGe9MvslemEfg.png" to "Paladin",
+            "https://img.finalfantasyxiv.com/lds/h/U/F5JzG9RPIKFSogtaKNBk455aYA.png" to "Gladiator",
+            "https://img.finalfantasyxiv.com/lds/h/y/A3UhbjZvDeN3tf_6nJ85VP0RY0.png" to "Warrior",
+            "https://img.finalfantasyxiv.com/lds/h/N/St9rjDJB3xNKGYg-vwooZ4j6CM.png" to "Marauder",
+            "https://img.finalfantasyxiv.com/lds/h/l/5CZEvDOMYMyVn2td9LZigsgw9s.png" to "Dark Knight",
+            "https://img.finalfantasyxiv.com/lds/h/8/hg8ofSSOKzqng290No55trV4mI.png" to "Gunbreaker",
+
+            "https://img.finalfantasyxiv.com/lds/h/7/i20QvSPcSQTybykLZDbQCgPwMw.png" to "White Mage",
+            "https://img.finalfantasyxiv.com/lds/h/s/gl62VOTBJrm7D_BmAZITngUEM8.png" to "Conjurer",
+            "https://img.finalfantasyxiv.com/lds/h/7/WdFey0jyHn9Nnt1Qnm-J3yTg5s.png" to "Scholar",
+            "https://img.finalfantasyxiv.com/lds/h/1/erCgjnMSiab4LiHpWxVc-tXAqk.png" to "Astrologian",
+            "https://img.finalfantasyxiv.com/lds/h/g/_oYApASVVReLLmsokuCJGkEpk0.png" to "Sage",
+
+            "https://img.finalfantasyxiv.com/lds/h/K/HW6tKOg4SOJbL8Z20GnsAWNjjM.png" to "Monk",
+            "https://img.finalfantasyxiv.com/lds/h/V/iW7IBKQ7oglB9jmbn6LwdZXkWw.png" to "Pugilist",
+            "https://img.finalfantasyxiv.com/lds/h/m/gX4OgBIHw68UcMU79P7LYCpldA.png" to "Dragoon",
+            "https://img.finalfantasyxiv.com/lds/h/k/tYTpoSwFLuGYGDJMff8GEFuDQs.png" to "Lancer",
+            "https://img.finalfantasyxiv.com/lds/h/0/Fso5hanZVEEAaZ7OGWJsXpf3jw.png" to "Ninja",
+            "https://img.finalfantasyxiv.com/lds/h/y/wdwVVcptybfgSruoh8R344y_GA.png" to "Rogue",
+            "https://img.finalfantasyxiv.com/lds/h/m/KndG72XtCFwaq1I1iqwcmO_0zc.png" to "Samurai",
+            "https://img.finalfantasyxiv.com/lds/h/7/cLlXUaeMPJDM2nBhIeM-uDmPzM.png" to "Reaper",
+
+            "https://img.finalfantasyxiv.com/lds/h/F/KWI-9P3RX_Ojjn_mwCS2N0-3TI.png" to "Bard",
+            "https://img.finalfantasyxiv.com/lds/h/Q/ZpqEJWYHj9SvHGuV9cIyRNnIkk.png" to "Archer",
+            "https://img.finalfantasyxiv.com/lds/h/E/vmtbIlf6Uv8rVp2YFCWA25X0dc.png" to "Machinist",
+            "https://img.finalfantasyxiv.com/lds/h/t/HK0jQ1y7YV9qm30cxGOVev6Cck.png" to "Dancer",
+
+            "https://img.finalfantasyxiv.com/lds/h/P/V01m8YRBYcIs5vgbRtpDiqltSE.png" to "Black Mage",
+            "https://img.finalfantasyxiv.com/lds/h/t/HK0jQ1y7YV9qm30cxGOVev6Cck.png" to "Thaumaturge",
+            "https://img.finalfantasyxiv.com/lds/h/h/4ghjpyyuNelzw1Bl0sM_PBA_FE.png" to "Summoner",
+            "https://img.finalfantasyxiv.com/lds/h/e/VYP1LKTDpt8uJVvUT7OKrXNL9E.png" to "Arcanist",
+            "https://img.finalfantasyxiv.com/lds/h/q/s3MlLUKmRAHy0pH57PnFStHmIw.png" to "Red Mage",
+            "https://img.finalfantasyxiv.com/lds/h/p/jdV3RRKtWzgo226CC09vjen5sk.png" to "Blue Mage",
+
+            "https://img.finalfantasyxiv.com/lds/h/v/YCN6F-xiXf03Ts3pXoBihh2OBk.png" to "Carpenter",
+            "https://img.finalfantasyxiv.com/lds/h/5/EEHVV5cIPkOZ6v5ALaoN5XSVRU.png" to "Blacksmith",
+            "https://img.finalfantasyxiv.com/lds/h/G/Rq5wcK3IPEaAB8N-T9l6tBPxCY.png" to "Armorer",
+            "https://img.finalfantasyxiv.com/lds/h/L/LbEjgw0cwO_2gQSmhta9z03pjM.png" to "Goldsmith",
+            "https://img.finalfantasyxiv.com/lds/h/b/ACAcQe3hWFxbWRVPqxKj_MzDiY.png" to "Leatherworker",
+            "https://img.finalfantasyxiv.com/lds/h/X/E69jrsOMGFvFpCX87F5wqgT_Vo.png" to "Weaver",
+            "https://img.finalfantasyxiv.com/lds/h/C/bBVQ9IFeXqjEdpuIxmKvSkqalE.png" to "Alchemist",
+            "https://img.finalfantasyxiv.com/lds/h/m/1kMI2v_KEVgo30RFvdFCyySkFo.png" to "Culinarian",
+
+            "https://img.finalfantasyxiv.com/lds/h/A/aM2Dd6Vo4HW_UGasK7tLuZ6fu4.png" to "Miner",
+            "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to "Botanist",
+            "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to "Fisher"
+        )
+
+        return@coroutineScope classJob.getValue(classJobUrl)
+    }
+
+    private suspend fun getFreeCompany(character: Document) = coroutineScope {
+        val freeCompany = async {
+            character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
+                .first()
+        }
+
+        if (freeCompany.await() != null) {
+            val freeCompanyName = async { freeCompany.await() !!.text() }
+            val freeCompanyId = async {
+                freeCompanyIdRegex.find(
+                    freeCompany.await() !!.attr("href")
+                ) !!.value
+            }
+
+            val freeCompanyIconLayerBottom = async {
+                character.select("div.character__freecompany__crest > div > img:nth-child(1)")
                     .first() !!
                     .attr("src")
+            }
+            val freeCompanyIconLayerMiddle = async {
+                character.select("div.character__freecompany__crest > div > img:nth-child(2)")
+                    .first() !!
+                    .attr("src")
+            }
+            val freeCompanyIconLayerTop = async {
+                character.select("div.character__freecompany__crest > div > img:nth-child(3)")
+                    .first() !!
+                    .attr("src")
+            }
 
-            val classJob = mapOf(
-                "https://img.finalfantasyxiv.com/lds/h/E/d0Tx-vhnsMYfYpGe9MvslemEfg.png" to "Paladin",
-                "https://img.finalfantasyxiv.com/lds/h/U/F5JzG9RPIKFSogtaKNBk455aYA.png" to "Gladiator",
-                "https://img.finalfantasyxiv.com/lds/h/y/A3UhbjZvDeN3tf_6nJ85VP0RY0.png" to "Warrior",
-                "https://img.finalfantasyxiv.com/lds/h/N/St9rjDJB3xNKGYg-vwooZ4j6CM.png" to "Marauder",
-                "https://img.finalfantasyxiv.com/lds/h/l/5CZEvDOMYMyVn2td9LZigsgw9s.png" to "Dark Knight",
-                "https://img.finalfantasyxiv.com/lds/h/8/hg8ofSSOKzqng290No55trV4mI.png" to "Gunbreaker",
-
-                "https://img.finalfantasyxiv.com/lds/h/7/i20QvSPcSQTybykLZDbQCgPwMw.png" to "White Mage",
-                "https://img.finalfantasyxiv.com/lds/h/s/gl62VOTBJrm7D_BmAZITngUEM8.png" to "Conjurer",
-                "https://img.finalfantasyxiv.com/lds/h/7/WdFey0jyHn9Nnt1Qnm-J3yTg5s.png" to "Scholar",
-                "https://img.finalfantasyxiv.com/lds/h/1/erCgjnMSiab4LiHpWxVc-tXAqk.png" to "Astrologian",
-                "https://img.finalfantasyxiv.com/lds/h/g/_oYApASVVReLLmsokuCJGkEpk0.png" to "Sage",
-
-                "https://img.finalfantasyxiv.com/lds/h/K/HW6tKOg4SOJbL8Z20GnsAWNjjM.png" to "Monk",
-                "https://img.finalfantasyxiv.com/lds/h/V/iW7IBKQ7oglB9jmbn6LwdZXkWw.png" to "Pugilist",
-                "https://img.finalfantasyxiv.com/lds/h/m/gX4OgBIHw68UcMU79P7LYCpldA.png" to "Dragoon",
-                "https://img.finalfantasyxiv.com/lds/h/k/tYTpoSwFLuGYGDJMff8GEFuDQs.png" to "Lancer",
-                "https://img.finalfantasyxiv.com/lds/h/0/Fso5hanZVEEAaZ7OGWJsXpf3jw.png" to "Ninja",
-                "https://img.finalfantasyxiv.com/lds/h/y/wdwVVcptybfgSruoh8R344y_GA.png" to "Rogue",
-                "https://img.finalfantasyxiv.com/lds/h/m/KndG72XtCFwaq1I1iqwcmO_0zc.png" to "Samurai",
-                "https://img.finalfantasyxiv.com/lds/h/7/cLlXUaeMPJDM2nBhIeM-uDmPzM.png" to "Reaper",
-
-                "https://img.finalfantasyxiv.com/lds/h/F/KWI-9P3RX_Ojjn_mwCS2N0-3TI.png" to "Bard",
-                "https://img.finalfantasyxiv.com/lds/h/Q/ZpqEJWYHj9SvHGuV9cIyRNnIkk.png" to "Archer",
-                "https://img.finalfantasyxiv.com/lds/h/E/vmtbIlf6Uv8rVp2YFCWA25X0dc.png" to "Machinist",
-                "https://img.finalfantasyxiv.com/lds/h/t/HK0jQ1y7YV9qm30cxGOVev6Cck.png" to "Dancer",
-
-                "https://img.finalfantasyxiv.com/lds/h/P/V01m8YRBYcIs5vgbRtpDiqltSE.png" to "Black Mage",
-                "https://img.finalfantasyxiv.com/lds/h/t/HK0jQ1y7YV9qm30cxGOVev6Cck.png" to "Thaumaturge",
-                "https://img.finalfantasyxiv.com/lds/h/h/4ghjpyyuNelzw1Bl0sM_PBA_FE.png" to "Summoner",
-                "https://img.finalfantasyxiv.com/lds/h/e/VYP1LKTDpt8uJVvUT7OKrXNL9E.png" to "Arcanist",
-                "https://img.finalfantasyxiv.com/lds/h/q/s3MlLUKmRAHy0pH57PnFStHmIw.png" to "Red Mage",
-                "https://img.finalfantasyxiv.com/lds/h/p/jdV3RRKtWzgo226CC09vjen5sk.png" to "Blue Mage",
-
-                "https://img.finalfantasyxiv.com/lds/h/v/YCN6F-xiXf03Ts3pXoBihh2OBk.png" to "Carpenter",
-                "https://img.finalfantasyxiv.com/lds/h/5/EEHVV5cIPkOZ6v5ALaoN5XSVRU.png" to "Blacksmith",
-                "https://img.finalfantasyxiv.com/lds/h/G/Rq5wcK3IPEaAB8N-T9l6tBPxCY.png" to "Armorer",
-                "https://img.finalfantasyxiv.com/lds/h/L/LbEjgw0cwO_2gQSmhta9z03pjM.png" to "Goldsmith",
-                "https://img.finalfantasyxiv.com/lds/h/b/ACAcQe3hWFxbWRVPqxKj_MzDiY.png" to "Leatherworker",
-                "https://img.finalfantasyxiv.com/lds/h/X/E69jrsOMGFvFpCX87F5wqgT_Vo.png" to "Weaver",
-                "https://img.finalfantasyxiv.com/lds/h/C/bBVQ9IFeXqjEdpuIxmKvSkqalE.png" to "Alchemist",
-                "https://img.finalfantasyxiv.com/lds/h/m/1kMI2v_KEVgo30RFvdFCyySkFo.png" to "Culinarian",
-
-                "https://img.finalfantasyxiv.com/lds/h/A/aM2Dd6Vo4HW_UGasK7tLuZ6fu4.png" to "Miner",
-                "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to "Botanist",
-                "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to "Fisher"
+            return@coroutineScope FreeCompany(
+                name = freeCompanyName.await(),
+                id = freeCompanyId.await(),
+                iconLayers = FreeCompanyIconLayers(
+                    bottom = freeCompanyIconLayerBottom.await(),
+                    middle = freeCompanyIconLayerMiddle.await(),
+                    top = freeCompanyIconLayerTop.await()
+                )
             )
+        } else {
+            return@coroutineScope null
+        }
+    }
 
-            return@coroutineScope classJob.getValue(classJobUrl)
+    private suspend fun getGrandCompany(character: Document) = coroutineScope {
+        val grandCompany = async {
+            character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
+                .first()
+                ?.text()
         }
 
-    private suspend fun getFreeCompany(character: Document): FreeCompany? =
-        coroutineScope {
-            val freeCompany = async {
-                character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
-                    .first()
+        if (grandCompany.await() != null) {
+            val grandCompanyName = async {
+                grandCompanyNameRegex.find(
+                    grandCompany.await() !!
+                ) !!.value
+            }
+            val grandCompanyRank = async {
+                grandCompanyRankRegex.find(
+                    grandCompany.await() !!
+                ) !!.value
+            }
+            val grandCompanyIcon = async {
+                character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(4) > img")
+                    .first() !!
+                    .attr("src")
             }
 
-            if (freeCompany.await() != null) {
-                val freeCompanyName = async { freeCompany.await() !!.text() }
-                val freeCompanyId = async {
-                    freeCompanyIdRegex.find(
-                        freeCompany.await() !!.attr("href")
-                    ) !!.value
-                }
-
-                val freeCompanyIconLayerBottom = async {
-                    character.select("div.character__freecompany__crest > div > img:nth-child(1)")
-                        .first() !!
-                        .attr("src")
-                }
-                val freeCompanyIconLayerMiddle = async {
-                    character.select("div.character__freecompany__crest > div > img:nth-child(2)")
-                        .first() !!
-                        .attr("src")
-                }
-                val freeCompanyIconLayerTop = async {
-                    character.select("div.character__freecompany__crest > div > img:nth-child(3)")
-                        .first() !!
-                        .attr("src")
-                }
-
-                return@coroutineScope FreeCompany(
-                    name = freeCompanyName.await(),
-                    id = freeCompanyId.await(),
-                    iconLayers = FreeCompanyIconLayers(
-                        bottom = freeCompanyIconLayerBottom.await(),
-                        middle = freeCompanyIconLayerMiddle.await(),
-                        top = freeCompanyIconLayerTop.await()
-                    )
-                )
-            } else {
-                return@coroutineScope null
-            }
+            return@coroutineScope GrandCompany(
+                name = grandCompanyName.await(),
+                rank = grandCompanyRank.await(),
+                icon = grandCompanyIcon.await()
+            )
+        } else {
+            return@coroutineScope null
         }
+    }
 
-    private suspend fun getGrandCompany(character: Document): GrandCompany? =
-        coroutineScope {
-            val grandCompany = async {
-                character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
-                    .first()
-                    ?.text()
-            }
-
-            if (grandCompany.await() != null) {
-                val grandCompanyName = async {
-                    grandCompanyNameRegex.find(
-                        grandCompany.await() !!
-                    ) !!.value
-                }
-                val grandCompanyRank = async {
-                    grandCompanyRankRegex.find(
-                        grandCompany.await() !!
-                    ) !!.value
-                }
-                val grandCompanyIcon = async {
-                    character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(4) > img")
-                        .first() !!
-                        .attr("src")
-                }
-
-                return@coroutineScope GrandCompany(
-                    name = grandCompanyName.await(),
-                    rank = grandCompanyRank.await(),
-                    icon = grandCompanyIcon.await()
-                )
-            } else {
-                return@coroutineScope null
-            }
-        }
-
-    private suspend fun getGuardian(character: Document): Guardian = coroutineScope {
+    private suspend fun getGuardian(character: Document) = coroutineScope {
         val guardianName = async {
             character.select("p.character-block__name:nth-child(4)").first() !!.text()
         }
@@ -282,7 +279,7 @@ object Character {
         )
     }
 
-    private suspend fun getPvpTeam(character: Document): PvpTeam? = coroutineScope {
+    private suspend fun getPvpTeam(character: Document) = coroutineScope {
         val pvpTeam = async {
             character.select(".character__pvpteam__name > h4:nth-child(2) > a:nth-child(1)")
                 .first()
@@ -326,7 +323,7 @@ object Character {
         }
     }
 
-    private suspend fun getTown(character: Document): Town = coroutineScope {
+    private suspend fun getTown(character: Document) = coroutineScope {
         val townName = async {
             character.select("div.character-block:nth-child(3) > div:nth-child(2) > p:nth-child(2)")
                 .first() !!
