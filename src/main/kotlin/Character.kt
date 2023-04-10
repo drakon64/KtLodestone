@@ -3,6 +3,8 @@ package cloud.drakon.ktlodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.Character
+import cloud.drakon.ktlodestone.profile.classjob.bozja.Bozja
+import cloud.drakon.ktlodestone.profile.classjob.bozja.Mettle
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompany
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompanyIconLayers
 import cloud.drakon.ktlodestone.profile.grandcompany.GrandCompany
@@ -336,5 +338,61 @@ object Character {
         }
 
         return@coroutineScope Town(name = townName.await(), icon = townIcon.await())
+    }
+
+    /*suspend fun getClassJob(id: Int) = coroutineScope {
+        val request =
+            ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/class_job/")
+        val character = when (request.status.value) {
+            200 -> Jsoup.parse(request.body() as String)
+            404 -> throw CharacterNotFoundException("Thrown when a character could not be found on The Lodestone.")
+            else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
+        }
+
+        val bozja = async { getResistanceRank(character) }
+
+        return@coroutineScope ClassJob(bozja)
+    }*/
+
+    private val currentBozjaExperienceRegex = """\+d""".toRegex()
+    private val bozjaExperienceToNextLevelRegex =
+        """(?<=Mettle to Next Rank: )\d+""".toRegex()
+
+    private suspend fun getResistanceRank(character: Document) = coroutineScope {
+        val resistanceRank = async {
+            character.select("div.character__job__list:nth-child(7) > div.character__job__level")
+                .first()
+                ?.text()
+                ?.toByteOrNull()
+        }
+
+        if (resistanceRank.await() != null) {
+            val experience = async {
+                character.select("div.character__job__list:nth-child(7) > div.character__job__exp")
+                    .text()
+            }
+
+            if (experience.await() == "Current Mettle: -- / Mettle to Next Rank: --") {
+                return@coroutineScope Bozja(
+                    level = resistanceRank.await() !!, mettle = null
+                )
+            } else {
+                val currentExperience = async {
+                    currentBozjaExperienceRegex.find(experience.await()) !!.value.toInt()
+                }
+                val experienceToNextLevel = async {
+                    bozjaExperienceToNextLevelRegex.find(experience.await()) !!.value.toInt()
+                }
+
+                return@coroutineScope Bozja(
+                    level = resistanceRank.await() !!.toByte(), mettle = Mettle(
+                        current = currentExperience.await(),
+                        next = experienceToNextLevel.await()
+                    )
+                )
+            }
+        } else {
+            return@coroutineScope null
+        }
     }
 }
