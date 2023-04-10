@@ -108,36 +108,44 @@ object Character {
                 }
             }
 
-            val grandCompanyNameRank = async {
+            val grandCompanyNameRankIcon = async {
                 character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
                     .first()
                     ?.text()
             }
             val grandCompanyName = async {
-                if (grandCompanyNameRank.await() != null) {
+                if (grandCompanyNameRankIcon.await() != null) {
                     grandCompanyNameRegex.find(
-                        grandCompanyNameRank.await() !!
+                        grandCompanyNameRankIcon.await() !!
                     ) !!.value
-
                 } else {
                     null
                 }
             }
             val grandCompanyRank = async {
-                if (grandCompanyNameRank.await() != null) {
+                if (grandCompanyNameRankIcon.await() != null) {
                     grandCompanyRankRegex.find(
-                        grandCompanyNameRank.await() !!
+                        grandCompanyNameRankIcon.await() !!
                     ) !!.value
-
+                } else {
+                    null
+                }
+            }
+            val grandCompanyIcon = async {
+                if (grandCompanyNameRankIcon.await() != null) {
+                    character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(4) > img")
+                        .first() !!
+                        .attr("src")
                 } else {
                     null
                 }
             }
             val grandCompany = async {
-                if (grandCompanyNameRank.await() != null) {
+                if (grandCompanyNameRankIcon.await() != null) {
                     GrandCompany(
                         name = grandCompanyName.await() !!,
-                        rank = grandCompanyRank.await() !!
+                        rank = grandCompanyRank.await() !!,
+                        icon = grandCompanyIcon.await() !!
                     )
                 } else {
                     null
