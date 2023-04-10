@@ -9,7 +9,7 @@ class CharacterTest {
     @Test fun getCharacter() {
         assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
-                println(Character.getCharacter(1))
+                println(Character.getCharacter(27545492))
             }
         }
 
