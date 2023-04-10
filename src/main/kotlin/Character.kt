@@ -20,6 +20,7 @@ object Character {
     private val activeClassJobLevelRegex = """\d+""".toRegex()
     private val grandCompanyNameRegex = """\w+""".toRegex()
     private val grandCompanyRankRegex = """(?<=\/ ).*""".toRegex()
+    private val freeCompanyRegex = """\d+""".toRegex()
     private val raceRegex = """^[^<]*""".toRegex()
     private val clanRegex = """(?<=<br>\n).*?(?= /)""".toRegex()
     private val genderRegex = """(?<=/ ).*""".toRegex()
@@ -74,7 +75,14 @@ object Character {
                 freeCompanyNameId.await()?.text()
             }
             val freeCompanyId = async {
-                freeCompanyNameId.await()?.attr("href")
+                val freeCompany = freeCompanyNameId.await()
+                if (freeCompany != null) {
+                    freeCompanyRegex.find(
+                        freeCompany.attr("href")
+                    ) !!.value
+                } else {
+                    null
+                }
             }
             val freeCompanyIconLayers = async {
                 if (freeCompanyNameId.await() != null) {
