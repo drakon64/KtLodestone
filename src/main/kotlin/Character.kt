@@ -173,8 +173,8 @@ object Character {
             val pvpTeamIconLayersBottom = async {
                 if (pvpTeamName.await() != null) {
                     character.select(".character__pvpteam__crest__image img:nth-child(1)")
-                        .first()
-                        ?.attr("src")
+                        .first() !!
+                        .attr("src")
                 } else {
                     null
                 }
@@ -182,8 +182,8 @@ object Character {
             val pvpTeamIconLayersMiddle = async {
                 if (pvpTeamName.await() != null) {
                     character.select(".character__pvpteam__crest__image img:nth-child(2)")
-                        .first()
-                        ?.attr("src")
+                        .first() !!
+                        .attr("src")
                 } else {
                     null
                 }
@@ -191,8 +191,8 @@ object Character {
             val pvpTeamIconLayersTop = async {
                 if (pvpTeamName.await() != null) {
                     character.select(".character__pvpteam__crest__image img:nth-child(3)")
-                        .first()
-                        ?.attr("src")
+                        .first() !!
+                        .attr("src")
                 } else {
                     null
                 }
