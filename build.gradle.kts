@@ -6,10 +6,13 @@ plugins {
     id("maven-publish")
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     signing
+
+    id("org.jetbrains.kotlinx.kover") version "0.6.1"
+    id("org.sonarqube") version "4.0.0.2929"
 }
 
 group = "cloud.drakon"
-version = "1.0.0"
+version = "2.0.0"
 
 repositories {
     mavenCentral()
@@ -119,4 +122,17 @@ signing {
     val signingPassword: String? by project
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications)
+}
+
+kover {
+    engine.set(kotlinx.kover.api.DefaultJacocoEngine)
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "KtLodestone")
+        property("sonar.organization", "drakon64")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/xml/report.xml")
+    }
 }
