@@ -20,11 +20,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 object Character {
-    private val activeClassJobLevelRegex = """\d+""".toRegex()
-    private val grandCompanyNameRegex = """\w+""".toRegex()
-    private val grandCompanyRankRegex = """(?<=\/ ).*""".toRegex()
-    private val freeCompanyIdRegex = """\d+""".toRegex()
-    private val pvpTeamIdRegex = """/lodestone/pvpteam/(.*?)/""".toRegex()
     private val raceRegex = """^[^<]*""".toRegex()
     private val clanRegex = """(?<=<br>\n).*?(?= /)""".toRegex()
     private val genderRegex = """(?<=/ ).*""".toRegex()
@@ -130,6 +125,8 @@ object Character {
         )
     }
 
+    private val activeClassJobLevelRegex = """\d+""".toRegex()
+
     private suspend fun getActiveClassJob(character: Document) = coroutineScope {
         val classJobUrl =
             character.select(".character__class_icon > img:nth-child(1)")
@@ -188,6 +185,8 @@ object Character {
         return@coroutineScope classJob.getValue(classJobUrl)
     }
 
+    private val freeCompanyIdRegex = """\d+""".toRegex()
+
     private suspend fun getFreeCompany(character: Document) = coroutineScope {
         val freeCompany = async {
             character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
@@ -231,6 +230,9 @@ object Character {
             return@coroutineScope null
         }
     }
+
+    private val grandCompanyNameRegex = """\w+""".toRegex()
+    private val grandCompanyRankRegex = """(?<=\/ ).*""".toRegex()
 
     private suspend fun getGrandCompany(character: Document) = coroutineScope {
         val grandCompany = async {
@@ -280,6 +282,8 @@ object Character {
             name = guardianName.await(), icon = guardianIcon.await()
         )
     }
+
+    private val pvpTeamIdRegex = """/lodestone/pvpteam/(.*?)/""".toRegex()
 
     private suspend fun getPvpTeam(character: Document) = coroutineScope {
         val pvpTeam = async {
