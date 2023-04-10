@@ -1,6 +1,7 @@
 package cloud.drakon.ktlodestone.profile
 
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompany
+import cloud.drakon.ktlodestone.profile.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.profile.guardiandeity.GuardianDeity
 import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeam
 import cloud.drakon.ktlodestone.profile.town.Town
@@ -11,8 +12,7 @@ data class Character(
     val avatar: String,
     val bio: String,
     val freeCompany: FreeCompany?,
-    val grandCompany: String?,
-    val grandCompanyRank: String?,
+    val grandCompany: GrandCompany?,
     val guardianDeity: GuardianDeity,
     val name: String,
     val nameday: String,

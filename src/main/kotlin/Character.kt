@@ -5,6 +5,7 @@ import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.Character
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompany
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompanyIconLayers
+import cloud.drakon.ktlodestone.profile.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.profile.guardiandeity.GuardianDeity
 import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeam
 import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeamIconLayers
@@ -17,7 +18,7 @@ import org.jsoup.Jsoup
 
 object Character {
     private val activeClassJobLevelRegex = """\d+""".toRegex()
-    private val grandCompanyRegex = """\w+""".toRegex()
+    private val grandCompanyNameRegex = """\w+""".toRegex()
     private val grandCompanyRankRegex = """(?<=\/ ).*""".toRegex()
     private val raceRegex = """^[^<]*""".toRegex()
     private val clanRegex = """(?<=<br>\n).*?(?= /)""".toRegex()
@@ -107,15 +108,15 @@ object Character {
                 }
             }
 
-            val grandCompanySelect = async {
+            val grandCompanyNameRank = async {
                 character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
                     .first()
                     ?.text()
             }
-            val grandCompany = async {
-                if (grandCompanySelect.await() != null) {
-                    grandCompanyRegex.find(
-                        grandCompanySelect.await() !!
+            val grandCompanyName = async {
+                if (grandCompanyNameRank.await() != null) {
+                    grandCompanyNameRegex.find(
+                        grandCompanyNameRank.await() !!
                     ) !!.value
 
                 } else {
@@ -123,11 +124,21 @@ object Character {
                 }
             }
             val grandCompanyRank = async {
-                if (grandCompanySelect.await() != null) {
+                if (grandCompanyNameRank.await() != null) {
                     grandCompanyRankRegex.find(
-                        grandCompanySelect.await() !!
+                        grandCompanyNameRank.await() !!
                     ) !!.value
 
+                } else {
+                    null
+                }
+            }
+            val grandCompany = async {
+                if (grandCompanyNameRank.await() != null) {
+                    GrandCompany(
+                        name = grandCompanyName.await() !!,
+                        rank = grandCompanyRank.await() !!
+                    )
                 } else {
                     null
                 }
@@ -316,7 +327,6 @@ object Character {
                 bio.await(),
                 freeCompany.await(),
                 grandCompany.await(),
-                grandCompanyRank.await(),
                 guardianDeity.await(),
                 name.await(),
                 nameday.await(),
