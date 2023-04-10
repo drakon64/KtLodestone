@@ -15,12 +15,14 @@ import io.ktor.client.request.get
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 
 object Character {
     private val activeClassJobLevelRegex = """\d+""".toRegex()
     private val grandCompanyNameRegex = """\w+""".toRegex()
     private val grandCompanyRankRegex = """(?<=\/ ).*""".toRegex()
-    private val freeCompanyRegex = """\d+""".toRegex()
+    private val freeCompanyIdRegex = """\d+""".toRegex()
+    private val pvpTeamIdRegex = """/lodestone/pvpteam/(.*?)/""".toRegex()
     private val raceRegex = """^[^<]*""".toRegex()
     private val clanRegex = """(?<=<br>\n).*?(?= /)""".toRegex()
     private val genderRegex = """(?<=/ ).*""".toRegex()
@@ -33,259 +35,105 @@ object Character {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getCharacter(id: Int): Character {
-        return coroutineScope {
-            val request =
-                ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/")
-            val character = when (request.status.value) {
-                200 -> Jsoup.parse(request.body() as String)
-                404 -> throw CharacterNotFoundException("Thrown when a character could not be found on The Lodestone.")
-                else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
-            }
+    suspend fun getCharacter(id: Int): Character = coroutineScope {
+        val request =
+            ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/")
+        val character = when (request.status.value) {
+            200 -> Jsoup.parse(request.body() as String)
+            404 -> throw CharacterNotFoundException("Thrown when a character could not be found on The Lodestone.")
+            else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
+        }
 
-            val activeClassJob = async {
+        val activeClassJob = async { getActiveClassJob(character) }
+        val activeClassJobLevel = async {
+            activeClassJobLevelRegex.find(
+                character.select(".character__class__data > p:nth-child(1)")
+                    .first() !!
+                    .text()
+            ) !!.value.toByte()
+        }
+
+        val avatar = async {
+            character.select(".frame__chara__face > img:nth-child(1)")
+                .first() !!
+                .attr("src")
+        }
+
+        val bio = async {
+            character.select(".character__selfintroduction").first() !!.text()
+        }
+
+        val freeCompany = async { getFreeCompany(character) }
+        val grandCompany = async { getGrandCompany(character) }
+        val guardian = async { getGuardian(character) }
+
+        val name = async {
+            character.select("div.frame__chara__box:nth-child(2) > .frame__chara__name")
+                .first() !!
+                .text()
+        }
+
+        val nameday = async {
+            character.select(".character-block__birth").first() !!.text()
+        }
+
+        val portrait = async {
+            character.select(".js__image_popup > img:nth-child(1)")
+                .first() !!
+                .attr("src")
+        }
+
+        val pvpTeam = async { getPvpTeam(character) }
+
+        val raceClanGender = async {
+            character.select("div.character-block:nth-child(1) > div:nth-child(2) > p:nth-child(2)")
+                .first() !!
+                .html()
+        }
+        val race = async { raceRegex.find(raceClanGender.await()) !!.value }
+        val clan = async { clanRegex.find(raceClanGender.await()) !!.value }
+        val gender = async { genderRegex.find(raceClanGender.await()) !!.value }
+
+        val serverDc = async {
+            character.select("p.frame__chara__world").first() !!.text()
+        }
+        val server = async { serverRegex.find(serverDc.await()) !!.value }
+        val dc = async { dcRegex.find(serverDc.await()) !!.value }
+
+        val title = async {
+            character.select(".frame__chara__title").first()?.text().toString()
+        }
+
+        val town = async { getTown(character) }
+
+        return@coroutineScope Character(
+            activeClassJob.await(),
+            activeClassJobLevel.await(),
+            avatar.await(),
+            bio.await(),
+            freeCompany.await(),
+            grandCompany.await(),
+            guardian.await(),
+            name.await(),
+            nameday.await(),
+            portrait.await(),
+            pvpTeam.await(),
+            race.await(),
+            clan.await(),
+            gender.await(),
+            server.await(),
+            dc.await(),
+            title.await(),
+            town.await()
+        )
+    }
+
+    private suspend fun getActiveClassJob(character: Document): String =
+        coroutineScope {
+            val classJobUrl =
                 character.select(".character__class_icon > img:nth-child(1)")
                     .first() !!
                     .attr("src")
-            }
-
-            val activeClassJobLevel = async {
-                activeClassJobLevelRegex.find(
-                    character.select(".character__class__data > p:nth-child(1)")
-                        .first() !!
-                        .text()
-                ) !!.value.toByte()
-            }
-
-            val avatar = async {
-                character.select(".frame__chara__face > img:nth-child(1)")
-                    .first() !!
-                    .attr("src")
-            }
-
-            val bio = async {
-                character.select(".character__selfintroduction").first() !!.text()
-            }
-
-            val freeCompanyNameId = async {
-                character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
-                    .first()
-            }
-            val freeCompanyName = async {
-                freeCompanyNameId.await()?.text()
-            }
-            val freeCompanyId = async {
-                val freeCompany = freeCompanyNameId.await()
-                if (freeCompany != null) {
-                    freeCompanyRegex.find(
-                        freeCompany.attr("href")
-                    ) !!.value
-                } else {
-                    null
-                }
-            }
-            val freeCompanyIconLayers = async {
-                if (freeCompanyNameId.await() != null) {
-                    FreeCompanyIconLayers(
-                        bottom = character.select("div.character__freecompany__crest > div > img:nth-child(1)")
-                            .first()
-                            ?.attr("src")
-                            .toString(),
-                        middle = character.select("div.character__freecompany__crest > div > img:nth-child(2)")
-                            .first()
-                            ?.attr("src")
-                            .toString(),
-                        top = character.select("div.character__freecompany__crest > div > img:nth-child(3)")
-                            .first()
-                            ?.attr("src")
-                            .toString()
-                    )
-                } else {
-                    null
-                }
-            }
-            val freeCompany = async {
-                if (freeCompanyNameId.await() != null) {
-                    FreeCompany(
-                        name = freeCompanyName.await() !!,
-                        id = freeCompanyId.await() !!,
-                        iconLayers = freeCompanyIconLayers.await() !!
-                    )
-                } else {
-                    null
-                }
-            }
-
-            val grandCompanyNameRankIcon = async {
-                character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
-                    .first()
-                    ?.text()
-            }
-            val grandCompanyName = async {
-                if (grandCompanyNameRankIcon.await() != null) {
-                    grandCompanyNameRegex.find(
-                        grandCompanyNameRankIcon.await() !!
-                    ) !!.value
-                } else {
-                    null
-                }
-            }
-            val grandCompanyRank = async {
-                if (grandCompanyNameRankIcon.await() != null) {
-                    grandCompanyRankRegex.find(
-                        grandCompanyNameRankIcon.await() !!
-                    ) !!.value
-                } else {
-                    null
-                }
-            }
-            val grandCompanyIcon = async {
-                if (grandCompanyNameRankIcon.await() != null) {
-                    character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(4) > img")
-                        .first() !!
-                        .attr("src")
-                } else {
-                    null
-                }
-            }
-            val grandCompany = async {
-                if (grandCompanyNameRankIcon.await() != null) {
-                    GrandCompany(
-                        name = grandCompanyName.await() !!,
-                        rank = grandCompanyRank.await() !!,
-                        icon = grandCompanyIcon.await() !!
-                    )
-                } else {
-                    null
-                }
-            }
-
-            val guardianName = async {
-                character.select("p.character-block__name:nth-child(4)")
-                    .first() !!
-                    .text()
-            }
-            val guardianIcon = async {
-                character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(2) > img")
-                    .first() !!
-                    .attr("src")
-            }
-            val guardian = async {
-                Guardian(
-                    name = guardianName.await(), icon = guardianIcon.await()
-                )
-            }
-
-            val name = async {
-                character.select("div.frame__chara__box:nth-child(2) > .frame__chara__name")
-                    .first() !!
-                    .text()
-            }
-
-            val nameday = async {
-                character.select(".character-block__birth").first() !!.text()
-            }
-
-            val portrait = async {
-                character.select(".js__image_popup > img:nth-child(1)")
-                    .first() !!
-                    .attr("src")
-            }
-
-            val pvpTeamName = async {
-                character.select(".character__pvpteam__name > h4:nth-child(2) > a:nth-child(1)")
-                    .first()
-                    ?.attr("href")
-            }
-            val pvpTeamIconLayersBottom = async {
-                if (pvpTeamName.await() != null) {
-                    character.select(".character__pvpteam__crest__image img:nth-child(1)")
-                        .first() !!
-                        .attr("src")
-                } else {
-                    null
-                }
-            }
-            val pvpTeamIconLayersMiddle = async {
-                if (pvpTeamName.await() != null) {
-                    character.select(".character__pvpteam__crest__image img:nth-child(2)")
-                        .first() !!
-                        .attr("src")
-                } else {
-                    null
-                }
-            }
-            val pvpTeamIconLayersTop = async {
-                if (pvpTeamName.await() != null) {
-                    character.select(".character__pvpteam__crest__image img:nth-child(3)")
-                        .first() !!
-                        .attr("src")
-                } else {
-                    null
-                }
-            }
-            val pvpTeamIconLayers = async {
-                if (pvpTeamName.await() != null) {
-                    PvpTeamIconLayers(
-                        bottom = pvpTeamIconLayersBottom.await() !!,
-                        middle = pvpTeamIconLayersMiddle.await() !!,
-                        top = pvpTeamIconLayersTop.await() !!
-                    )
-                } else {
-                    null
-                }
-            }
-            val pvpTeam = async {
-                if (pvpTeamName.await() != null && pvpTeamIconLayers.await() != null) {
-                    PvpTeam(
-                        name = pvpTeamName.await() !!,
-                        iconLayers = pvpTeamIconLayers.await() !!
-                    )
-                } else {
-                    null
-                }
-            }
-
-            val raceClanGender = async {
-                character.select("div.character-block:nth-child(1) > div:nth-child(2) > p:nth-child(2)")
-                    .first() !!
-                    .html()
-            }
-            val race = async {
-                raceRegex.find(raceClanGender.await()) !!.value
-            }
-            val clan = async {
-                clanRegex.find(raceClanGender.await()) !!.value
-            }
-            val gender = async {
-                genderRegex.find(raceClanGender.await()) !!.value
-            }
-
-            val serverDc = async {
-                character.select("p.frame__chara__world").first() !!.text()
-            }
-            val server = async { serverRegex.find(serverDc.await()) !!.value }
-            val dc = async { dcRegex.find(serverDc.await()) !!.value }
-
-            val title = async {
-                character.select(".frame__chara__title").first()?.text().toString()
-            }
-
-            val townName = async {
-                character.select("div.character-block:nth-child(3) > div:nth-child(2) > p:nth-child(2)")
-                    .first() !!
-                    .text()
-            }
-            val townIcon = async {
-                character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(3) > img")
-                    .first() !!
-                    .attr("src")
-            }
-            val town = async {
-                Town(
-                    name = townName.await(), icon = townIcon.await()
-                )
-            }
 
             val classJob = mapOf(
                 "https://img.finalfantasyxiv.com/lds/h/E/d0Tx-vhnsMYfYpGe9MvslemEfg.png" to "Paladin",
@@ -336,26 +184,160 @@ object Character {
                 "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to "Fisher"
             )
 
-            return@coroutineScope Character(
-                classJob.getValue(activeClassJob.await()),
-                activeClassJobLevel.await(),
-                avatar.await(),
-                bio.await(),
-                freeCompany.await(),
-                grandCompany.await(),
-                guardian.await(),
-                name.await(),
-                nameday.await(),
-                portrait.await(),
-                pvpTeam.await(),
-                race.await(),
-                clan.await(),
-                gender.await(),
-                server.await(),
-                dc.await(),
-                title.await(),
-                town.await()
-            )
+            return@coroutineScope classJob.getValue(classJobUrl)
         }
+
+    private suspend fun getFreeCompany(character: Document): FreeCompany? =
+        coroutineScope {
+            val freeCompany = async {
+                character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
+                    .first()
+            }
+
+            if (freeCompany.await() != null) {
+                val freeCompanyName = async { freeCompany.await() !!.text() }
+                val freeCompanyId = async {
+                    freeCompanyIdRegex.find(
+                        freeCompany.await() !!.attr("href")
+                    ) !!.value
+                }
+
+                val freeCompanyIconLayerBottom = async {
+                    character.select("div.character__freecompany__crest > div > img:nth-child(1)")
+                        .first() !!
+                        .attr("src")
+                }
+                val freeCompanyIconLayerMiddle = async {
+                    character.select("div.character__freecompany__crest > div > img:nth-child(2)")
+                        .first() !!
+                        .attr("src")
+                }
+                val freeCompanyIconLayerTop = async {
+                    character.select("div.character__freecompany__crest > div > img:nth-child(3)")
+                        .first() !!
+                        .attr("src")
+                }
+
+                return@coroutineScope FreeCompany(
+                    name = freeCompanyName.await(),
+                    id = freeCompanyId.await(),
+                    iconLayers = FreeCompanyIconLayers(
+                        bottom = freeCompanyIconLayerBottom.await(),
+                        middle = freeCompanyIconLayerMiddle.await(),
+                        top = freeCompanyIconLayerTop.await()
+                    )
+                )
+            } else {
+                return@coroutineScope null
+            }
+        }
+
+    private suspend fun getGrandCompany(character: Document): GrandCompany? =
+        coroutineScope {
+            val grandCompany = async {
+                character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
+                    .first()
+                    ?.text()
+            }
+
+            if (grandCompany.await() != null) {
+                val grandCompanyName = async {
+                    grandCompanyNameRegex.find(
+                        grandCompany.await() !!
+                    ) !!.value
+                }
+                val grandCompanyRank = async {
+                    grandCompanyRankRegex.find(
+                        grandCompany.await() !!
+                    ) !!.value
+                }
+                val grandCompanyIcon = async {
+                    character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(4) > img")
+                        .first() !!
+                        .attr("src")
+                }
+
+                return@coroutineScope GrandCompany(
+                    name = grandCompanyName.await(),
+                    rank = grandCompanyRank.await(),
+                    icon = grandCompanyIcon.await()
+                )
+            } else {
+                return@coroutineScope null
+            }
+        }
+
+    private suspend fun getGuardian(character: Document): Guardian = coroutineScope {
+        val guardianName = async {
+            character.select("p.character-block__name:nth-child(4)").first() !!.text()
+        }
+        val guardianIcon = async {
+            character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(2) > img")
+                .first() !!
+                .attr("src")
+        }
+
+        return@coroutineScope Guardian(
+            name = guardianName.await(), icon = guardianIcon.await()
+        )
+    }
+
+    private suspend fun getPvpTeam(character: Document): PvpTeam? = coroutineScope {
+        val pvpTeam = async {
+            character.select(".character__pvpteam__name > h4:nth-child(2) > a:nth-child(1)")
+                .first()
+        }
+
+        if (pvpTeam.await() != null) {
+            val pvpTeamId = async {
+                pvpTeamIdRegex.find(
+                    pvpTeam.await() !!.attr("href")
+                ) !!.groups[1] !!.value
+            }
+            val pvpTeamName = async { pvpTeam.await() !!.text() }
+
+            val pvpTeamIconLayerBottom = async {
+                character.select(".character__pvpteam__crest__image img:nth-child(1)")
+                    .first() !!
+                    .attr("src")
+            }
+            val pvpTeamIconLayerMiddle = async {
+                character.select(".character__pvpteam__crest__image img:nth-child(2)")
+                    .first() !!
+                    .attr("src")
+            }
+            val pvpTeamIconLayerTop = async {
+                character.select(".character__pvpteam__crest__image img:nth-child(3)")
+                    .first() !!
+                    .attr("src")
+            }
+
+            return@coroutineScope PvpTeam(
+                name = pvpTeamName.await(),
+                id = pvpTeamId.await(),
+                iconLayers = PvpTeamIconLayers(
+                    bottom = pvpTeamIconLayerBottom.await(),
+                    middle = pvpTeamIconLayerMiddle.await(),
+                    top = pvpTeamIconLayerTop.await()
+                )
+            )
+        } else {
+            return@coroutineScope null
+        }
+    }
+
+    private suspend fun getTown(character: Document): Town = coroutineScope {
+        val townName = async {
+            character.select("div.character-block:nth-child(3) > div:nth-child(2) > p:nth-child(2)")
+                .first() !!
+                .text()
+        }
+        val townIcon = async {
+            character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(3) > img")
+                .first() !!
+                .attr("src")
+        }
+
+        return@coroutineScope Town(name = townName.await(), icon = townIcon.await())
     }
 }

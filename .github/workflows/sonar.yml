@@ -25,4 +25,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         uses: gradle/gradle-build-action@v2.3.3
         with:
-          arguments: koverReport sonarqube
+          arguments: koverXmlReport sonar
