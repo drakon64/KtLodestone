@@ -65,18 +65,18 @@ object Character {
                 character.select(".character__selfintroduction").first() !!.text()
             }
 
-            val freeCompanyName = async {
+            val freeCompanyNameId = async {
                 character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
                     .first()
-                    ?.text()
+            }
+            val freeCompanyName = async {
+                freeCompanyNameId.await()?.text()
             }
             val freeCompanyId = async {
-                character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
-                    .first()
-                    ?.attr("href")
+                freeCompanyNameId.await()?.attr("href")
             }
             val freeCompanyIconLayers = async {
-                if (freeCompanyId.await() != null) {
+                if (freeCompanyNameId.await() != null) {
                     FreeCompanyIconLayers(
                         bottom = character.select("div.character__freecompany__crest > div > img:nth-child(1)")
                             .first()
@@ -96,7 +96,7 @@ object Character {
                 }
             }
             val freeCompany = async {
-                if (freeCompanyId.await() != null && freeCompanyIconLayers.await() != null) {
+                if (freeCompanyNameId.await() != null) {
                     FreeCompany(
                         name = freeCompanyName.await() !!,
                         id = freeCompanyId.await() !!,
