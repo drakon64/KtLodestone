@@ -65,6 +65,11 @@ object Character {
                 character.select(".character__selfintroduction").first() !!.text()
             }
 
+            val freeCompanyName = async {
+                character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
+                    .first()
+                    ?.text()
+            }
             val freeCompanyId = async {
                 character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
                     .first()
@@ -93,6 +98,7 @@ object Character {
             val freeCompany = async {
                 if (freeCompanyId.await() != null && freeCompanyIconLayers.await() != null) {
                     FreeCompany(
+                        name = freeCompanyName.await() !!,
                         id = freeCompanyId.await() !!,
                         iconLayers = freeCompanyIconLayers.await() !!
                     )
