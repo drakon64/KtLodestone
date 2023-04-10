@@ -6,7 +6,7 @@ import cloud.drakon.ktlodestone.profile.Character
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompany
 import cloud.drakon.ktlodestone.profile.freecompany.FreeCompanyIconLayers
 import cloud.drakon.ktlodestone.profile.grandcompany.GrandCompany
-import cloud.drakon.ktlodestone.profile.guardiandeity.GuardianDeity
+import cloud.drakon.ktlodestone.profile.guardian.Guardian
 import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeam
 import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeamIconLayers
 import cloud.drakon.ktlodestone.profile.town.Town
@@ -144,19 +144,19 @@ object Character {
                 }
             }
 
-            val guardianDeityName = async {
+            val guardianName = async {
                 character.select("p.character-block__name:nth-child(4)")
                     .first() !!
                     .text()
             }
-            val guardianDeityIcon = async {
+            val guardianIcon = async {
                 character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(2) > img")
                     .first() !!
                     .attr("src")
             }
-            val guardianDeity = async {
-                GuardianDeity(
-                    name = guardianDeityName.await(), icon = guardianDeityIcon.await()
+            val guardian = async {
+                Guardian(
+                    name = guardianName.await(), icon = guardianIcon.await()
                 )
             }
 
@@ -327,7 +327,7 @@ object Character {
                 bio.await(),
                 freeCompany.await(),
                 grandCompany.await(),
-                guardianDeity.await(),
+                guardian.await(),
                 name.await(),
                 nameday.await(),
                 portrait.await(),
