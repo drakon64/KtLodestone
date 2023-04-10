@@ -5,7 +5,7 @@ import cloud.drakon.ktlodestone.profile.guardiandeity.GuardianDeity
 import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeam
 import cloud.drakon.ktlodestone.profile.town.Town
 
-class Character(
+data class Character(
     val activeClassJob: String,
     val activeClassJobLevel: Byte,
     val avatar: String,
