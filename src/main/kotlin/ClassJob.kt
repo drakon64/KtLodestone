@@ -28,30 +28,43 @@ object ClassJob {
 
         val bozja = async { getResistanceRank(character) }
         val eureka = async { getElementalLevel(character) }
-        val paladin = async { getProfileClassJob(character, "Paladin") }
-        val warrior = async { getProfileClassJob(character, "Warrior") }
-        val darkKnight = async { getProfileClassJob(character, "Dark Knight") }
-        val gunbreaker = async { getProfileClassJob(character, "Gunbreaker") }
+        val paladin = async { getClassJobLevel(character, "Paladin") }
+        val warrior = async { getClassJobLevel(character, "Warrior") }
+        val darkKnight = async { getClassJobLevel(character, "Dark Knight") }
+        val gunbreaker = async { getClassJobLevel(character, "Gunbreaker") }
 
-        val whiteMage = async { getProfileClassJob(character, "White Mage") }
-        val scholar = async { getProfileClassJob(character, "Scholar") }
-        val astrologian = async { getProfileClassJob(character, "Astrologian") }
-        val sage = async { getProfileClassJob(character, "Sage") }
+        val whiteMage = async { getClassJobLevel(character, "White Mage") }
+        val scholar = async { getClassJobLevel(character, "Scholar") }
+        val astrologian = async { getClassJobLevel(character, "Astrologian") }
+        val sage = async { getClassJobLevel(character, "Sage") }
 
-        val monk = async { getProfileClassJob(character, "Monk") }
-        val dragoon = async { getProfileClassJob(character, "Dragoon") }
-        val ninja = async { getProfileClassJob(character, "Ninja") }
-        val samurai = async { getProfileClassJob(character, "Samurai") }
-        val reaper = async { getProfileClassJob(character, "Reaper") }
+        val monk = async { getClassJobLevel(character, "Monk") }
+        val dragoon = async { getClassJobLevel(character, "Dragoon") }
+        val ninja = async { getClassJobLevel(character, "Ninja") }
+        val samurai = async { getClassJobLevel(character, "Samurai") }
+        val reaper = async { getClassJobLevel(character, "Reaper") }
 
-        val bard = async { getProfileClassJob(character, "Bard") }
-        val machinist = async { getProfileClassJob(character, "Machinist") }
-        val dancer = async { getProfileClassJob(character, "Dancer") }
+        val bard = async { getClassJobLevel(character, "Bard") }
+        val machinist = async { getClassJobLevel(character, "Machinist") }
+        val dancer = async { getClassJobLevel(character, "Dancer") }
 
-        val blackMage = async { getProfileClassJob(character, "Black Mage") }
-        val summoner = async { getProfileClassJob(character, "Summoner") }
-        val redMage = async { getProfileClassJob(character, "Red Mage") }
-        val blueMage = async { getProfileClassJob(character, "Blue Mage") }
+        val blackMage = async { getClassJobLevel(character, "Black Mage") }
+        val summoner = async { getClassJobLevel(character, "Summoner") }
+        val redMage = async { getClassJobLevel(character, "Red Mage") }
+        val blueMage = async { getClassJobLevel(character, "Blue Mage") }
+
+        val carpenter = async { getClassJobLevel(character, "Carpenter") }
+        val blacksmith = async { getClassJobLevel(character, "Blacksmith") }
+        val armorer = async { getClassJobLevel(character, "Armorer") }
+        val goldsmith = async { getClassJobLevel(character, "Goldsmith") }
+        val leatherworker = async { getClassJobLevel(character, "Leatherworker") }
+        val weaver = async { getClassJobLevel(character, "Weaver") }
+        val alchemist = async { getClassJobLevel(character, "Alchemist") }
+        val culinarian = async { getClassJobLevel(character, "Culinarian") }
+
+        val miner = async { getClassJobLevel(character, "Miner") }
+        val botanist = async { getClassJobLevel(character, "Botanist") }
+        val fisher = async { getClassJobLevel(character, "Fisher") }
 
         return@coroutineScope ProfileClassJob(
             bozja.await(),
@@ -76,17 +89,17 @@ object ClassJob {
             summoner.await(),
             redMage.await(),
             blueMage.await(),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
+            carpenter.await(),
+            blacksmith.await(),
+            armorer.await(),
+            goldsmith.await(),
+            leatherworker.await(),
+            weaver.await(),
+            alchemist.await(),
+            culinarian.await(),
+            miner.await(),
+            botanist.await(),
+            fisher.await(),
         )
     }
 
@@ -177,7 +190,7 @@ object ClassJob {
         }
     }
 
-    private suspend fun getProfileClassJob(character: Document, classJob: String) =
+    private suspend fun getClassJobLevel(character: Document, classJob: String) =
         coroutineScope {
             class ClassJobSelector(
                 val name: String,
@@ -274,9 +287,56 @@ object ClassJob {
                     name = "#character > div.character__content.selected > div:nth-child(3) > div:nth-child(2) > ul:nth-child(4) > li:nth-child(4) > div.character__job__name.js__tooltip",
                     level = "#character > div.character__content.selected > div:nth-child(3) > div:nth-child(2) > ul:nth-child(4) > li:nth-child(4) > div.character__job__level",
                     experience = "#character > div.character__content.selected > div:nth-child(3) > div:nth-child(2) > ul:nth-child(4) > li:nth-child(4) > div.character__job__exp"
+                ),
+
+                "Carpenter" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(1) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(1) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(1) > div.character__job__exp"
+                ), "Blacksmith" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(2) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(2) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(2) > div.character__job__exp"
+                ), "Armorer" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(3) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(3) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(3) > div.character__job__exp"
+                ), "Goldsmith" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(4) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(4) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(4) > div.character__job__exp"
+                ), "Leatherworker" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(5) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(5) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(5) > div.character__job__exp"
+                ), "Weaver" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(6) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(6) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(6) > div.character__job__exp"
+                ), "Alchemist" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(7) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(7) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(7) > div.character__job__exp"
+                ), "Culinarian" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(8) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(8) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(1) > ul > li:nth-child(8) > div.character__job__exp"
+                ),
+
+                "Miner" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(2) > ul > li:nth-child(1) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(2) > ul > li:nth-child(1) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(2) > ul > li:nth-child(1) > div.character__job__exp"
+                ), "Botanist" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(2) > ul > li:nth-child(2) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(2) > ul > li:nth-child(2) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(2) > ul > li:nth-child(2) > div.character__job__exp"
+                ), "Fisher" to ClassJobSelector(
+                    name = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(2) > ul > li:nth-child(3) > div.character__job__name.js__tooltip",
+                    level = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(2) > ul > li:nth-child(3) > div.character__job__level",
+                    experience = "#character > div.character__content.selected > div:nth-child(5) > div:nth-child(2) > ul > li:nth-child(3) > div.character__job__exp"
                 )
             )
-
             val selectors = classJobSelectors.getValue(classJob)
 
             val name = async {
