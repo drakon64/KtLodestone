@@ -1,9 +1,5 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.profile.grandcompany.GrandCompany
-import cloud.drakon.ktlodestone.profile.guardian.Guardian
-import cloud.drakon.ktlodestone.profile.town.Town
-
 data class ProfileCharacter(
     val activeClassJob: String,
     val activeClassJobLevel: Byte,

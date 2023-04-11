@@ -6,9 +6,9 @@ import cloud.drakon.ktlodestone.profile.FreeCompany
 import cloud.drakon.ktlodestone.profile.IconLayers
 import cloud.drakon.ktlodestone.profile.ProfileCharacter
 import cloud.drakon.ktlodestone.profile.PvpTeam
-import cloud.drakon.ktlodestone.profile.grandcompany.GrandCompany
-import cloud.drakon.ktlodestone.profile.guardian.Guardian
-import cloud.drakon.ktlodestone.profile.town.Town
+import cloud.drakon.ktlodestone.profile.GrandCompany
+import cloud.drakon.ktlodestone.profile.Guardian
+import cloud.drakon.ktlodestone.profile.Town
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.async
