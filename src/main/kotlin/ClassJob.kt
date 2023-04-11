@@ -15,6 +15,8 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 object ClassJob {
+    private const val noExperience = "-- / --"
+
     suspend fun getClassJob(id: Int) = coroutineScope {
         val request =
             ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/class_job/")
@@ -147,7 +149,7 @@ object ClassJob {
                     .text()
             }
 
-            if (experience.await() == "-- / --") {
+            if (experience.await() == noExperience) {
                 return@coroutineScope Eureka(
                     level = elementalLevel.await() !!, experience = null
                 )
@@ -287,9 +289,9 @@ object ClassJob {
                 character.select(selectors.experience).first() !!.text()
             }
 
-            if (level.await() == "-" && experience.await() == "-- / --") {
+            if (level.await() == "-" && experience.await() == noExperience) {
                 return@coroutineScope null
-            } else if (experience.await() == "-- / --") {
+            } else if (experience.await() == noExperience) {
                 return@coroutineScope ClassJobLevel(
                     name = name.await(),
                     level = level.await().toByte(),
