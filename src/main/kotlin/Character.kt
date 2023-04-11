@@ -2,13 +2,12 @@ package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
+import cloud.drakon.ktlodestone.profile.FreeCompany
+import cloud.drakon.ktlodestone.profile.IconLayers
 import cloud.drakon.ktlodestone.profile.ProfileCharacter
-import cloud.drakon.ktlodestone.profile.freecompany.FreeCompany
-import cloud.drakon.ktlodestone.profile.freecompany.FreeCompanyIconLayers
+import cloud.drakon.ktlodestone.profile.PvpTeam
 import cloud.drakon.ktlodestone.profile.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.profile.guardian.Guardian
-import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeam
-import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeamIconLayers
 import cloud.drakon.ktlodestone.profile.town.Town
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -218,7 +217,7 @@ object Character {
             return@coroutineScope FreeCompany(
                 name = freeCompanyName.await(),
                 id = freeCompanyId.await(),
-                iconLayers = FreeCompanyIconLayers(
+                iconLayers = IconLayers(
                     bottom = freeCompanyIconLayerBottom.await(),
                     middle = freeCompanyIconLayerMiddle.await(),
                     top = freeCompanyIconLayerTop.await()
@@ -316,7 +315,7 @@ object Character {
             return@coroutineScope PvpTeam(
                 name = pvpTeamName.await(),
                 id = pvpTeamId.await(),
-                iconLayers = PvpTeamIconLayers(
+                iconLayers = IconLayers(
                     bottom = pvpTeamIconLayerBottom.await(),
                     middle = pvpTeamIconLayerMiddle.await(),
                     top = pvpTeamIconLayerTop.await()
