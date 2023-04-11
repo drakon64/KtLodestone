@@ -1,12 +1,6 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.profile.freecompany.FreeCompany
-import cloud.drakon.ktlodestone.profile.grandcompany.GrandCompany
-import cloud.drakon.ktlodestone.profile.guardian.Guardian
-import cloud.drakon.ktlodestone.profile.pvpteam.PvpTeam
-import cloud.drakon.ktlodestone.profile.town.Town
-
-data class Character(
+data class ProfileCharacter(
     val activeClassJob: String,
     val activeClassJobLevel: Byte,
     val avatar: String,
