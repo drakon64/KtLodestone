@@ -17,6 +17,12 @@ import org.jsoup.nodes.Document
 object ClassJob {
     private const val noExperience = "-- / --"
 
+    /**
+     * Gets a characters class/job stats from The Lodestone
+     * @param id The Lodestone character ID
+     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
+     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
+     */
     suspend fun getClassJob(id: Int) = coroutineScope {
         val request =
             ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/class_job/")
