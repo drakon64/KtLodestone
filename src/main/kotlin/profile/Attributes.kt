@@ -18,4 +18,8 @@ data class Attributes(
     val spellSpeed: Short,
     val tenacity: Short,
     val piety: Short,
+    val hp: Int,
+    val mp: Int?,
+    val cp: Short?,
+    val gp: Short?,
 )
