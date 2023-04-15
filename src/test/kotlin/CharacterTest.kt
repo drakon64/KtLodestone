@@ -5,17 +5,17 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
-class ProfileCharacterTest {
+class CharacterTest {
     @Test fun getCharacter() {
         assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
-                println(Character.getCharacter(27545492))
+                println(Character.getCharacter(27545492, true))
             }
         }
 
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
-                println(Character.getCharacter(0))
+                println(Character.getCharacter(0, false))
             }
         }
     }
