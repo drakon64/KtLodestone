@@ -20,6 +20,4 @@ data class Attributes(
     val piety: Short,
     val hp: Int,
     val mp: Int?,
-    val cp: Short?,
-    val gp: Short?,
 )
