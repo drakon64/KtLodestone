@@ -5,7 +5,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 
-class ProfileClassJobTest {
+class ClassJobTest {
     @Test fun getClassJob() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
