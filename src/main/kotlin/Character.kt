@@ -95,9 +95,7 @@ object Character {
         val server = async { serverRegex.find(serverDc.await()) !!.value }
         val dc = async { dcRegex.find(serverDc.await()) !!.value }
 
-        val title = async {
-            character.select(".frame__chara__title").first()?.text().toString()
-        }
+        val title = async { character.select(".frame__chara__title").first()?.text() }
 
         val town = async { getTown(character) }
 
