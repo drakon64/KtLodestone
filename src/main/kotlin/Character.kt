@@ -106,7 +106,7 @@ object Character {
 
         val profileAttributes = async {
             if (attributes) {
-                getAttributes(character)
+                Attributes.getAttributes(character)
             } else {
                 null
             }
@@ -348,148 +348,107 @@ object Character {
         Town(name = townName.await(), icon = townIcon.await())
     }
 
-    private suspend fun getAttributes(character: Document) = coroutineScope {
-        val strength = async {
-            character.select("table.character__param__list:nth-child(2) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val dexterity = async {
-            character.select("table.character__param__list:nth-child(2) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val vitality = async {
-            character.select("table.character__param__list:nth-child(2) tr:nth-child(3) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val intelligence = async {
-            character.select("table.character__param__list:nth-child(2) tr:nth-child(4) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val mind = async {
-            character.select("table.character__param__list:nth-child(2) tr:nth-child(5) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val criticalHitRate = async {
-            character.select("table.character__param__list:nth-child(4) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val determination = async {
-            character.select("table.character__param__list:nth-child(4) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val directHitRate = async {
-            character.select("table.character__param__list:nth-child(4) tr:nth-child(3) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val defense = async {
-            character.select("table.character__param__list:nth-child(6) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val magicDefense = async {
-            character.select("table.character__param__list:nth-child(6) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val attackPower = async {
-            character.select("table.character__param__list:nth-child(8) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val skillSpeed = async {
-            character.select("table.character__param__list:nth-child(8) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val attackMagicPotency = async {
-            character.select("table.character__param__list:nth-child(10) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val healingMagicPotency = async {
-            character.select("table.character__param__list:nth-child(10) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val spellSpeed = async {
-            character.select("table.character__param__list:nth-child(10) tr:nth-child(3) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val tenacity = async {
-            character.select("table.character__param__list:nth-child(12) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val piety = async {
-            character.select("table.character__param__list:nth-child(12) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val hp = async {
-            character.select(".character__param > ul:nth-child(1) > li:nth-child(1) > div:nth-child(1) > span:nth-child(2)")
-                .first() !!
-                .text()
-                .toInt()
-        }
-        val mp = async {
-            character.select(".character__param > ul:nth-child(1) > li:nth-child(2) > div:nth-child(1) > span:nth-child(2)")
-                .first() !!
-                .text()
-                .toInt()
-        }
-
-        Attributes(
-            strength.await(),
-            dexterity.await(),
-            vitality.await(),
-            intelligence.await(),
-            mind.await(),
-            criticalHitRate.await(),
-            determination.await(),
-            directHitRate.await(),
-            defense.await(),
-            magicDefense.await(),
-            attackPower.await(),
-            skillSpeed.await(),
-            attackMagicPotency.await(),
-            healingMagicPotency.await(),
-            spellSpeed.await(),
-            tenacity.await(),
-            piety.await(),
-            hp.await(),
-            mp.await()
+    private object Attributes {
+        private val lodestoneCssSelectors = Json.parseToJsonElement(
+            this::class.java.classLoader.getResource("lodestone-css-selectors/profile/attributes.json") !!
+                .readText()
         )
+
+        suspend fun getAttributes(character: Document) = coroutineScope {
+            val strength = async {
+                getAttributeCss(character, "STRENGTH").toShort()
+            }
+            val dexterity = async {
+                getAttributeCss(character, "DEXTERITY").toShort()
+            }
+            val vitality = async {
+                getAttributeCss(character, "VITALITY").toShort()
+            }
+            val intelligence = async {
+                getAttributeCss(character, "INTELLIGENCE").toShort()
+            }
+            val mind = async {
+                getAttributeCss(character, "MIND").toShort()
+            }
+
+            val criticalHitRate = async {
+                getAttributeCss(character, "CRITICAL_HIT_RATE").toShort()
+            }
+            val determination = async {
+                getAttributeCss(character, "DETERMINATION").toShort()
+            }
+            val directHitRate = async {
+                getAttributeCss(character, "DIRECT_HIT_RATE").toShort()
+            }
+
+            val defense = async {
+                getAttributeCss(character, "DEFENSE").toShort()
+            }
+            val magicDefense = async {
+                getAttributeCss(character, "MAGIC_DEFENSE").toShort()
+            }
+
+            val attackPower = async {
+                getAttributeCss(character, "ATTACK_POWER").toShort()
+            }
+            val skillSpeed = async {
+                getAttributeCss(character, "SKILL_SPEED").toShort()
+            }
+
+            val attackMagicPotency = async {
+                getAttributeCss(character, "ATTACK_MAGIC_POTENCY").toShort()
+            }
+            val healingMagicPotency = async {
+                getAttributeCss(character, "HEALING_MAGIC_POTENCY").toShort()
+            }
+            val spellSpeed = async {
+                getAttributeCss(character, "SPELL_SPEED").toShort()
+            }
+
+            val tenacity = async {
+                getAttributeCss(character, "TENACITY").toShort()
+            }
+            val piety = async {
+                getAttributeCss(character, "PIETY").toShort()
+            }
+
+            val hp = async {
+                getAttributeCss(character, "HP").toInt()
+            }
+            val mp = async {
+                getAttributeCss(character, "MP_GP_CP").toInt()
+            }
+
+            Attributes(
+                strength.await(),
+                dexterity.await(),
+                vitality.await(),
+                intelligence.await(),
+                mind.await(),
+                criticalHitRate.await(),
+                determination.await(),
+                directHitRate.await(),
+                defense.await(),
+                magicDefense.await(),
+                attackPower.await(),
+                skillSpeed.await(),
+                attackMagicPotency.await(),
+                healingMagicPotency.await(),
+                spellSpeed.await(),
+                tenacity.await(),
+                piety.await(),
+                hp.await(),
+                mp.await()
+            )
+        }
+
+        private suspend fun getAttributeCss(
+            character: Document,
+            lodestoneProperty: String,
+        ) = coroutineScope {
+            character.select(lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                .first() !!
+                .text()
+        }
     }
 }
