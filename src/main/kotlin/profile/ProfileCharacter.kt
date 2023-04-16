@@ -19,5 +19,5 @@ data class ProfileCharacter(
     val dc: String,
     val title: String?,
     val town: Town,
-    val attributes: Attributes?
+    val attributes: Attributes?,
 )

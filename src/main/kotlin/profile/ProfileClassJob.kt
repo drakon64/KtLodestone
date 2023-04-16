@@ -1,7 +1,7 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
 import cloud.drakon.ktlodestone.profile.classjob.Bozja
+import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
 import cloud.drakon.ktlodestone.profile.classjob.Eureka
 
 data class ProfileClassJob(
