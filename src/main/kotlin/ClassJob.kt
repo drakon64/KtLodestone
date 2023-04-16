@@ -138,7 +138,7 @@ object ClassJob {
                 }
 
                 Bozja(
-                    level = resistanceRank.await() !!.toByte(), mettle = Experience(
+                    level = resistanceRank.await() !!, mettle = Experience(
                         current = currentExperience.await(),
                         next = experienceToNextLevel.await()
                     )
@@ -183,7 +183,7 @@ object ClassJob {
                 }
 
                 Eureka(
-                    level = elementalLevel.await() !!.toByte(), experience = Experience(
+                    level = elementalLevel.await() !!, experience = Experience(
                         current = currentExperience.await(),
                         next = experienceToNextLevel.await()
                     )
