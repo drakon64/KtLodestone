@@ -72,7 +72,7 @@ object ClassJob {
         val botanist = async { getClassJobLevel(character, "Botanist") }
         val fisher = async { getClassJobLevel(character, "Fisher") }
 
-        return@coroutineScope ProfileClassJob(
+        ProfileClassJob(
             bozja.await(),
             eureka.await(),
             paladin.await(),
@@ -128,9 +128,7 @@ object ClassJob {
             }
 
             if (experience.await() == "Current Mettle: -- / Mettle to Next Rank: --") {
-                return@coroutineScope Bozja(
-                    level = resistanceRank.await() !!, mettle = null
-                )
+                Bozja(level = resistanceRank.await() !!, mettle = null)
             } else {
                 val currentExperience = async {
                     currentBozjaExperienceRegex.find(experience.await()) !!.value.toInt()
@@ -139,7 +137,7 @@ object ClassJob {
                     bozjaExperienceToNextLevelRegex.find(experience.await()) !!.value.toInt()
                 }
 
-                return@coroutineScope Bozja(
+                Bozja(
                     level = resistanceRank.await() !!.toByte(), mettle = Experience(
                         current = currentExperience.await(),
                         next = experienceToNextLevel.await()
@@ -147,7 +145,7 @@ object ClassJob {
                 )
             }
         } else {
-            return@coroutineScope null
+            null
         }
     }
 
@@ -169,7 +167,7 @@ object ClassJob {
             }
 
             if (experience.await() == noExperience) {
-                return@coroutineScope Eureka(
+                Eureka(
                     level = elementalLevel.await() !!, experience = null
                 )
             } else {
@@ -184,7 +182,7 @@ object ClassJob {
                     ).toInt()
                 }
 
-                return@coroutineScope Eureka(
+                Eureka(
                     level = elementalLevel.await() !!.toByte(), experience = Experience(
                         current = currentExperience.await(),
                         next = experienceToNextLevel.await()
@@ -192,7 +190,7 @@ object ClassJob {
                 )
             }
         } else {
-            return@coroutineScope null
+            null
         }
     }
 
@@ -356,9 +354,9 @@ object ClassJob {
             }
 
             if (level.await() == "-" && experience.await() == noExperience) {
-                return@coroutineScope null
+                null
             } else if (experience.await() == noExperience) {
-                return@coroutineScope ClassJobLevel(
+                ClassJobLevel(
                     name = name.await(),
                     level = level.await().toByte(),
                     experience = null
@@ -375,7 +373,7 @@ object ClassJob {
                     ).toInt()
                 }
 
-                return@coroutineScope ClassJobLevel(
+                ClassJobLevel(
                     name = name.await(),
                     level = level.await().toByte(),
                     experience = Experience(

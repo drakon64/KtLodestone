@@ -113,7 +113,7 @@ object Character {
             }
         }
 
-        return@coroutineScope ProfileCharacter(
+        ProfileCharacter(
             activeClassJob.await(),
             activeClassJobLevel.await(),
             avatar.await(),
@@ -140,7 +140,7 @@ object Character {
         lodestoneProperty: String,
         cssProperty: String = "selector",
     ) = coroutineScope {
-        return@coroutineScope lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject[cssProperty] !!.jsonPrimitive.content
+        lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject[cssProperty] !!.jsonPrimitive.content
     }
 
     private val activeClassJobLevelRegex = """\d+""".toRegex()
@@ -200,7 +200,7 @@ object Character {
             "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to "Fisher"
         )
 
-        return@coroutineScope classJob.getValue(classJobUrl)
+        classJob.getValue(classJobUrl)
     }
 
     private val freeCompanyIdRegex = """\d+""".toRegex()
@@ -246,7 +246,7 @@ object Character {
                 }
 
                 when (type) {
-                    GuildType.FREE_COMPANY -> return@coroutineScope FreeCompany(
+                    GuildType.FREE_COMPANY -> FreeCompany(
                         name = guildName.await(),
                         id = guildId.await(),
                         iconLayers = IconLayers(
@@ -256,7 +256,7 @@ object Character {
                         )
                     )
 
-                    GuildType.PVP_TEAM -> return@coroutineScope PvpTeam(
+                    GuildType.PVP_TEAM -> PvpTeam(
                         name = guildName.await(),
                         id = guildId.await(),
                         iconLayers = IconLayers(
@@ -267,7 +267,7 @@ object Character {
                     )
                 }
             } else {
-                return@coroutineScope null
+                null
             }
         }
 
@@ -313,13 +313,13 @@ object Character {
                     .attr("src")
             }
 
-            return@coroutineScope GrandCompany(
+            GrandCompany(
                 name = grandCompanyName.await(),
                 rank = grandCompanyRank.await(),
                 icon = grandCompanyIcon.await()
             )
         } else {
-            return@coroutineScope null
+            null
         }
     }
 
@@ -339,9 +339,7 @@ object Character {
                 .attr(iconSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
         }
 
-        return@coroutineScope Guardian(
-            name = guardianName.await(), icon = guardianIcon.await()
-        )
+        Guardian(name = guardianName.await(), icon = guardianIcon.await())
     }
 
     private suspend fun getTown(character: Document) = coroutineScope {
@@ -360,7 +358,7 @@ object Character {
                 .attr(iconSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
         }
 
-        return@coroutineScope Town(name = townName.await(), icon = townIcon.await())
+        Town(name = townName.await(), icon = townIcon.await())
     }
 
     private suspend fun getAttributes(character: Document) = coroutineScope {
@@ -485,7 +483,7 @@ object Character {
                 .toInt()
         }
 
-        return@coroutineScope Attributes(
+        Attributes(
             strength.await(),
             dexterity.await(),
             vitality.await(),
