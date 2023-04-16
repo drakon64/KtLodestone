@@ -4,10 +4,9 @@ import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.ClassesJobs
 import cloud.drakon.ktlodestone.profile.ProfileClassJob
-import cloud.drakon.ktlodestone.profile.classjob.Bozja
 import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
-import cloud.drakon.ktlodestone.profile.classjob.Eureka
 import cloud.drakon.ktlodestone.profile.classjob.Experience
+import cloud.drakon.ktlodestone.profile.classjob.UniqueDutyLevel
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.async
@@ -41,8 +40,8 @@ object ClassJob {
             else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
         }
 
-        val bozja = async { getResistanceRank(character) }
-        val eureka = async { getElementalLevel(character) }
+        val bozja = async { getUniqueDutyLevel(character, ClassesJobs.BOZJA) }
+        val eureka = async { getUniqueDutyLevel(character, ClassesJobs.EUREKA) }
         val paladin = async { getClassJobLevel(character, ClassesJobs.PALADIN) }
         val warrior = async { getClassJobLevel(character, ClassesJobs.WARRIOR) }
         val darkKnight = async { getClassJobLevel(character, ClassesJobs.DARKKNIGHT) }
@@ -123,75 +122,66 @@ object ClassJob {
     private val currentBozjaExperienceRegex = """\+d""".toRegex()
     private val bozjaExperienceToNextLevelRegex =
         """(?<=Mettle to Next Rank: )\d+""".toRegex()
-
-    private suspend fun getResistanceRank(character: Document) = coroutineScope {
-        val classJob = ClassesJobs.BOZJA
-
-        val resistanceRank = async { getLevel(character, classJob) }
-
-        if (resistanceRank.await() != null) {
-            val experience = async { getExperience(character, classJob) }
-
-            if (experience.await() == "Current Mettle: -- / Mettle to Next Rank: --") {
-                Bozja(level = resistanceRank.await() !!.toByte(), mettle = null)
-            } else {
-                val currentExperience = async {
-                    currentBozjaExperienceRegex.find(experience.await()) !!.value.toInt()
-                }
-                val experienceToNextLevel = async {
-                    bozjaExperienceToNextLevelRegex.find(experience.await()) !!.value.toInt()
-                }
-
-                Bozja(
-                    level = resistanceRank.await() !!.toByte(), mettle = Experience(
-                        current = currentExperience.await(),
-                        next = experienceToNextLevel.await()
-                    )
-                )
-            }
-        } else {
-            null
-        }
-    }
-
     private val currentExperienceRegex = """^[^ /]*""".toRegex()
     private val experienceToNextLevelRegex = """(?<=/ ).*""".toRegex()
 
-    private suspend fun getElementalLevel(character: Document) = coroutineScope {
-        val classJob = ClassesJobs.EUREKA
+    private suspend fun getUniqueDutyLevel(character: Document, duty: ClassesJobs) =
+        coroutineScope {
+            val uniqueDutyLevel = async { getLevel(character, duty) }
 
-        val elementalLevel = async { getLevel(character, classJob) }
+            if (uniqueDutyLevel.await() != null) {
+                val experience = async { getExperience(character, duty) }
 
-        if (elementalLevel.await() != null) {
-            val experience = async { getExperience(character, classJob) }
+                if (duty == ClassesJobs.BOZJA) {
+                    if (experience.await() == "Current Mettle: -- / Mettle to Next Rank: --") {
+                        UniqueDutyLevel(
+                            level = uniqueDutyLevel.await() !!.toByte(),
+                            experience = null
+                        )
+                    } else {
+                        val currentExperience = async {
+                            currentBozjaExperienceRegex.find(experience.await()) !!.value.toInt()
+                        }
+                        val experienceToNextLevel = async {
+                            bozjaExperienceToNextLevelRegex.find(experience.await()) !!.value.toInt()
+                        }
 
-            if (experience.await() == noExperience) {
-                Eureka(
-                    level = elementalLevel.await() !!.toByte(), experience = null
-                )
-            } else {
-                val currentExperience = async {
-                    currentExperienceRegex.find(experience.await()) !!.value.replace(
-                        ",", ""
-                    ).toInt()
-                }
-                val experienceToNextLevel = async {
-                    experienceToNextLevelRegex.find(experience.await()) !!.value.replace(
-                        ",", ""
-                    ).toInt()
-                }
-
-                Eureka(
-                    level = elementalLevel.await() !!.toByte(), experience = Experience(
-                        current = currentExperience.await(),
-                        next = experienceToNextLevel.await()
+                        UniqueDutyLevel(
+                            level = uniqueDutyLevel.await() !!.toByte(),
+                            experience = Experience(
+                                current = currentExperience.await(),
+                                next = experienceToNextLevel.await()
+                            )
+                        )
+                    }
+                } else if (experience.await() == noExperience) {
+                    UniqueDutyLevel(
+                        level = uniqueDutyLevel.await() !!.toByte(), experience = null
                     )
-                )
+                } else {
+                    val currentExperience = async {
+                        currentExperienceRegex.find(experience.await()) !!.value.replace(
+                            ",", ""
+                        ).toInt()
+                    }
+                    val experienceToNextLevel = async {
+                        experienceToNextLevelRegex.find(experience.await()) !!.value.replace(
+                            ",", ""
+                        ).toInt()
+                    }
+
+                    UniqueDutyLevel(
+                        level = uniqueDutyLevel.await() !!.toByte(),
+                        experience = Experience(
+                            current = currentExperience.await(),
+                            next = experienceToNextLevel.await()
+                        )
+                    )
+                }
+            } else {
+                null
             }
-        } else {
-            null
         }
-    }
 
     private suspend fun getClassJobLevel(character: Document, classJob: ClassesJobs) =
         coroutineScope {
