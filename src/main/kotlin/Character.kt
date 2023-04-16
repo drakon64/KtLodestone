@@ -59,7 +59,9 @@ object Character {
         }
 
         val avatar = async {
-            character.select(getLodestoneCss("AVATAR")).first() !!.attr("src")
+            character.select(getLodestoneCss("AVATAR"))
+                .first() !!
+                .attr(getLodestoneCss("AVATAR", "attribute"))
         }
 
         val bio = async {
@@ -79,7 +81,9 @@ object Character {
         }
 
         val portrait = async {
-            character.select(getLodestoneCss("PORTRAIT")).first() !!.attr("src")
+            character.select(getLodestoneCss("PORTRAIT"))
+                .first() !!
+                .attr(getLodestoneCss("PORTRAIT", "attribute"))
         }
 
         val pvpTeam = async { getGuild(character, GuildType.PVP_TEAM) }
