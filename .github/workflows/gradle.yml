@@ -1,11 +1,8 @@
 name: Build and publish
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "**.kt"
-      - "**.kts"
+  release:
+    types:
+      - released
   workflow_dispatch:
 
 jobs:
