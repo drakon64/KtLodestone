@@ -3,13 +3,12 @@ package cloud.drakon.ktlodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.Attributes
-import cloud.drakon.ktlodestone.profile.FreeCompany
 import cloud.drakon.ktlodestone.profile.GrandCompany
 import cloud.drakon.ktlodestone.profile.Guardian
+import cloud.drakon.ktlodestone.profile.Guild
 import cloud.drakon.ktlodestone.profile.GuildType
 import cloud.drakon.ktlodestone.profile.IconLayers
 import cloud.drakon.ktlodestone.profile.ProfileCharacter
-import cloud.drakon.ktlodestone.profile.PvpTeam
 import cloud.drakon.ktlodestone.profile.Town
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -245,27 +244,15 @@ object Character {
                     getIconLayer("TOP", character, selectorJson)
                 }
 
-                when (type) {
-                    GuildType.FREE_COMPANY -> FreeCompany(
-                        name = guildName.await(),
-                        id = guildId.await(),
-                        iconLayers = IconLayers(
-                            bottom = guildIconLayerBottom.await(),
-                            middle = guildIconLayerMiddle.await(),
-                            top = guildIconLayerTop.await()
-                        )
+                Guild(
+                    name = guildName.await(),
+                    id = guildId.await(),
+                    iconLayers = IconLayers(
+                        bottom = guildIconLayerBottom.await(),
+                        middle = guildIconLayerMiddle.await(),
+                        top = guildIconLayerTop.await()
                     )
-
-                    GuildType.PVP_TEAM -> PvpTeam(
-                        name = guildName.await(),
-                        id = guildId.await(),
-                        iconLayers = IconLayers(
-                            bottom = guildIconLayerBottom.await(),
-                            middle = guildIconLayerMiddle.await(),
-                            top = guildIconLayerTop.await()
-                        )
-                    )
-                }
+                )
             } else {
                 null
             }
