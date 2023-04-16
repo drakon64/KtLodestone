@@ -52,18 +52,18 @@ object Character {
         val activeClassJob = async { getActiveClassJob(character) }
         val activeClassJobLevel = async {
             activeClassJobLevelRegex.find(
-                character.select(getLodestoneCssSelector("ACTIVE_CLASSJOB_LEVEL"))
+                character.select(getLodestoneCss("ACTIVE_CLASSJOB_LEVEL"))
                     .first() !!
                     .text()
             ) !!.value.toByte()
         }
 
         val avatar = async {
-            character.select(getLodestoneCssSelector("AVATAR")).first() !!.attr("src")
+            character.select(getLodestoneCss("AVATAR")).first() !!.attr("src")
         }
 
         val bio = async {
-            character.select(getLodestoneCssSelector("BIO")).first() !!.text()
+            character.select(getLodestoneCss("BIO")).first() !!.text()
         }
 
         val freeCompany = async { getGuild(character, GuildType.FREE_COMPANY) }
@@ -71,36 +71,33 @@ object Character {
         val guardian = async { getGuardian(character) }
 
         val name = async {
-            character.select(getLodestoneCssSelector("NAME")).first() !!.text()
+            character.select(getLodestoneCss("NAME")).first() !!.text()
         }
 
         val nameday = async {
-            character.select(getLodestoneCssSelector("NAMEDAY")).first() !!.text()
+            character.select(getLodestoneCss("NAMEDAY")).first() !!.text()
         }
 
         val portrait = async {
-            character.select(getLodestoneCssSelector("PORTRAIT")).first() !!.attr("src")
+            character.select(getLodestoneCss("PORTRAIT")).first() !!.attr("src")
         }
 
         val pvpTeam = async { getGuild(character, GuildType.PVP_TEAM) }
 
         val raceClanGender = async {
-            character.select(getLodestoneCssSelector("RACE_CLAN_GENDER"))
-                .first() !!
-                .html()
+            character.select(getLodestoneCss("RACE_CLAN_GENDER")).first() !!.html()
         }
         val race = async { raceRegex.find(raceClanGender.await()) !!.value }
         val clan = async { clanRegex.find(raceClanGender.await()) !!.value }
         val gender = async { genderRegex.find(raceClanGender.await()) !!.value }
 
         val serverDc = async {
-            character.select(getLodestoneCssSelector("SERVER")).first() !!.text()
+            character.select(getLodestoneCss("SERVER")).first() !!.text()
         }
         val server = async { serverRegex.find(serverDc.await()) !!.value }
         val dc = async { dcRegex.find(serverDc.await()) !!.value }
 
-        val title =
-            async { character.select(getLodestoneCssSelector("TITLE")).first()?.text() }
+        val title = async { character.select(getLodestoneCss("TITLE")).first()?.text() }
 
         val town = async { getTown(character) }
 
@@ -135,21 +132,20 @@ object Character {
         )
     }
 
-    private suspend fun getLodestoneCssSelector(property: String) = coroutineScope {
-        return@coroutineScope lodestoneCssSelectors.jsonObject[property] !!.jsonObject["selector"] !!.jsonPrimitive.content
-    }
-
-    private suspend fun getLodestoneCssAttribute(property: String) = coroutineScope {
-        return@coroutineScope lodestoneCssSelectors.jsonObject[property] !!.jsonObject["attribute"] !!.jsonPrimitive.content
+    private suspend fun getLodestoneCss(
+        lodestoneProperty: String,
+        cssProperty: String = "selector",
+    ) = coroutineScope {
+        return@coroutineScope lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject[cssProperty] !!.jsonPrimitive.content
     }
 
     private val activeClassJobLevelRegex = """\d+""".toRegex()
 
     private suspend fun getActiveClassJob(character: Document) = coroutineScope {
         val classJobUrl =
-            character.select(getLodestoneCssSelector("ACTIVE_CLASSJOB"))
+            character.select(getLodestoneCss("ACTIVE_CLASSJOB"))
                 .first() !!
-                .attr(getLodestoneCssAttribute("ACTIVE_CLASSJOB"))
+                .attr(getLodestoneCss("ACTIVE_CLASSJOB", "attribute"))
 
         val classJob = mapOf(
             "https://img.finalfantasyxiv.com/lds/h/E/d0Tx-vhnsMYfYpGe9MvslemEfg.png" to "Paladin",
