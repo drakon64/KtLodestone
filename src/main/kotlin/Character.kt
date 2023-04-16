@@ -3,21 +3,30 @@ package cloud.drakon.ktlodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.Attributes
-import cloud.drakon.ktlodestone.profile.FreeCompany
 import cloud.drakon.ktlodestone.profile.GrandCompany
 import cloud.drakon.ktlodestone.profile.Guardian
+import cloud.drakon.ktlodestone.profile.Guild
+import cloud.drakon.ktlodestone.profile.GuildType
 import cloud.drakon.ktlodestone.profile.IconLayers
 import cloud.drakon.ktlodestone.profile.ProfileCharacter
-import cloud.drakon.ktlodestone.profile.PvpTeam
 import cloud.drakon.ktlodestone.profile.Town
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 object Character {
+    private val lodestoneCssSelectors = Json.parseToJsonElement(
+        this::class.java.classLoader.getResource("lodestone-css-selectors/profile/character.json") !!
+            .readText()
+    )
+
     private val raceRegex = """^[^<]*""".toRegex()
     private val clanRegex = """(?<=<br>\n).*?(?= /)""".toRegex()
     private val genderRegex = """(?<=/ ).*""".toRegex()
@@ -42,72 +51,68 @@ object Character {
         val activeClassJob = async { getActiveClassJob(character) }
         val activeClassJobLevel = async {
             activeClassJobLevelRegex.find(
-                character.select(".character__class__data > p:nth-child(1)")
+                character.select(getLodestoneCss("ACTIVE_CLASSJOB_LEVEL"))
                     .first() !!
                     .text()
             ) !!.value.toByte()
         }
 
         val avatar = async {
-            character.select(".frame__chara__face > img:nth-child(1)")
+            character.select(getLodestoneCss("AVATAR"))
                 .first() !!
-                .attr("src")
+                .attr(getLodestoneCss("AVATAR", "attribute"))
         }
 
         val bio = async {
-            character.select(".character__selfintroduction").first() !!.text()
+            character.select(getLodestoneCss("BIO")).first() !!.text()
         }
 
-        val freeCompany = async { getFreeCompany(character) }
+        val freeCompany = async { getGuild(character, GuildType.FREE_COMPANY) }
         val grandCompany = async { getGrandCompany(character) }
         val guardian = async { getGuardian(character) }
 
         val name = async {
-            character.select("div.frame__chara__box:nth-child(2) > .frame__chara__name")
-                .first() !!
-                .text()
+            character.select(getLodestoneCss("NAME")).first() !!.text()
         }
 
         val nameday = async {
-            character.select(".character-block__birth").first() !!.text()
+            character.select(getLodestoneCss("NAMEDAY")).first() !!.text()
         }
 
         val portrait = async {
-            character.select(".js__image_popup > img:nth-child(1)")
+            character.select(getLodestoneCss("PORTRAIT"))
                 .first() !!
-                .attr("src")
+                .attr(getLodestoneCss("PORTRAIT", "attribute"))
         }
 
-        val pvpTeam = async { getPvpTeam(character) }
+        val pvpTeam = async { getGuild(character, GuildType.PVP_TEAM) }
 
         val raceClanGender = async {
-            character.select("div.character-block:nth-child(1) > div:nth-child(2) > p:nth-child(2)")
-                .first() !!
-                .html()
+            character.select(getLodestoneCss("RACE_CLAN_GENDER")).first() !!.html()
         }
         val race = async { raceRegex.find(raceClanGender.await()) !!.value }
         val clan = async { clanRegex.find(raceClanGender.await()) !!.value }
         val gender = async { genderRegex.find(raceClanGender.await()) !!.value }
 
         val serverDc = async {
-            character.select("p.frame__chara__world").first() !!.text()
+            character.select(getLodestoneCss("SERVER")).first() !!.text()
         }
         val server = async { serverRegex.find(serverDc.await()) !!.value }
         val dc = async { dcRegex.find(serverDc.await()) !!.value }
 
-        val title = async { character.select(".frame__chara__title").first()?.text() }
+        val title = async { character.select(getLodestoneCss("TITLE")).first()?.text() }
 
         val town = async { getTown(character) }
 
         val profileAttributes = async {
             if (attributes) {
-                getAttributes(character)
+                Attributes.getAttributes(character)
             } else {
                 null
             }
         }
 
-        return@coroutineScope ProfileCharacter(
+        ProfileCharacter(
             activeClassJob.await(),
             activeClassJobLevel.await(),
             avatar.await(),
@@ -130,13 +135,20 @@ object Character {
         )
     }
 
+    private suspend fun getLodestoneCss(
+        lodestoneProperty: String,
+        cssProperty: String = "selector",
+    ) = coroutineScope {
+        lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject[cssProperty] !!.jsonPrimitive.content
+    }
+
     private val activeClassJobLevelRegex = """\d+""".toRegex()
 
     private suspend fun getActiveClassJob(character: Document) = coroutineScope {
         val classJobUrl =
-            character.select(".character__class_icon > img:nth-child(1)")
+            character.select(getLodestoneCss("ACTIVE_CLASSJOB"))
                 .first() !!
-                .attr("src")
+                .attr(getLodestoneCss("ACTIVE_CLASSJOB", "attribute"))
 
         val classJob = mapOf(
             "https://img.finalfantasyxiv.com/lds/h/E/d0Tx-vhnsMYfYpGe9MvslemEfg.png" to "Paladin",
@@ -187,61 +199,86 @@ object Character {
             "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to "Fisher"
         )
 
-        return@coroutineScope classJob.getValue(classJobUrl)
+        classJob.getValue(classJobUrl)
     }
 
     private val freeCompanyIdRegex = """\d+""".toRegex()
+    private val pvpTeamIdRegex = """/lodestone/pvpteam/(.*?)/""".toRegex()
 
-    private suspend fun getFreeCompany(character: Document) = coroutineScope {
-        val freeCompany = async {
-            character.select(".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)")
-                .first()
-        }
+    private suspend fun getGuild(character: Document, type: GuildType) =
+        coroutineScope {
+            val selectorJson = lodestoneCssSelectors.jsonObject[type.name] !!
+            val nameSelectorJson = selectorJson.jsonObject["NAME"] !!
 
-        if (freeCompany.await() != null) {
-            val freeCompanyName = async { freeCompany.await() !!.text() }
-            val freeCompanyId = async {
-                freeCompanyIdRegex.find(
-                    freeCompany.await() !!.attr("href")
-                ) !!.value
+            val guild = async {
+                character.select(nameSelectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
+                    .first()
             }
 
-            val freeCompanyIconLayerBottom = async {
-                character.select("div.character__freecompany__crest > div > img:nth-child(1)")
-                    .first() !!
-                    .attr("src")
-            }
-            val freeCompanyIconLayerMiddle = async {
-                character.select("div.character__freecompany__crest > div > img:nth-child(2)")
-                    .first() !!
-                    .attr("src")
-            }
-            val freeCompanyIconLayerTop = async {
-                character.select("div.character__freecompany__crest > div > img:nth-child(3)")
-                    .first() !!
-                    .attr("src")
-            }
+            if (guild.await() != null) {
+                val guildName = async { guild.await() !!.text() }
+                val guildId = async {
+                    val regex = when (type) {
+                        GuildType.FREE_COMPANY -> {
+                            freeCompanyIdRegex
+                        }
 
-            return@coroutineScope FreeCompany(
-                name = freeCompanyName.await(),
-                id = freeCompanyId.await(),
-                iconLayers = IconLayers(
-                    bottom = freeCompanyIconLayerBottom.await(),
-                    middle = freeCompanyIconLayerMiddle.await(),
-                    top = freeCompanyIconLayerTop.await()
+                        GuildType.PVP_TEAM -> {
+                            pvpTeamIdRegex
+                        }
+                    }
+
+                    regex.find(
+                        guild.await() !!
+                            .attr(nameSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
+                    ) !!.value
+                }
+
+                val guildIconLayerBottom = async {
+                    getIconLayer("BOTTOM", character, selectorJson)
+                }
+                val guildIconLayerMiddle = async {
+                    getIconLayer("MIDDLE", character, selectorJson)
+                }
+                val guildIconLayerTop = async {
+                    getIconLayer("TOP", character, selectorJson)
+                }
+
+                Guild(
+                    name = guildName.await(),
+                    id = guildId.await(),
+                    iconLayers = IconLayers(
+                        bottom = guildIconLayerBottom.await(),
+                        middle = guildIconLayerMiddle.await(),
+                        top = guildIconLayerTop.await()
+                    )
                 )
-            )
-        } else {
-            return@coroutineScope null
+            } else {
+                null
+            }
         }
+
+    private suspend fun getIconLayer(
+        iconLayer: String,
+        character: Document,
+        jsonElement: JsonElement,
+    ) = coroutineScope {
+        val selectorJson =
+            jsonElement.jsonObject["ICON_LAYERS"] !!.jsonObject[iconLayer] !!
+
+        character.select(selectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
+            .first() !!
+            .attr(selectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
     }
 
     private val grandCompanyNameRegex = """\w+""".toRegex()
     private val grandCompanyRankRegex = """(?<=\/ ).*""".toRegex()
 
     private suspend fun getGrandCompany(character: Document) = coroutineScope {
+        val selectorJson = lodestoneCssSelectors.jsonObject["GRAND_COMPANY"] !!
+
         val grandCompany = async {
-            character.select("div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)")
+            character.select(selectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
                 .first()
                 ?.text()
         }
@@ -263,234 +300,155 @@ object Character {
                     .attr("src")
             }
 
-            return@coroutineScope GrandCompany(
+            GrandCompany(
                 name = grandCompanyName.await(),
                 rank = grandCompanyRank.await(),
                 icon = grandCompanyIcon.await()
             )
         } else {
-            return@coroutineScope null
+            null
         }
     }
 
     private suspend fun getGuardian(character: Document) = coroutineScope {
+        val selectorJson = lodestoneCssSelectors.jsonObject["GUARDIAN_DEITY"] !!
+
         val guardianName = async {
-            character.select("p.character-block__name:nth-child(4)").first() !!.text()
-        }
-        val guardianIcon = async {
-            character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(2) > img")
+            character.select(selectorJson.jsonObject["NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                 .first() !!
-                .attr("src")
+                .text()
         }
 
-        return@coroutineScope Guardian(
-            name = guardianName.await(), icon = guardianIcon.await()
-        )
-    }
-
-    private val pvpTeamIdRegex = """/lodestone/pvpteam/(.*?)/""".toRegex()
-
-    private suspend fun getPvpTeam(character: Document) = coroutineScope {
-        val pvpTeam = async {
-            character.select(".character__pvpteam__name > h4:nth-child(2) > a:nth-child(1)")
-                .first()
+        val iconSelectorJson = selectorJson.jsonObject["ICON"] !!
+        val guardianIcon = async {
+            character.select(iconSelectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
+                .first() !!
+                .attr(iconSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
         }
 
-        if (pvpTeam.await() != null) {
-            val pvpTeamId = async {
-                pvpTeamIdRegex.find(
-                    pvpTeam.await() !!.attr("href")
-                ) !!.groups[1] !!.value
-            }
-            val pvpTeamName = async { pvpTeam.await() !!.text() }
-
-            val pvpTeamIconLayerBottom = async {
-                character.select(".character__pvpteam__crest__image img:nth-child(1)")
-                    .first() !!
-                    .attr("src")
-            }
-            val pvpTeamIconLayerMiddle = async {
-                character.select(".character__pvpteam__crest__image img:nth-child(2)")
-                    .first() !!
-                    .attr("src")
-            }
-            val pvpTeamIconLayerTop = async {
-                character.select(".character__pvpteam__crest__image img:nth-child(3)")
-                    .first() !!
-                    .attr("src")
-            }
-
-            return@coroutineScope PvpTeam(
-                name = pvpTeamName.await(),
-                id = pvpTeamId.await(),
-                iconLayers = IconLayers(
-                    bottom = pvpTeamIconLayerBottom.await(),
-                    middle = pvpTeamIconLayerMiddle.await(),
-                    top = pvpTeamIconLayerTop.await()
-                )
-            )
-        } else {
-            return@coroutineScope null
-        }
+        Guardian(name = guardianName.await(), icon = guardianIcon.await())
     }
 
     private suspend fun getTown(character: Document) = coroutineScope {
+        val selectorJson = lodestoneCssSelectors.jsonObject["TOWN"] !!
+
         val townName = async {
-            character.select("div.character-block:nth-child(3) > div:nth-child(2) > p:nth-child(2)")
+            character.select(selectorJson.jsonObject["NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                 .first() !!
                 .text()
         }
+
+        val iconSelectorJson = selectorJson.jsonObject["ICON"] !!
         val townIcon = async {
-            character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(3) > img")
+            character.select(iconSelectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
                 .first() !!
-                .attr("src")
+                .attr(iconSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
         }
 
-        return@coroutineScope Town(name = townName.await(), icon = townIcon.await())
+        Town(name = townName.await(), icon = townIcon.await())
     }
 
-    private suspend fun getAttributes(character: Document) = coroutineScope {
-        val strength = async {
-            character.select("table.character__param__list:nth-child(2) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val dexterity = async {
-            character.select("table.character__param__list:nth-child(2) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val vitality = async {
-            character.select("table.character__param__list:nth-child(2) tr:nth-child(3) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val intelligence = async {
-            character.select("table.character__param__list:nth-child(2) tr:nth-child(4) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val mind = async {
-            character.select("table.character__param__list:nth-child(2) tr:nth-child(5) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val criticalHitRate = async {
-            character.select("table.character__param__list:nth-child(4) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val determination = async {
-            character.select("table.character__param__list:nth-child(4) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val directHitRate = async {
-            character.select("table.character__param__list:nth-child(4) tr:nth-child(3) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val defense = async {
-            character.select("table.character__param__list:nth-child(6) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val magicDefense = async {
-            character.select("table.character__param__list:nth-child(6) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val attackPower = async {
-            character.select("table.character__param__list:nth-child(8) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val skillSpeed = async {
-            character.select("table.character__param__list:nth-child(8) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val attackMagicPotency = async {
-            character.select("table.character__param__list:nth-child(10) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val healingMagicPotency = async {
-            character.select("table.character__param__list:nth-child(10) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val spellSpeed = async {
-            character.select("table.character__param__list:nth-child(10) tr:nth-child(3) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val tenacity = async {
-            character.select("table.character__param__list:nth-child(12) tr:nth-child(1) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-        val piety = async {
-            character.select("table.character__param__list:nth-child(12) tr:nth-child(2) > td:nth-child(2)")
-                .first() !!
-                .text()
-                .toShort()
-        }
-
-        val hp = async {
-            character.select(".character__param > ul:nth-child(1) > li:nth-child(1) > div:nth-child(1) > span:nth-child(2)")
-                .first() !!
-                .text()
-                .toInt()
-        }
-        val mp = async {
-            character.select(".character__param > ul:nth-child(1) > li:nth-child(2) > div:nth-child(1) > span:nth-child(2)")
-                .first() !!
-                .text()
-                .toInt()
-        }
-
-        return@coroutineScope Attributes(
-            strength.await(),
-            dexterity.await(),
-            vitality.await(),
-            intelligence.await(),
-            mind.await(),
-            criticalHitRate.await(),
-            determination.await(),
-            directHitRate.await(),
-            defense.await(),
-            magicDefense.await(),
-            attackPower.await(),
-            skillSpeed.await(),
-            attackMagicPotency.await(),
-            healingMagicPotency.await(),
-            spellSpeed.await(),
-            tenacity.await(),
-            piety.await(),
-            hp.await(),
-            mp.await()
+    private object Attributes {
+        private val lodestoneCssSelectors = Json.parseToJsonElement(
+            this::class.java.classLoader.getResource("lodestone-css-selectors/profile/attributes.json") !!
+                .readText()
         )
+
+        suspend fun getAttributes(character: Document) = coroutineScope {
+            val strength = async {
+                getAttributeCss(character, "STRENGTH").toShort()
+            }
+            val dexterity = async {
+                getAttributeCss(character, "DEXTERITY").toShort()
+            }
+            val vitality = async {
+                getAttributeCss(character, "VITALITY").toShort()
+            }
+            val intelligence = async {
+                getAttributeCss(character, "INTELLIGENCE").toShort()
+            }
+            val mind = async {
+                getAttributeCss(character, "MIND").toShort()
+            }
+
+            val criticalHitRate = async {
+                getAttributeCss(character, "CRITICAL_HIT_RATE").toShort()
+            }
+            val determination = async {
+                getAttributeCss(character, "DETERMINATION").toShort()
+            }
+            val directHitRate = async {
+                getAttributeCss(character, "DIRECT_HIT_RATE").toShort()
+            }
+
+            val defense = async {
+                getAttributeCss(character, "DEFENSE").toShort()
+            }
+            val magicDefense = async {
+                getAttributeCss(character, "MAGIC_DEFENSE").toShort()
+            }
+
+            val attackPower = async {
+                getAttributeCss(character, "ATTACK_POWER").toShort()
+            }
+            val skillSpeed = async {
+                getAttributeCss(character, "SKILL_SPEED").toShort()
+            }
+
+            val attackMagicPotency = async {
+                getAttributeCss(character, "ATTACK_MAGIC_POTENCY").toShort()
+            }
+            val healingMagicPotency = async {
+                getAttributeCss(character, "HEALING_MAGIC_POTENCY").toShort()
+            }
+            val spellSpeed = async {
+                getAttributeCss(character, "SPELL_SPEED").toShort()
+            }
+
+            val tenacity = async {
+                getAttributeCss(character, "TENACITY").toShort()
+            }
+            val piety = async {
+                getAttributeCss(character, "PIETY").toShort()
+            }
+
+            val hp = async {
+                getAttributeCss(character, "HP").toInt()
+            }
+            val mp = async {
+                getAttributeCss(character, "MP_GP_CP").toInt()
+            }
+
+            Attributes(
+                strength.await(),
+                dexterity.await(),
+                vitality.await(),
+                intelligence.await(),
+                mind.await(),
+                criticalHitRate.await(),
+                determination.await(),
+                directHitRate.await(),
+                defense.await(),
+                magicDefense.await(),
+                attackPower.await(),
+                skillSpeed.await(),
+                attackMagicPotency.await(),
+                healingMagicPotency.await(),
+                spellSpeed.await(),
+                tenacity.await(),
+                piety.await(),
+                hp.await(),
+                mp.await()
+            )
+        }
+
+        private suspend fun getAttributeCss(
+            character: Document,
+            lodestoneProperty: String,
+        ) = coroutineScope {
+            character.select(lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                .first() !!
+                .text()
+        }
     }
 }

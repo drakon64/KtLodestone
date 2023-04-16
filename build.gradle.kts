@@ -1,5 +1,8 @@
 plugins {
-    kotlin("jvm") version "1.8.20"
+    val kotlinVersion = "1.8.20"
+
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
 
     id("org.jetbrains.dokka") version "1.8.10"
 
@@ -12,7 +15,7 @@ plugins {
 }
 
 group = "cloud.drakon"
-version = "3.1.0"
+version = "4.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -24,6 +27,8 @@ dependencies {
     implementation("io.ktor:ktor-client-java:$ktorVersion")
 
     implementation("org.jsoup:jsoup:1.15.4")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
     testImplementation(kotlin("test"))
 }

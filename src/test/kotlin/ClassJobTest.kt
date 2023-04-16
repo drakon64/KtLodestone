@@ -12,7 +12,9 @@ class ClassJobTest {
                 println(ClassJob.getClassJob(27545492))
             }
         }
+    }
 
+    @Test fun getInvalidClassJob() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
                 println(ClassJob.getClassJob(0))

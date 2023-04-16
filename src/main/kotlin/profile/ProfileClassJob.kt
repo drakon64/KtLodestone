@@ -1,12 +1,11 @@
 package cloud.drakon.ktlodestone.profile
 
 import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
-import cloud.drakon.ktlodestone.profile.classjob.Bozja
-import cloud.drakon.ktlodestone.profile.classjob.Eureka
+import cloud.drakon.ktlodestone.profile.classjob.UniqueDutyLevel
 
 data class ProfileClassJob(
-    val bozja: Bozja?,
-    val eureka: Eureka?,
+    val bozja: UniqueDutyLevel?,
+    val eureka: UniqueDutyLevel?,
     val paladin: ClassJobLevel?,
     val warrior: ClassJobLevel?,
     val darkKnight: ClassJobLevel?,
