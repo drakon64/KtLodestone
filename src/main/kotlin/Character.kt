@@ -6,6 +6,7 @@ import cloud.drakon.ktlodestone.profile.Attributes
 import cloud.drakon.ktlodestone.profile.FreeCompany
 import cloud.drakon.ktlodestone.profile.GrandCompany
 import cloud.drakon.ktlodestone.profile.Guardian
+import cloud.drakon.ktlodestone.profile.GuildType
 import cloud.drakon.ktlodestone.profile.IconLayers
 import cloud.drakon.ktlodestone.profile.ProfileCharacter
 import cloud.drakon.ktlodestone.profile.PvpTeam
@@ -65,7 +66,7 @@ object Character {
             character.select(getLodestoneCssSelector("BIO")).first() !!.text()
         }
 
-        val freeCompany = async { getFreeCompany(character) }
+        val freeCompany = async { getGuild(character, GuildType.FREE_COMPANY) }
         val grandCompany = async { getGrandCompany(character) }
         val guardian = async { getGuardian(character) }
 
@@ -81,7 +82,7 @@ object Character {
             character.select(getLodestoneCssSelector("PORTRAIT")).first() !!.attr("src")
         }
 
-        val pvpTeam = async { getPvpTeam(character) }
+        val pvpTeam = async { getGuild(character, GuildType.PVP_TEAM) }
 
         val raceClanGender = async {
             character.select(getLodestoneCssSelector("RACE_CLAN_GENDER"))
@@ -140,18 +141,6 @@ object Character {
 
     private suspend fun getLodestoneCssAttribute(property: String) = coroutineScope {
         return@coroutineScope lodestoneCssSelectors.jsonObject[property] !!.jsonObject["attribute"] !!.jsonPrimitive.content
-    }
-
-    private suspend fun getIconLayer(
-        layer: String,
-        character: Document,
-        jsonElement: JsonElement,
-    ) = coroutineScope {
-        val selectorJson = jsonElement.jsonObject["ICON_LAYERS"] !!.jsonObject[layer] !!
-
-        character.select(selectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
-            .first() !!
-            .attr(selectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
     }
 
     private val activeClassJobLevelRegex = """\d+""".toRegex()
@@ -215,47 +204,84 @@ object Character {
     }
 
     private val freeCompanyIdRegex = """\d+""".toRegex()
+    private val pvpTeamIdRegex = """/lodestone/pvpteam/(.*?)/""".toRegex()
 
-    private suspend fun getFreeCompany(character: Document) = coroutineScope {
-        val selectorJson = lodestoneCssSelectors.jsonObject["FREE_COMPANY"] !!
-        val nameSelectorJson = selectorJson.jsonObject["NAME"] !!
+    private suspend fun getGuild(character: Document, type: GuildType) =
+        coroutineScope {
+            val selectorJson = lodestoneCssSelectors.jsonObject[type.name] !!
+            val nameSelectorJson = selectorJson.jsonObject["NAME"] !!
 
-        val freeCompany = async {
-            character.select(nameSelectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first()
+            val guild = async {
+                character.select(nameSelectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
+                    .first()
+            }
+
+            if (guild.await() != null) {
+                val guildName = async { guild.await() !!.text() }
+                val guildId = async {
+                    val regex = when (type) {
+                        GuildType.FREE_COMPANY -> {
+                            freeCompanyIdRegex
+                        }
+
+                        GuildType.PVP_TEAM -> {
+                            pvpTeamIdRegex
+                        }
+                    }
+
+                    regex.find(
+                        guild.await() !!
+                            .attr(nameSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
+                    ) !!.value
+                }
+
+                val guildIconLayerBottom = async {
+                    getIconLayer("BOTTOM", character, selectorJson)
+                }
+                val guildIconLayerMiddle = async {
+                    getIconLayer("MIDDLE", character, selectorJson)
+                }
+                val guildIconLayerTop = async {
+                    getIconLayer("TOP", character, selectorJson)
+                }
+
+                when (type) {
+                    GuildType.FREE_COMPANY -> return@coroutineScope FreeCompany(
+                        name = guildName.await(),
+                        id = guildId.await(),
+                        iconLayers = IconLayers(
+                            bottom = guildIconLayerBottom.await(),
+                            middle = guildIconLayerMiddle.await(),
+                            top = guildIconLayerTop.await()
+                        )
+                    )
+
+                    GuildType.PVP_TEAM -> return@coroutineScope PvpTeam(
+                        name = guildName.await(),
+                        id = guildId.await(),
+                        iconLayers = IconLayers(
+                            bottom = guildIconLayerBottom.await(),
+                            middle = guildIconLayerMiddle.await(),
+                            top = guildIconLayerTop.await()
+                        )
+                    )
+                }
+            } else {
+                return@coroutineScope null
+            }
         }
 
-        if (freeCompany.await() != null) {
-            val freeCompanyName = async { freeCompany.await() !!.text() }
-            val freeCompanyId = async {
-                freeCompanyIdRegex.find(
-                    freeCompany.await() !!
-                        .attr(nameSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
-                ) !!.value
-            }
+    private suspend fun getIconLayer(
+        iconLayer: String,
+        character: Document,
+        jsonElement: JsonElement,
+    ) = coroutineScope {
+        val selectorJson =
+            jsonElement.jsonObject["ICON_LAYERS"] !!.jsonObject[iconLayer] !!
 
-            val freeCompanyIconLayerBottom = async {
-                getIconLayer("BOTTOM", character, selectorJson)
-            }
-            val freeCompanyIconLayerMiddle = async {
-                getIconLayer("MIDDLE", character, selectorJson)
-            }
-            val freeCompanyIconLayerTop = async {
-                getIconLayer("TOP", character, selectorJson)
-            }
-
-            return@coroutineScope FreeCompany(
-                name = freeCompanyName.await(),
-                id = freeCompanyId.await(),
-                iconLayers = IconLayers(
-                    bottom = freeCompanyIconLayerBottom.await(),
-                    middle = freeCompanyIconLayerMiddle.await(),
-                    top = freeCompanyIconLayerTop.await()
-                )
-            )
-        } else {
-            return@coroutineScope null
-        }
+        character.select(selectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
+            .first() !!
+            .attr(selectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
     }
 
     private val grandCompanyNameRegex = """\w+""".toRegex()
@@ -316,50 +342,6 @@ object Character {
         return@coroutineScope Guardian(
             name = guardianName.await(), icon = guardianIcon.await()
         )
-    }
-
-    private val pvpTeamIdRegex = """/lodestone/pvpteam/(.*?)/""".toRegex()
-
-    private suspend fun getPvpTeam(character: Document) = coroutineScope {
-        val selectorJson = lodestoneCssSelectors.jsonObject["PVP_TEAM"] !!
-        val nameSelectorJson = selectorJson.jsonObject["NAME"] !!
-
-        val pvpTeam = async {
-            character.select(nameSelectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first()
-        }
-
-        if (pvpTeam.await() != null) {
-            val pvpTeamName = async { pvpTeam.await() !!.text() }
-            val pvpTeamId = async {
-                pvpTeamIdRegex.find(
-                    pvpTeam.await() !!
-                        .attr(nameSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
-                ) !!.value
-            }
-
-            val pvpTeamIconLayerBottom = async {
-                getIconLayer("BOTTOM", character, selectorJson)
-            }
-            val pvpTeamIconLayerMiddle = async {
-                getIconLayer("MIDDLE", character, selectorJson)
-            }
-            val pvpTeamIconLayerTop = async {
-                getIconLayer("TOP", character, selectorJson)
-            }
-
-            return@coroutineScope PvpTeam(
-                name = pvpTeamName.await(),
-                id = pvpTeamId.await(),
-                iconLayers = IconLayers(
-                    bottom = pvpTeamIconLayerBottom.await(),
-                    middle = pvpTeamIconLayerMiddle.await(),
-                    top = pvpTeamIconLayerTop.await()
-                )
-            )
-        } else {
-            return@coroutineScope null
-        }
     }
 
     private suspend fun getTown(character: Document) = coroutineScope {

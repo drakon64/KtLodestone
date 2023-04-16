@@ -1,3 +1,7 @@
 package cloud.drakon.ktlodestone.profile
 
-data class PvpTeam(val name: String, val id: String, val iconLayers: IconLayers)
+data class PvpTeam(
+    override val name: String,
+    override val id: String,
+    override val iconLayers: IconLayers,
+): Guild
