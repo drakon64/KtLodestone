@@ -10,6 +10,8 @@ import cloud.drakon.ktlodestone.profile.GuildType
 import cloud.drakon.ktlodestone.profile.IconLayers
 import cloud.drakon.ktlodestone.profile.ProfileCharacter
 import cloud.drakon.ktlodestone.profile.Town
+import cloud.drakon.ktlodestone.profile.gear.Gear
+import cloud.drakon.ktlodestone.profile.ProfileGearSet
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.async
@@ -37,10 +39,15 @@ object Character {
      * Gets a character from The Lodestone
      * @param id The Lodestone character ID
      * @param attributes Return character attributes
+     * @param gearSet Return character equipped gear
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getCharacter(id: Int, attributes: Boolean = false) = coroutineScope {
+    suspend fun getCharacter(
+        id: Int,
+        attributes: Boolean = false,
+        gearSet: Boolean = false,
+    ) = coroutineScope {
         val request =
             ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/")
         val character = when (request.status.value) {
@@ -113,6 +120,14 @@ object Character {
             }
         }
 
+        val profileGearSet = async {
+            if (gearSet) {
+                GearSet.getGearSet(character)
+            } else {
+                null
+            }
+        }
+
         ProfileCharacter(
             activeClassJob.await(),
             activeClassJobLevel.await(),
@@ -132,7 +147,8 @@ object Character {
             dc.await(),
             title.await(),
             town.await(),
-            profileAttributes.await()
+            profileAttributes.await(),
+            profileGearSet.await()
         )
     }
 
@@ -450,6 +466,147 @@ object Character {
             character.select(lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                 .first() !!
                 .text()
+        }
+    }
+
+    private object GearSet {
+        private val lodestoneCssSelectors = Json.parseToJsonElement(
+            this::class.java.classLoader.getResource("lodestone-css-selectors/profile/gearset.json") !!
+                .readText()
+        )
+
+        suspend fun getGearSet(character: Document) = coroutineScope {
+            val mainHand = async {
+                getGearSetCss(character, "MAINHAND") !! // Cannot be null
+            }
+            val offHand = async { getGearSetCss(character, "OFFHAND") }
+            val head = async { getGearSetCss(character, "HEAD") }
+            val body = async { getGearSetCss(character, "BODY") }
+            val hands = async { getGearSetCss(character, "HANDS") }
+            val legs = async { getGearSetCss(character, "LEGS") }
+            val feet = async { getGearSetCss(character, "FEET") }
+            val earrings = async { getGearSetCss(character, "EARRINGS") }
+            val necklace = async { getGearSetCss(character, "NECKLACE") }
+            val bracelets = async { getGearSetCss(character, "BRACELETS") }
+            val ring1 = async { getGearSetCss(character, "RING1") }
+            val ring2 = async { getGearSetCss(character, "RING2") }
+            val ring = async {
+                if (ring1.await() != null || ring2.await() != null) {
+                    listOf(ring1.await(), ring2.await())
+                } else {
+                    null
+                }
+            }
+            val soulCrystal = async { getSoulCrystalCss(character) }
+
+            return@coroutineScope ProfileGearSet(
+                mainHand.await(),
+                offHand.await(),
+                head.await(),
+                body.await(),
+                hands.await(),
+                legs.await(),
+                feet.await(),
+                earrings.await(),
+                necklace.await(),
+                bracelets.await(),
+                ring.await(),
+                soulCrystal.await()
+            )
+        }
+
+        private suspend fun getGearSetCss(character: Document, gear: String) =
+            coroutineScope {
+                val css = lodestoneCssSelectors.jsonObject[gear] !!
+
+                val name = async {
+                    character.select(css.jsonObject["NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val dbLink = async {
+                    character.select(css.jsonObject["DB_LINK"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val mirageName = async {
+                    character.select(css.jsonObject["MIRAGE_NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val mirageDbLink = async {
+                    character.select(css.jsonObject["MIRAGE_DB_LINK"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val stain = async {
+                    character.select(css.jsonObject["STAIN"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val materia1 = async {
+                    character.select(css.jsonObject["MATERIA_1"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val materia2 = async {
+                    character.select(css.jsonObject["MATERIA_2"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val materia3 = async {
+                    character.select(css.jsonObject["MATERIA_3"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val materia4 = async {
+                    character.select(css.jsonObject["MATERIA_4"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val materia5 = async {
+                    character.select(css.jsonObject["MATERIA_5"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val materia = async {
+                    if (materia1.await() != null || materia2.await() != null || materia3.await() != null || materia4.await() != null || materia5.await() != null) {
+                        listOf(
+                            materia1.await(),
+                            materia2.await(),
+                            materia3.await(),
+                            materia4.await(),
+                            materia5.await()
+                        )
+                    } else {
+                        null
+                    }
+                }
+                val creatorName = async {
+                    character.select(css.jsonObject["CREATOR_NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+
+                return@coroutineScope if (name.await() != null) {
+                    Gear(
+                        name.await() !!,
+                        dbLink.await() !!,
+                        mirageName.await(),
+                        mirageDbLink.await(),
+                        stain.await(),
+                        materia.await(),
+                        creatorName.await()
+                    )
+                } else {
+                    null
+                }
+            }
+
+        private suspend fun getSoulCrystalCss(character: Document) = coroutineScope {
+            return@coroutineScope character.select(lodestoneCssSelectors.jsonObject["SOULCRYSTAL"] !!.jsonObject["NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                .first()
+                ?.text()
         }
     }
 }
