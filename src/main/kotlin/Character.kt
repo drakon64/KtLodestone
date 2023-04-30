@@ -525,9 +525,16 @@ object Character {
                         ?.text()
                 }
                 val dbLink = async {
-                    character.select(css.jsonObject["DB_LINK"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                        .first()
-                        ?.text()
+                    val link =
+                        character.select(css.jsonObject["DB_LINK"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                            .first()
+                            ?.attr("href")
+
+                    if (link != null) {
+                        "https://eu.finalfantasyxiv.com${link}"
+                    } else {
+                        null
+                    }
                 }
                 val mirageName = async {
                     character.select(css.jsonObject["MIRAGE_NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
@@ -535,9 +542,16 @@ object Character {
                         ?.text()
                 }
                 val mirageDbLink = async {
-                    character.select(css.jsonObject["MIRAGE_DB_LINK"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                        .first()
-                        ?.text()
+                    val link =
+                        character.select(css.jsonObject["MIRAGE_DB_LINK"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                            .first()
+                            ?.attr("href")
+
+                    if (link != null) {
+                        "https://eu.finalfantasyxiv.com${link}"
+                    } else {
+                        null
+                    }
                 }
                 val stain = async {
                     character.select(css.jsonObject["STAIN"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
