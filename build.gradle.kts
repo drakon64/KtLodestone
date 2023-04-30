@@ -52,10 +52,16 @@ tasks.dokkaJekyll.configure {
 }
 
 val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+val htmlJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+    dependsOn(tasks.dokkaHtml)
+    archiveClassifier.set("html-docs")
+    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+}
+
 val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
+    dependsOn(tasks.dokkaJavadoc)
     archiveClassifier.set("javadoc")
-    from(dokkaHtml.outputDirectory)
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
@@ -67,6 +73,7 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             artifact(javadocJar.get())
+            artifact(htmlJar.get())
             artifact(sourcesJar.get())
 
             from(components["java"])
