@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     val kotlinVersion = "1.8.21"
 
@@ -37,21 +39,22 @@ tasks.test {
     useJUnitPlatform()
 }
 
+val jvmToolchain = 11
+
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(jvmToolchain)
 }
 
-tasks.dokkaJekyll.configure {
-    outputDirectory.set(buildDir.resolve("dokka"))
-
+tasks.withType<DokkaTask>().configureEach {
     dokkaSourceSets {
         configureEach {
-            jdkVersion.set(11)
+            jdkVersion.set(jvmToolchain)
+            languageVersion.set("1.8")
         }
     }
 }
 
-val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+val dokkaHtml by tasks.getting(DokkaTask::class)
 val htmlJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
     dependsOn(tasks.dokkaHtml)
     archiveClassifier.set("html-docs")
