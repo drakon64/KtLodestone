@@ -2,7 +2,6 @@ package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
-import cloud.drakon.ktlodestone.profile.ClassesJobs
 import cloud.drakon.ktlodestone.profile.ProfileClassJob
 import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
 import cloud.drakon.ktlodestone.profile.classjob.Experience
@@ -40,47 +39,45 @@ object ClassJob {
             else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
         }
 
-        val bozja = async { getUniqueDutyLevel(character, ClassesJobs.BOZJA) }
-        val eureka = async { getUniqueDutyLevel(character, ClassesJobs.EUREKA) }
-        val paladin = async { getClassJobLevel(character, ClassesJobs.PALADIN) }
-        val warrior = async { getClassJobLevel(character, ClassesJobs.WARRIOR) }
-        val darkKnight = async { getClassJobLevel(character, ClassesJobs.DARKKNIGHT) }
-        val gunbreaker = async { getClassJobLevel(character, ClassesJobs.GUNBREAKER) }
+        val bozja = async { getUniqueDutyLevel(character, "BOZJA") }
+        val eureka = async { getUniqueDutyLevel(character, "EUREKA") }
+        val paladin = async { getClassJobLevel(character, "PALADIN") }
+        val warrior = async { getClassJobLevel(character, "WARRIOR") }
+        val darkKnight = async { getClassJobLevel(character, "DARKKNIGHT") }
+        val gunbreaker = async { getClassJobLevel(character, "GUNBREAKER") }
 
-        val whiteMage = async { getClassJobLevel(character, ClassesJobs.WHITEMAGE) }
-        val scholar = async { getClassJobLevel(character, ClassesJobs.SCHOLAR) }
-        val astrologian = async { getClassJobLevel(character, ClassesJobs.ASTROLOGIAN) }
-        val sage = async { getClassJobLevel(character, ClassesJobs.SAGE) }
+        val whiteMage = async { getClassJobLevel(character, "WHITEMAGE") }
+        val scholar = async { getClassJobLevel(character, "SCHOLAR") }
+        val astrologian = async { getClassJobLevel(character, "ASTROLOGIAN") }
+        val sage = async { getClassJobLevel(character, "SAGE") }
 
-        val monk = async { getClassJobLevel(character, ClassesJobs.MONK) }
-        val dragoon = async { getClassJobLevel(character, ClassesJobs.DRAGOON) }
-        val ninja = async { getClassJobLevel(character, ClassesJobs.NINJA) }
-        val samurai = async { getClassJobLevel(character, ClassesJobs.SAMURAI) }
-        val reaper = async { getClassJobLevel(character, ClassesJobs.REAPER) }
+        val monk = async { getClassJobLevel(character, "MONK") }
+        val dragoon = async { getClassJobLevel(character, "DRAGOON") }
+        val ninja = async { getClassJobLevel(character, "NINJA") }
+        val samurai = async { getClassJobLevel(character, "SAMURAI") }
+        val reaper = async { getClassJobLevel(character, "REAPER") }
 
-        val bard = async { getClassJobLevel(character, ClassesJobs.BARD) }
-        val machinist = async { getClassJobLevel(character, ClassesJobs.MACHINIST) }
-        val dancer = async { getClassJobLevel(character, ClassesJobs.DANCER) }
+        val bard = async { getClassJobLevel(character, "BARD") }
+        val machinist = async { getClassJobLevel(character, "MACHINIST") }
+        val dancer = async { getClassJobLevel(character, "DANCER") }
 
-        val blackMage = async { getClassJobLevel(character, ClassesJobs.BLACKMAGE) }
-        val summoner = async { getClassJobLevel(character, ClassesJobs.SUMMONER) }
-        val redMage = async { getClassJobLevel(character, ClassesJobs.REDMAGE) }
-        val blueMage = async { getClassJobLevel(character, ClassesJobs.BLUEMAGE) }
+        val blackMage = async { getClassJobLevel(character, "BLACKMAGE") }
+        val summoner = async { getClassJobLevel(character, "SUMMONER") }
+        val redMage = async { getClassJobLevel(character, "REDMAGE") }
+        val blueMage = async { getClassJobLevel(character, "BLUEMAGE") }
 
-        val carpenter = async { getClassJobLevel(character, ClassesJobs.CARPENTER) }
-        val blacksmith = async { getClassJobLevel(character, ClassesJobs.BLACKSMITH) }
-        val armorer = async { getClassJobLevel(character, ClassesJobs.ARMORER) }
-        val goldsmith = async { getClassJobLevel(character, ClassesJobs.GOLDSMITH) }
-        val leatherworker = async {
-            getClassJobLevel(character, ClassesJobs.LEATHERWORKER)
-        }
-        val weaver = async { getClassJobLevel(character, ClassesJobs.WEAVER) }
-        val alchemist = async { getClassJobLevel(character, ClassesJobs.ALCHEMIST) }
-        val culinarian = async { getClassJobLevel(character, ClassesJobs.CULINARIAN) }
+        val carpenter = async { getClassJobLevel(character, "CARPENTER") }
+        val blacksmith = async { getClassJobLevel(character, "BLACKSMITH") }
+        val armorer = async { getClassJobLevel(character, "ARMORER") }
+        val goldsmith = async { getClassJobLevel(character, "GOLDSMITH") }
+        val leatherworker = async { getClassJobLevel(character, "LEATHERWORKER") }
+        val weaver = async { getClassJobLevel(character, "WEAVER") }
+        val alchemist = async { getClassJobLevel(character, "ALCHEMIST") }
+        val culinarian = async { getClassJobLevel(character, "CULINARIAN") }
 
-        val miner = async { getClassJobLevel(character, ClassesJobs.MINER) }
-        val botanist = async { getClassJobLevel(character, ClassesJobs.BOTANIST) }
-        val fisher = async { getClassJobLevel(character, ClassesJobs.FISHER) }
+        val miner = async { getClassJobLevel(character, "MINER") }
+        val botanist = async { getClassJobLevel(character, "BOTANIST") }
+        val fisher = async { getClassJobLevel(character, "FISHER") }
 
         ProfileClassJob(
             bozja.await(),
@@ -125,14 +122,14 @@ object ClassJob {
     private val currentExperienceRegex = """^[^ /]*""".toRegex()
     private val experienceToNextLevelRegex = """(?<=/ ).*""".toRegex()
 
-    private suspend fun getUniqueDutyLevel(character: Document, duty: ClassesJobs) =
+    private suspend fun getUniqueDutyLevel(character: Document, duty: String) =
         coroutineScope {
             val uniqueDutyLevel = async { getLevel(character, duty) }
 
             if (uniqueDutyLevel.await() != null) {
                 val experience = async { getExperience(character, duty) }
 
-                if (duty == ClassesJobs.BOZJA) {
+                if (duty == "BOZJA") {
                     if (experience.await() == "Current Mettle: -- / Mettle to Next Rank: --") {
                         UniqueDutyLevel(
                             level = uniqueDutyLevel.await() !!.toByte(),
@@ -183,7 +180,7 @@ object ClassJob {
             }
         }
 
-    private suspend fun getClassJobLevel(character: Document, classJob: ClassesJobs) =
+    private suspend fun getClassJobLevel(character: Document, classJob: String) =
         coroutineScope {
             val name = async {
                 getUnlockState(character, classJob)
@@ -226,31 +223,31 @@ object ClassJob {
             }
         }
 
-    private suspend fun getLevel(character: Document, classJob: ClassesJobs) =
+    private suspend fun getLevel(character: Document, classJob: String) =
         coroutineScope {
             val selectorJson =
-                lodestoneCssSelectors.jsonObject[classJob.name] !!.jsonObject["LEVEL"] !!.jsonObject["selector"] !!.jsonPrimitive.content
+                lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject["LEVEL"] !!.jsonObject["selector"] !!.jsonPrimitive.content
 
             character.select(selectorJson).first()?.text()
         }
 
-    private suspend fun getExperience(character: Document, classJob: ClassesJobs) =
+    private suspend fun getExperience(character: Document, classJob: String) =
         coroutineScope {
-            val experience = if (classJob != ClassesJobs.BOZJA) {
+            val experience = if (classJob != "BOZJA") {
                 "EXP"
             } else {
                 "METTLE"
             }
 
             val selectorJson =
-                lodestoneCssSelectors.jsonObject[classJob.name] !!.jsonObject[experience] !!.jsonObject["selector"] !!.jsonPrimitive.content
+                lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject[experience] !!.jsonObject["selector"] !!.jsonPrimitive.content
 
             character.select(selectorJson).first() !!.text()
         }
 
-    private suspend fun getUnlockState(character: Document, classJob: ClassesJobs) =
+    private suspend fun getUnlockState(character: Document, classJob: String) =
         coroutineScope {
-            character.select(lodestoneCssSelectors.jsonObject[classJob.name] !!.jsonObject["UNLOCKSTATE"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+            character.select(lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject["UNLOCKSTATE"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                 .first() !!
                 .text()
         }
