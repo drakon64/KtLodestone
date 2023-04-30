@@ -570,6 +570,40 @@ object Character {
                         ?.text()
                 }
 
+                val materia = async { getMateriaCss(character, gear) }
+
+                val creatorName = async {
+                    character.select(css.jsonObject["CREATOR_NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.text()
+                }
+                val hq = async {
+                    if (name.await() != null) {
+                        name.await() !!.endsWith("\uE03C") // HQ symbol
+                    } else {
+                        null
+                    }
+                }
+
+                return@coroutineScope if (name.await() != null) {
+                    Gear(
+                        name.await() !!.replace("\uE03C", ""), // Strip the HQ symbol
+                        dbLink.await() !!,
+                        glamour,
+                        stain.await(),
+                        materia.await(),
+                        creatorName.await(),
+                        hq.await() !!
+                    )
+                } else {
+                    null
+                }
+            }
+
+        private suspend fun getMateriaCss(character: Document, gear: String) =
+            coroutineScope {
+                val css = lodestoneCssSelectors.jsonObject[gear] !!
+
                 val materia1 = async {
                     character.select(css.jsonObject["MATERIA_1"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                         .first()
@@ -595,49 +629,20 @@ object Character {
                         .first()
                         ?.text()
                 }
-                val materia = async {
-                    val materiaList = mutableListOf<String>()
+                val materiaList = mutableListOf<String>()
 
-                    for (i in arrayOf(
-                        materia1, materia2, materia3, materia4, materia5
-                    )) {
-                        val materia = i.await()
+                for (i in arrayOf(
+                    materia1, materia2, materia3, materia4, materia5
+                )) {
+                    val materia = i.await()
 
-                        if (materia != null) {
-                            materiaList.add(materia)
-                        }
-                    }
-
-                    if (materiaList.isNotEmpty()) {
-                        materiaList.toList()
-                    } else {
-                        null
+                    if (materia != null) {
+                        materiaList.add(materia)
                     }
                 }
 
-                val creatorName = async {
-                    character.select(css.jsonObject["CREATOR_NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                        .first()
-                        ?.text()
-                }
-                val hq = async {
-                    if (name.await() != null) {
-                        name.await() !!.endsWith("\uE03C") // HQ symbol
-                    } else {
-                        null
-                    }
-                }
-
-                return@coroutineScope if (name.await() != null) {
-                    Gear(
-                        name.await() !!.replace("\uE03C", ""), // Strip the HQ symbol
-                        dbLink.await() !!,
-                        glamour,
-                        stain.await(),
-                        materia.await(),
-                        creatorName.await(),
-                        hq.await() !!
-                    )
+                if (materiaList.isNotEmpty()) {
+                    materiaList.toList()
                 } else {
                     null
                 }
