@@ -21,7 +21,7 @@ package cloud.drakon.ktlodestone.profile
  * @property hp HP
  * @property mp MP/CP/GP
  */
-data class Attributes(
+data class ProfileAttributes(
     val strength: Short,
     val dexterity: Short,
     val vitality: Short,
