@@ -6,6 +6,6 @@ data class Gear(
     val mirageName: String?,
     val mirageDbLink: String?,
     val stain: String?,
-    val materia: List<String?>?,
+    val materia: List<String>?,
     val creatorName: String?
 )

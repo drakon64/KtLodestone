@@ -9,9 +9,9 @@ import cloud.drakon.ktlodestone.profile.Guild
 import cloud.drakon.ktlodestone.profile.GuildType
 import cloud.drakon.ktlodestone.profile.IconLayers
 import cloud.drakon.ktlodestone.profile.ProfileCharacter
+import cloud.drakon.ktlodestone.profile.ProfileGearSet
 import cloud.drakon.ktlodestone.profile.Town
 import cloud.drakon.ktlodestone.profile.gear.Gear
-import cloud.drakon.ktlodestone.profile.ProfileGearSet
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.async
@@ -570,14 +570,31 @@ object Character {
                         ?.text()
                 }
                 val materia = async {
-                    if (materia1.await() != null || materia2.await() != null || materia3.await() != null || materia4.await() != null || materia5.await() != null) {
+                    if (materia1.await() != null && materia2.await() != null && materia3.await() != null && materia4.await() != null && materia5.await() != null) {
                         listOf(
-                            materia1.await(),
-                            materia2.await(),
-                            materia3.await(),
-                            materia4.await(),
-                            materia5.await()
+                            materia1.await() !!,
+                            materia2.await() !!,
+                            materia3.await() !!,
+                            materia4.await() !!,
+                            materia5.await() !!
                         )
+                    } else if (materia1.await() != null && materia2.await() != null && materia3.await() != null && materia4.await() != null) {
+                        listOf(
+                            materia1.await() !!,
+                            materia2.await() !!,
+                            materia3.await() !!,
+                            materia4.await() !!
+                        )
+                    } else if (materia1.await() != null && materia2.await() != null && materia3.await() != null) {
+                        listOf(
+                            materia1.await() !!,
+                            materia2.await() !!,
+                            materia3.await() !!
+                        )
+                    } else if (materia1.await() != null && materia2.await() != null) {
+                        listOf(materia1.await() !!, materia2.await() !!)
+                    } else if (materia1.await() != null) {
+                        listOf(materia1.await() !!)
                     } else {
                         null
                     }
