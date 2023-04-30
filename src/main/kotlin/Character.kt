@@ -3,6 +3,7 @@ package cloud.drakon.ktlodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.Attributes
+import cloud.drakon.ktlodestone.profile.Gear
 import cloud.drakon.ktlodestone.profile.GrandCompany
 import cloud.drakon.ktlodestone.profile.Guardian
 import cloud.drakon.ktlodestone.profile.Guild
@@ -11,7 +12,6 @@ import cloud.drakon.ktlodestone.profile.IconLayers
 import cloud.drakon.ktlodestone.profile.ProfileCharacter
 import cloud.drakon.ktlodestone.profile.ProfileGearSet
 import cloud.drakon.ktlodestone.profile.Town
-import cloud.drakon.ktlodestone.profile.gear.Gear
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.async

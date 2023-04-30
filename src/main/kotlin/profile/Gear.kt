@@ -1,4 +1,4 @@
-package cloud.drakon.ktlodestone.profile.gear
+package cloud.drakon.ktlodestone.profile
 
 data class Gear(
     val name: String,
@@ -7,5 +7,5 @@ data class Gear(
     val mirageDbLink: String?,
     val stain: String?,
     val materia: List<String>?,
-    val creatorName: String?
+    val creatorName: String?,
 )
