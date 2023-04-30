@@ -1,5 +1,5 @@
 plugins {
-    val kotlinVersion = "1.8.20"
+    val kotlinVersion = "1.8.21"
 
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    val ktorVersion = "2.2.4"
+    val ktorVersion = "2.3.0"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-java:$ktorVersion")
 
