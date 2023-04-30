@@ -565,9 +565,16 @@ object Character {
                     }
 
                 val stain = async {
-                    character.select(css.jsonObject["STAIN"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                        .first()
-                        ?.text()
+                    val stain =
+                        character.select(css.jsonObject["STAIN"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                            .first()
+                            ?.text()
+
+                    if (stain.isNullOrBlank()) {
+                        null
+                    } else {
+                        stain
+                    }
                 }
 
                 val materia = async { getMateriaCss(character, css) }
@@ -606,13 +613,10 @@ object Character {
             coroutineScope {
                 val materiaList = mutableListOf<String>()
 
-                for (i in arrayOf(
-                    "MATERIA_1", "MATERIA_2", "MATERIA_3", "MATERIA_4", "MATERIA_5"
-                )) {
-                    val materia =
-                        character.select(css.jsonObject[i] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                            .first()
-                            ?.html()
+                for (i in 1 .. 5) {
+                    val materia = character.select(
+                        css.jsonObject["MATERIA_${i}"] !!.jsonObject["selector"] !!.jsonPrimitive.content
+                    ).first()?.html()
 
                     if (materia != null) {
                         materiaList.add(materiaRegex.find(materia) !!.value)
