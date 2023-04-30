@@ -3,7 +3,6 @@ package cloud.drakon.ktlodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.Attributes
-import cloud.drakon.ktlodestone.profile.Gear
 import cloud.drakon.ktlodestone.profile.GrandCompany
 import cloud.drakon.ktlodestone.profile.Guardian
 import cloud.drakon.ktlodestone.profile.Guild
@@ -12,6 +11,8 @@ import cloud.drakon.ktlodestone.profile.IconLayers
 import cloud.drakon.ktlodestone.profile.ProfileCharacter
 import cloud.drakon.ktlodestone.profile.ProfileGearSet
 import cloud.drakon.ktlodestone.profile.Town
+import cloud.drakon.ktlodestone.profile.gear.Gear
+import cloud.drakon.ktlodestone.profile.gear.Glamour
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.async
@@ -608,12 +609,20 @@ object Character {
                         ?.text()
                 }
 
+                val glamour =
+                    if (mirageName.await() != null && mirageDbLink.await() != null) {
+                        Glamour(
+                            mirageName.await() !!, mirageDbLink.await() !!
+                        )
+                    } else {
+                        null
+                    }
+
                 return@coroutineScope if (name.await() != null) {
                     Gear(
                         name.await() !!,
                         dbLink.await() !!,
-                        mirageName.await(),
-                        mirageDbLink.await(),
+                        glamour,
                         stain.await(),
                         materia.await(),
                         creatorName.await()

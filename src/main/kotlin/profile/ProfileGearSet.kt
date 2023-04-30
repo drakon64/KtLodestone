@@ -1,5 +1,7 @@
 package cloud.drakon.ktlodestone.profile
 
+import cloud.drakon.ktlodestone.profile.gear.Gear
+
 data class ProfileGearSet(
     val mainHand: Gear,
     val offHand: Gear?,
