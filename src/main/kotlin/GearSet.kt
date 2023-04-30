@@ -98,31 +98,7 @@ object GearSet {
                 }
             }
 
-            val mirageName = async {
-                character.select(css.jsonObject["MIRAGE_NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                    .first()
-                    ?.text()
-            }
-            val mirageDbLink = async {
-                val link =
-                    character.select(css.jsonObject["MIRAGE_DB_LINK"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                        .first()
-                        ?.attr("href")
-
-                if (link != null) {
-                    "https://eu.finalfantasyxiv.com${link}"
-                } else {
-                    null
-                }
-            }
-            val glamour =
-                if (mirageName.await() != null && mirageDbLink.await() != null) {
-                    Glamour(
-                        mirageName.await() !!, mirageDbLink.await() !!
-                    )
-                } else {
-                    null
-                }
+            val glamour = async { getGlamour(character, css) }
 
             val stain = async {
                 val stain =
@@ -156,11 +132,40 @@ object GearSet {
                 Gear(
                     name.await() !!.replace("\uE03C", ""), // Strip the HQ symbol
                     dbLink.await() !!,
-                    glamour,
+                    glamour.await(),
                     stain.await(),
                     materia.await(),
                     creatorName.await(),
                     hq.await() !!
+                )
+            } else {
+                null
+            }
+        }
+
+    private suspend fun getGlamour(character: Document, css: JsonElement) =
+        coroutineScope {
+            val mirageName = async {
+                character.select(css.jsonObject["MIRAGE_NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                    .first()
+                    ?.text()
+            }
+            val mirageDbLink = async {
+                val link =
+                    character.select(css.jsonObject["MIRAGE_DB_LINK"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                        .first()
+                        ?.attr("href")
+
+                if (link != null) {
+                    "https://eu.finalfantasyxiv.com${link}"
+                } else {
+                    null
+                }
+            }
+
+            if (mirageName.await() != null && mirageDbLink.await() != null) {
+                Glamour(
+                    mirageName.await() !!, mirageDbLink.await() !!
                 )
             } else {
                 null
