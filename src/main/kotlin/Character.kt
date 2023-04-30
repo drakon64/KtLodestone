@@ -36,6 +36,7 @@ object Character {
     /**
      * Gets a character from The Lodestone
      * @param id The Lodestone character ID
+     * @param attributes Return character attributes
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
