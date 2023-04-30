@@ -606,75 +606,18 @@ object Character {
             coroutineScope {
                 val css = lodestoneCssSelectors.jsonObject[gear] !!
 
-                val materia1 = async {
-                    val materia =
-                        character.select(css.jsonObject["MATERIA_1"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                            .first()
-                            ?.html()
-
-                    if (materia != null) {
-                        materiaRegex.find(materia) !!.value
-                    } else {
-                        null
-                    }
-                }
-                val materia2 = async {
-                    val materia =
-                        character.select(css.jsonObject["MATERIA_2"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                            .first()
-                            ?.html()
-
-                    if (materia != null) {
-                        materiaRegex.find(materia) !!.value
-                    } else {
-                        null
-                    }
-                }
-                val materia3 = async {
-                    val materia =
-                        character.select(css.jsonObject["MATERIA_3"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                            .first()
-                            ?.html()
-
-                    if (materia != null) {
-                        materiaRegex.find(materia) !!.value
-                    } else {
-                        null
-                    }
-                }
-                val materia4 = async {
-                    val materia =
-                        character.select(css.jsonObject["MATERIA_4"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                            .first()
-                            ?.html()
-
-                    if (materia != null) {
-                        materiaRegex.find(materia) !!.value
-                    } else {
-                        null
-                    }
-                }
-                val materia5 = async {
-                    val materia =
-                        character.select(css.jsonObject["MATERIA_5"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                            .first()
-                            ?.html()
-
-                    if (materia != null) {
-                        materiaRegex.find(materia) !!.value
-                    } else {
-                        null
-                    }
-                }
                 val materiaList = mutableListOf<String>()
 
                 for (i in arrayOf(
-                    materia1, materia2, materia3, materia4, materia5
+                    "MATERIA_1", "MATERIA_2", "MATERIA_3", "MATERIA_4", "MATERIA_5"
                 )) {
-                    val materia = i.await()
+                    val materia =
+                        character.select(css.jsonObject[i] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                            .first()
+                            ?.html()
 
                     if (materia != null) {
-                        materiaList.add(materia)
+                        materiaList.add(materiaRegex.find(materia) !!.value)
                     }
                 }
 
