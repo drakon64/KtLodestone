@@ -570,7 +570,7 @@ object Character {
                         ?.text()
                 }
 
-                val materia = async { getMateriaCss(character, gear) }
+                val materia = async { getMateriaCss(character, css) }
 
                 val creatorName = async {
                     character.select(css.jsonObject["CREATOR_NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
@@ -602,10 +602,8 @@ object Character {
 
         private val materiaRegex = """.*(?=<br>)""".toRegex()
 
-        private suspend fun getMateriaCss(character: Document, gear: String) =
+        private suspend fun getMateriaCss(character: Document, css: JsonElement) =
             coroutineScope {
-                val css = lodestoneCssSelectors.jsonObject[gear] !!
-
                 val materiaList = mutableListOf<String>()
 
                 for (i in arrayOf(
