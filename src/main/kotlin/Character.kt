@@ -537,6 +537,7 @@ object Character {
                         null
                     }
                 }
+
                 val mirageName = async {
                     character.select(css.jsonObject["MIRAGE_NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                         .first()
@@ -554,11 +555,21 @@ object Character {
                         null
                     }
                 }
+                val glamour =
+                    if (mirageName.await() != null && mirageDbLink.await() != null) {
+                        Glamour(
+                            mirageName.await() !!, mirageDbLink.await() !!
+                        )
+                    } else {
+                        null
+                    }
+
                 val stain = async {
                     character.select(css.jsonObject["STAIN"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                         .first()
                         ?.text()
                 }
+
                 val materia1 = async {
                     character.select(css.jsonObject["MATERIA_1"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                         .first()
@@ -603,29 +614,29 @@ object Character {
                         null
                     }
                 }
+
                 val creatorName = async {
                     character.select(css.jsonObject["CREATOR_NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                         .first()
                         ?.text()
                 }
-
-                val glamour =
-                    if (mirageName.await() != null && mirageDbLink.await() != null) {
-                        Glamour(
-                            mirageName.await() !!, mirageDbLink.await() !!
-                        )
+                val hq = async {
+                    if (name.await() != null) {
+                        name.await() !!.endsWith("\uE03C") // HQ symbol
                     } else {
                         null
                     }
+                }
 
                 return@coroutineScope if (name.await() != null) {
                     Gear(
-                        name.await() !!,
+                        name.await() !!.replace("\uE03C", ""), // Strip the HQ symbol
                         dbLink.await() !!,
                         glamour,
                         stain.await(),
                         materia.await(),
-                        creatorName.await()
+                        creatorName.await(),
+                        hq.await() !!
                     )
                 } else {
                     null
