@@ -570,31 +570,20 @@ object Character {
                         ?.text()
                 }
                 val materia = async {
-                    if (materia1.await() != null && materia2.await() != null && materia3.await() != null && materia4.await() != null && materia5.await() != null) {
-                        listOf(
-                            materia1.await() !!,
-                            materia2.await() !!,
-                            materia3.await() !!,
-                            materia4.await() !!,
-                            materia5.await() !!
-                        )
-                    } else if (materia1.await() != null && materia2.await() != null && materia3.await() != null && materia4.await() != null) {
-                        listOf(
-                            materia1.await() !!,
-                            materia2.await() !!,
-                            materia3.await() !!,
-                            materia4.await() !!
-                        )
-                    } else if (materia1.await() != null && materia2.await() != null && materia3.await() != null) {
-                        listOf(
-                            materia1.await() !!,
-                            materia2.await() !!,
-                            materia3.await() !!
-                        )
-                    } else if (materia1.await() != null && materia2.await() != null) {
-                        listOf(materia1.await() !!, materia2.await() !!)
-                    } else if (materia1.await() != null) {
-                        listOf(materia1.await() !!)
+                    val materiaList = mutableListOf<String>()
+
+                    for (i in arrayOf(
+                        materia1, materia2, materia3, materia4, materia5
+                    )) {
+                        val materia = i.await()
+
+                        if (materia != null) {
+                            materiaList.add(materia)
+                        }
+                    }
+
+                    if (materiaList.isNotEmpty()) {
+                        materiaList.toList()
                     } else {
                         null
                     }
