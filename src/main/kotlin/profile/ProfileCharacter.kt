@@ -20,4 +20,5 @@ data class ProfileCharacter(
     val title: String?,
     val town: Town,
     val attributes: Attributes?,
+    val gearSet: ProfileGearSet?
 )
