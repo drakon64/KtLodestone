@@ -5,15 +5,12 @@ import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.gearset.Gear
 import cloud.drakon.ktlodestone.profile.gearset.Glamour
 import cloud.drakon.ktlodestone.profile.gearset.ProfileGearSet
-import io.ktor.client.call.body
-import io.ktor.client.request.get
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 object GearSet {
@@ -29,13 +26,7 @@ object GearSet {
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
     suspend fun getGearSet(id: Int) = coroutineScope {
-        val request =
-            ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/")
-        val character = when (request.status.value) {
-            200 -> Jsoup.parse(request.body() as String)
-            404 -> throw CharacterNotFoundException("Thrown when a character could not be found on The Lodestone.")
-            else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
-        }
+        val character = getLodestoneProfile(id)
 
         val mainHand = async {
             getGearSetCss(character, "MAINHAND") !! // Cannot be null

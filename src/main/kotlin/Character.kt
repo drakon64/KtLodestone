@@ -10,15 +10,12 @@ import cloud.drakon.ktlodestone.profile.character.Town
 import cloud.drakon.ktlodestone.profile.guild.Guild
 import cloud.drakon.ktlodestone.profile.guild.GuildType
 import cloud.drakon.ktlodestone.profile.guild.IconLayers
-import io.ktor.client.call.body
-import io.ktor.client.request.get
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 object Character {
@@ -40,13 +37,7 @@ object Character {
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
     suspend fun getCharacter(id: Int) = coroutineScope {
-        val request =
-            ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/")
-        val character = when (request.status.value) {
-            200 -> Jsoup.parse(request.body() as String)
-            404 -> throw CharacterNotFoundException("Thrown when a character could not be found on The Lodestone.")
-            else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
-        }
+        val character = getLodestoneProfile(id)
 
         val activeClassJob = async { getActiveClassJob(character) }
 
