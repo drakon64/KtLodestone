@@ -1,4 +1,4 @@
-package cloud.drakon.ktlodestone.profile
+package cloud.drakon.ktlodestone.profile.guild
 
 data class IconLayers(
     val bottom: String,
