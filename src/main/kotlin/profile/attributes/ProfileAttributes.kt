@@ -1,4 +1,4 @@
-package cloud.drakon.ktlodestone.profile
+package cloud.drakon.ktlodestone.profile.attributes
 
 /**
  * @property strength Affects physical damage dealt by gladiator's arms, marauder's arms, pugilist's arms, lancer's arms, conjurer's arms, thaumaturge's arms, arcanist's arms, dark knight's arms, samurai's arms, reaper's arms, gunbreaker's arms, red mage's arms, astrologian's arms, sage's arms, and blue mage's arms.

@@ -2,7 +2,7 @@ package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
-import cloud.drakon.ktlodestone.profile.ProfileAttributes
+import cloud.drakon.ktlodestone.profile.attributes.ProfileAttributes
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.async
