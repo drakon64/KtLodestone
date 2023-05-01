@@ -2,9 +2,9 @@ package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
-import cloud.drakon.ktlodestone.profile.ProfileClassJob
 import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
 import cloud.drakon.ktlodestone.profile.classjob.Experience
+import cloud.drakon.ktlodestone.profile.classjob.ProfileClassJob
 import cloud.drakon.ktlodestone.profile.classjob.UniqueDutyLevel
 import io.ktor.client.call.body
 import io.ktor.client.request.get

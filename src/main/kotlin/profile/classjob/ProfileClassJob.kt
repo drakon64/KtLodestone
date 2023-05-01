@@ -1,7 +1,4 @@
-package cloud.drakon.ktlodestone.profile
-
-import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
-import cloud.drakon.ktlodestone.profile.classjob.UniqueDutyLevel
+package cloud.drakon.ktlodestone.profile.classjob
 
 data class ProfileClassJob(
     val bozja: UniqueDutyLevel?,
