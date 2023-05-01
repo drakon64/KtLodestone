@@ -28,7 +28,7 @@ object ClassJob {
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
     suspend fun getClassJob(id: Int) = coroutineScope {
-        val character = getLodestoneProfile(id)
+        val character = getLodestoneProfile(id, "class_job")
 
         val bozja = async { getUniqueDutyLevel(character, "BOZJA") }
         val eureka = async { getUniqueDutyLevel(character, "EUREKA") }

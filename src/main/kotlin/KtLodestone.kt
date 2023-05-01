@@ -26,22 +26,30 @@ private val userAgentMobile =
 
 internal val ktorClient = HttpClient(Java)
 
-internal suspend fun getLodestoneProfile(id: Int, mobileUserAgent: Boolean = false) =
-    coroutineScope {
-        val request =
-            ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/${id}/") {
-                headers {
-                    if (! mobileUserAgent) {
-                        append(HttpHeaders.UserAgent, userAgentDesktop)
-                    } else {
-                        append(HttpHeaders.UserAgent, userAgentMobile)
-                    }
-                }
-            }
+internal suspend fun getLodestoneProfile(
+    id: Int,
+    endpoint: String? = null,
+    mobileUserAgent: Boolean = false,
+) = coroutineScope {
+    val url = if (endpoint == null) {
+        "https://eu.finalfantasyxiv.com/lodestone/character/${id}/"
+    } else {
+        "https://eu.finalfantasyxiv.com/lodestone/character/${id}/${endpoint}"
+    }
 
-        return@coroutineScope when (request.status.value) {
-            200 -> Jsoup.parse(request.body() as String)
-            404 -> throw CharacterNotFoundException("Thrown when a character could not be found on The Lodestone.")
-            else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
+    val request = ktorClient.get(url) {
+        headers {
+            if (! mobileUserAgent) {
+                append(HttpHeaders.UserAgent, userAgentDesktop)
+            } else {
+                append(HttpHeaders.UserAgent, userAgentMobile)
+            }
         }
     }
+
+    return@coroutineScope when (request.status.value) {
+        200 -> Jsoup.parse(request.body() as String)
+        404 -> throw CharacterNotFoundException("Thrown when a character could not be found on The Lodestone.")
+        else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
+    }
+}
