@@ -1,4 +1,4 @@
-package cloud.drakon.ktlodestone.profile
+package cloud.drakon.ktlodestone.profile.character
 
 import cloud.drakon.ktlodestone.profile.guild.Guild
 

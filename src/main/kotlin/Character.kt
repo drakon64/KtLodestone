@@ -2,11 +2,11 @@ package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
-import cloud.drakon.ktlodestone.profile.ActiveClassJob
-import cloud.drakon.ktlodestone.profile.GrandCompany
-import cloud.drakon.ktlodestone.profile.Guardian
-import cloud.drakon.ktlodestone.profile.ProfileCharacter
-import cloud.drakon.ktlodestone.profile.Town
+import cloud.drakon.ktlodestone.profile.character.ActiveClassJob
+import cloud.drakon.ktlodestone.profile.character.GrandCompany
+import cloud.drakon.ktlodestone.profile.character.Guardian
+import cloud.drakon.ktlodestone.profile.character.ProfileCharacter
+import cloud.drakon.ktlodestone.profile.character.Town
 import cloud.drakon.ktlodestone.profile.guild.Guild
 import cloud.drakon.ktlodestone.profile.guild.GuildType
 import cloud.drakon.ktlodestone.profile.guild.IconLayers
