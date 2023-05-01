@@ -1,6 +1,4 @@
-package cloud.drakon.ktlodestone.profile
-
-import cloud.drakon.ktlodestone.profile.gear.Gear
+package cloud.drakon.ktlodestone.profile.gearset
 
 data class ProfileGearSet(
     val mainHand: Gear,
