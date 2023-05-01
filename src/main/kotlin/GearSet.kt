@@ -2,9 +2,9 @@ package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
-import cloud.drakon.ktlodestone.profile.ProfileGearSet
-import cloud.drakon.ktlodestone.profile.gear.Gear
-import cloud.drakon.ktlodestone.profile.gear.Glamour
+import cloud.drakon.ktlodestone.profile.gearset.Gear
+import cloud.drakon.ktlodestone.profile.gearset.Glamour
+import cloud.drakon.ktlodestone.profile.gearset.ProfileGearSet
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.async

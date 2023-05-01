@@ -1,4 +1,4 @@
-package cloud.drakon.ktlodestone.profile.gear
+package cloud.drakon.ktlodestone.profile.gearset
 
 data class Gear(
     val name: String,
