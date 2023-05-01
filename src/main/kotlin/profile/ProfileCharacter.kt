@@ -1,8 +1,7 @@
 package cloud.drakon.ktlodestone.profile
 
 data class ProfileCharacter(
-    val activeClassJob: String,
-    val activeClassJobLevel: Byte,
+    val activeClassJob: ActiveClassJob,
     val avatar: String,
     val bio: String,
     val freeCompany: FreeCompany?,
