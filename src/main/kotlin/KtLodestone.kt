@@ -24,7 +24,7 @@ private val userAgentDesktop =
 private val userAgentMobile =
     meta.jsonObject["userAgentMobile"] !!.jsonPrimitive.content
 
-internal val ktorClient = HttpClient(Java)
+private val ktorClient = HttpClient(Java)
 
 internal suspend fun getLodestoneProfile(
     id: Int,
