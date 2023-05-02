@@ -49,7 +49,7 @@ internal suspend fun getLodestoneProfile(
 
     return@coroutineScope when (request.status.value) {
         200 -> Jsoup.parse(request.body() as String)
-        404 -> throw CharacterNotFoundException("Thrown when a character could not be found on The Lodestone.")
-        else -> throw LodestoneException("Thrown when The Lodestone returns an unknown error.")
+        404 -> throw CharacterNotFoundException("A character with ID `${id}` could not be found on The Lodestone.")
+        else -> throw LodestoneException("The Lodestone returned an unknown error.")
     }
 }
