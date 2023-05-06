@@ -6,8 +6,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.java.Java
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
-import io.ktor.http.headers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -38,13 +38,13 @@ internal suspend fun getLodestoneProfile(
     }
 
     val request = ktorClient.get(url) {
-        headers {
-            if (! mobileUserAgent) {
-                append(HttpHeaders.UserAgent, userAgentDesktop)
+        header(
+            HttpHeaders.UserAgent, if (! mobileUserAgent) {
+                userAgentDesktop
             } else {
-                append(HttpHeaders.UserAgent, userAgentMobile)
+                userAgentMobile
             }
-        }
+        )
     }
 
     return@coroutineScope when (request.status.value) {
