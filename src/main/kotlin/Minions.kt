@@ -30,13 +30,15 @@ object Minions {
     }
 
     private suspend fun getMinionList(character: Document) = coroutineScope {
-        val minions = mutableListOf<Minion>()
+        val minions = mutableMapOf<String, Minion>()
 
         for (i in character.select(lodestoneCssSelectors.jsonObject["MINIONS"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)) {
-            minions.add(getMinion(i))
+            val minion = getMinion(i)
+
+            minions[minion.name] = minion
         }
 
-        return@coroutineScope minions.toList()
+        return@coroutineScope minions.toMap()
     }
 
     private suspend fun getMinion(minion: Element) = coroutineScope {
