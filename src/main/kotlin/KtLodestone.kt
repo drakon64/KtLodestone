@@ -95,7 +95,7 @@ object KtLodestone {
         GlobalScope.future { GearSet.getGearSet(id) }
 
     /**
-     * Gets the minions that a character on The Lodestone has acquired. This is equivalent to what is returned by The Lodestone's `/minions` endpoint for a character.
+     * Gets the minions that a character on The Lodestone has acquired. This is equivalent to what is returned by The Lodestone's `/minion` endpoint for a character.
      * @param id The Lodestone character ID.
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
@@ -103,7 +103,7 @@ object KtLodestone {
     suspend fun getMinions(id: Int) = coroutineScope { Minions.getMinions(id) }
 
     /**
-     * Gets the minions that a character on The Lodestone has acquired. This is equivalent to what is returned by The Lodestone's `/minions` endpoint for a character. For use outside of Kotlin coroutines.
+     * Gets the minions that a character on The Lodestone has acquired. This is equivalent to what is returned by The Lodestone's `/minion` endpoint for a character. For use outside of Kotlin coroutines.
      * @param id The Lodestone character ID.
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
