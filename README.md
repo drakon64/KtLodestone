@@ -5,13 +5,13 @@
 [![License](https://img.shields.io/github/license/drakon64/KtLodestone)](hhttps://opensource.org/license/mit/)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=KtLodestone&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=KtLodestone)
 
-KtLodestone is a parser for The Lodestone for the JVM platform written in Kotlin.
+KtLodestone is a parser for The Lodestone for the JVM platform (JDK 11+).
 
 # Features
 
 ---
 
-- Supports scraping the following information from The Lodestone
+- Supports scraping the following information from The Lodestone:
   - Character
     - Profile
     - Attributes
@@ -51,14 +51,16 @@ Javadocs: [![javadoc](https://javadoc.io/badge2/cloud.drakon/ktlodestone/javadoc
 
 Kotlin:
 ```kotlin
-val character: ProfileCharacter = KtLodestone.getCharacter(27545492)
-val activeClassJob: String = character.activeClassJob.name // returns "Red Mage"
+val character: ProfileCharacter = KtLodestone.getCharacter(27545492) // Must be called from a coroutine or a suspendable function
+val activeClassJobName: String = character.activeClassJob.name // returns "Red Mage"
+val activeClassJobLevel: Byte = character.activeClassJob.level // returns `90`
 val title: String = character.title // returns "Hope's Legacy"
 ```
 
 Java:
 ```java
-ProfileCharacter character = KtLodestone.getCharacterAsync(27545492).get();
-String activeClassJob = character.getActiveClassJob().getName(); // returns "Red Mage"
+ProfileCharacter character = KtLodestone.getCharacterAsync(27545492).get(); // Async functions return a `CompletableFuture`
+String activeClassJobName = character.getActiveClassJob().getName(); // returns "Red Mage"
+Byte activeClassJobLevel = character.getActiveClassJob().getLevel(); // returns `90`
 String title = character.getTitle(); // returns "Hope's Legacy"
 ```
