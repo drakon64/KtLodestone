@@ -7,6 +7,7 @@ import cloud.drakon.ktlodestone.profile.Character
 import cloud.drakon.ktlodestone.profile.ClassJob
 import cloud.drakon.ktlodestone.profile.GearSet
 import cloud.drakon.ktlodestone.profile.Minions
+import cloud.drakon.ktlodestone.profile.Mounts
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.java.Java
@@ -103,6 +104,22 @@ object KtLodestone {
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
     @JvmStatic fun getMinionsBlocking(id: Int) = runBlocking { Minions.getMinions(id) }
+
+    /**
+     * Gets the mounts that a character on The Lodestone has acquired. This is equivalent to what is returned by The Lodestone's `/mount` endpoint for a character.
+     * @param id The Lodestone character ID.
+     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
+     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
+     */
+    suspend fun getMounts(id: Int) = coroutineScope { Mounts.getMounts(id) }
+
+    /**
+     * Gets the mounts that a character on The Lodestone has acquired. This is equivalent to what is returned by The Lodestone's `/mount` endpoint for a character. For use outside of Kotlin coroutines.
+     * @param id The Lodestone character ID.
+     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
+     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
+     */
+    @JvmStatic fun getMountsBlocking(id: Int) = runBlocking { Mounts.getMounts(id) }
 
     private val meta = Json.parseToJsonElement(
         object {}::class.java.classLoader.getResource("lodestone-css-selectors/meta.json") !!
