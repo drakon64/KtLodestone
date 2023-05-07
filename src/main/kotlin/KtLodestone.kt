@@ -2,6 +2,11 @@ package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
+import cloud.drakon.ktlodestone.profile.Attributes
+import cloud.drakon.ktlodestone.profile.Character
+import cloud.drakon.ktlodestone.profile.ClassJob
+import cloud.drakon.ktlodestone.profile.GearSet
+import cloud.drakon.ktlodestone.profile.Minions
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.java.Java

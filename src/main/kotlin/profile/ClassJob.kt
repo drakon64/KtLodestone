@@ -1,5 +1,6 @@
-package cloud.drakon.ktlodestone
+package cloud.drakon.ktlodestone.profile
 
+import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
 import cloud.drakon.ktlodestone.profile.classjob.Experience
 import cloud.drakon.ktlodestone.profile.classjob.ProfileClassJob

@@ -1,5 +1,6 @@
-package cloud.drakon.ktlodestone
+package cloud.drakon.ktlodestone.profile
 
+import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.minions.Minion
 import cloud.drakon.ktlodestone.profile.minions.ProfileMinions
 import kotlinx.coroutines.async

@@ -1,5 +1,6 @@
-package cloud.drakon.ktlodestone
+package cloud.drakon.ktlodestone.profile
 
+import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.gearset.Gear
 import cloud.drakon.ktlodestone.profile.gearset.Glamour
 import cloud.drakon.ktlodestone.profile.gearset.ProfileGearSet

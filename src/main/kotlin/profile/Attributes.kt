@@ -1,5 +1,6 @@
-package cloud.drakon.ktlodestone
+package cloud.drakon.ktlodestone.profile
 
+import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.attributes.ProfileAttributes
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
