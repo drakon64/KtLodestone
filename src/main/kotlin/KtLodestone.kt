@@ -1,3 +1,5 @@
+@file:OptIn(DelicateCoroutinesApi::class)
+
 package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
@@ -14,8 +16,10 @@ import io.ktor.client.engine.java.Java
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.future.future
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -36,8 +40,8 @@ object KtLodestone {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    @JvmStatic fun getAttributesBlocking(id: Int) =
-        runBlocking { Attributes.getAttributes(id) }
+    @JvmStatic fun getAttributesAsync(id: Int) =
+        GlobalScope.future { Attributes.getAttributes(id) }
 
     /**
      * Gets a character's profile from The Lodestone.
@@ -53,8 +57,8 @@ object KtLodestone {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    @JvmStatic fun getCharacterBlocking(id: Int) =
-        runBlocking { Character.getCharacter(id) }
+    @JvmStatic fun getCharacterAsync(id: Int) =
+        GlobalScope.future { Character.getCharacter(id) }
 
     /**
      * Gets a characters class/job stats from The Lodestone. This is equivalent to what is returned by The Lodestone's `/class_job` endpoint for a character.
@@ -70,8 +74,8 @@ object KtLodestone {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    @JvmStatic fun getClassJobBlocking(id: Int) =
-        runBlocking { ClassJob.getClassJob(id) }
+    @JvmStatic fun getClassJobAsync(id: Int) =
+        GlobalScope.future { ClassJob.getClassJob(id) }
 
     /**
      * Gets a characters equipped gear set from The Lodestone.
@@ -87,7 +91,8 @@ object KtLodestone {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    @JvmStatic fun getGearSetBlocking(id: Int) = runBlocking { GearSet.getGearSet(id) }
+    @JvmStatic fun getGearSetAsync(id: Int) =
+        GlobalScope.future { GearSet.getGearSet(id) }
 
     /**
      * Gets the minions that a character on The Lodestone has acquired. This is equivalent to what is returned by The Lodestone's `/minions` endpoint for a character.
@@ -103,7 +108,8 @@ object KtLodestone {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    @JvmStatic fun getMinionsBlocking(id: Int) = runBlocking { Minions.getMinions(id) }
+    @JvmStatic fun getMinionsAsync(id: Int) =
+        GlobalScope.future { Minions.getMinions(id) }
 
     /**
      * Gets the mounts that a character on The Lodestone has acquired. This is equivalent to what is returned by The Lodestone's `/mount` endpoint for a character.
@@ -119,7 +125,7 @@ object KtLodestone {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    @JvmStatic fun getMountsBlocking(id: Int) = runBlocking { Mounts.getMounts(id) }
+    @JvmStatic fun getMountsAsync(id: Int) = GlobalScope.future { Mounts.getMounts(id) }
 
     private val meta = Json.parseToJsonElement(
         object {}::class.java.classLoader.getResource("lodestone-css-selectors/meta.json") !!
