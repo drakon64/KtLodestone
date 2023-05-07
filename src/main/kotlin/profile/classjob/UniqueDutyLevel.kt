@@ -6,8 +6,3 @@ package cloud.drakon.ktlodestone.profile.classjob
  * @property experience The experience that a character has in the unique duty.
  */
 data class UniqueDutyLevel(val level: Byte, val experience: Experience?)
-
-/** The Elemental Level of a character. */
-typealias Eureka = UniqueDutyLevel
-/** The Resistance Rank of a character. */
-typealias Bozja = UniqueDutyLevel

@@ -2,9 +2,11 @@ package cloud.drakon.ktlodestone.profile
 
 import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
+import cloud.drakon.ktlodestone.profile.classjob.ClassJobName
 import cloud.drakon.ktlodestone.profile.classjob.Experience
 import cloud.drakon.ktlodestone.profile.classjob.ProfileClassJob
 import cloud.drakon.ktlodestone.profile.classjob.UniqueDutyLevel
+import cloud.drakon.ktlodestone.profile.classjob.UniqueDutyName
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.Json
@@ -23,80 +25,11 @@ internal object ClassJob {
     suspend fun getClassJob(id: Int) = coroutineScope {
         val character = KtLodestone.getLodestoneProfile(id, "class_job")
 
-        val bozja = async { getUniqueDutyLevel(character, "BOZJA") }
-        val eureka = async { getUniqueDutyLevel(character, "EUREKA") }
-        val paladin = async { getClassJobLevel(character, "PALADIN") }
-        val warrior = async { getClassJobLevel(character, "WARRIOR") }
-        val darkKnight = async { getClassJobLevel(character, "DARKKNIGHT") }
-        val gunbreaker = async { getClassJobLevel(character, "GUNBREAKER") }
-
-        val whiteMage = async { getClassJobLevel(character, "WHITEMAGE") }
-        val scholar = async { getClassJobLevel(character, "SCHOLAR") }
-        val astrologian = async { getClassJobLevel(character, "ASTROLOGIAN") }
-        val sage = async { getClassJobLevel(character, "SAGE") }
-
-        val monk = async { getClassJobLevel(character, "MONK") }
-        val dragoon = async { getClassJobLevel(character, "DRAGOON") }
-        val ninja = async { getClassJobLevel(character, "NINJA") }
-        val samurai = async { getClassJobLevel(character, "SAMURAI") }
-        val reaper = async { getClassJobLevel(character, "REAPER") }
-
-        val bard = async { getClassJobLevel(character, "BARD") }
-        val machinist = async { getClassJobLevel(character, "MACHINIST") }
-        val dancer = async { getClassJobLevel(character, "DANCER") }
-
-        val blackMage = async { getClassJobLevel(character, "BLACKMAGE") }
-        val summoner = async { getClassJobLevel(character, "SUMMONER") }
-        val redMage = async { getClassJobLevel(character, "REDMAGE") }
-        val blueMage = async { getClassJobLevel(character, "BLUEMAGE") }
-
-        val carpenter = async { getClassJobLevel(character, "CARPENTER") }
-        val blacksmith = async { getClassJobLevel(character, "BLACKSMITH") }
-        val armorer = async { getClassJobLevel(character, "ARMORER") }
-        val goldsmith = async { getClassJobLevel(character, "GOLDSMITH") }
-        val leatherworker = async { getClassJobLevel(character, "LEATHERWORKER") }
-        val weaver = async { getClassJobLevel(character, "WEAVER") }
-        val alchemist = async { getClassJobLevel(character, "ALCHEMIST") }
-        val culinarian = async { getClassJobLevel(character, "CULINARIAN") }
-
-        val miner = async { getClassJobLevel(character, "MINER") }
-        val botanist = async { getClassJobLevel(character, "BOTANIST") }
-        val fisher = async { getClassJobLevel(character, "FISHER") }
+        val uniqueDutyLevels = async { getUniqueDutyLevels(character) }
+        val classJobLevels = async { getClassJobLevels(character) }
 
         ProfileClassJob(
-            bozja.await(),
-            eureka.await(),
-            paladin.await(),
-            warrior.await(),
-            darkKnight.await(),
-            gunbreaker.await(),
-            whiteMage.await(),
-            scholar.await(),
-            astrologian.await(),
-            sage.await(),
-            monk.await(),
-            dragoon.await(),
-            ninja.await(),
-            samurai.await(),
-            reaper.await(),
-            bard.await(),
-            machinist.await(),
-            dancer.await(),
-            blackMage.await(),
-            summoner.await(),
-            redMage.await(),
-            blueMage.await(),
-            carpenter.await(),
-            blacksmith.await(),
-            armorer.await(),
-            goldsmith.await(),
-            leatherworker.await(),
-            weaver.await(),
-            alchemist.await(),
-            culinarian.await(),
-            miner.await(),
-            botanist.await(),
-            fisher.await(),
+            classJobLevels.await(), uniqueDutyLevels.await()
         )
     }
 
@@ -106,14 +39,24 @@ internal object ClassJob {
     private val currentExperienceRegex = """^[^ /]*""".toRegex()
     private val experienceToNextLevelRegex = """(?<=/ ).*""".toRegex()
 
-    private suspend fun getUniqueDutyLevel(character: Document, duty: String) =
+    private suspend fun getUniqueDutyLevels(character: Document) = coroutineScope {
+        val uniqueDuties = mutableMapOf<UniqueDutyName, UniqueDutyLevel?>()
+
+        UniqueDutyName.values().forEach {
+            uniqueDuties[it] = getUniqueDutyLevel(character, it)
+        }
+
+        return@coroutineScope uniqueDuties.toMap()
+    }
+
+    private suspend fun getUniqueDutyLevel(character: Document, duty: UniqueDutyName) =
         coroutineScope {
-            val uniqueDutyLevel = async { getLevel(character, duty) }
+            val uniqueDutyLevel = async { getLevel(character, duty.name) }
 
             if (uniqueDutyLevel.await() != null) {
-                val experience = async { getExperience(character, duty) }
+                val experience = async { getExperience(character, duty.name) }
 
-                if (duty == "BOZJA") {
+                if (duty == UniqueDutyName.BOZJA) {
                     if (experience.await() == "Current Mettle: -- / Mettle to Next Rank: --") {
                         UniqueDutyLevel(
                             level = uniqueDutyLevel.await() !!.toByte(),
@@ -164,16 +107,26 @@ internal object ClassJob {
             }
         }
 
-    private suspend fun getClassJobLevel(character: Document, classJob: String) =
+    private suspend fun getClassJobLevels(character: Document) = coroutineScope {
+        val classesJobs = mutableMapOf<ClassJobName, ClassJobLevel?>()
+
+        ClassJobName.values().forEach {
+            classesJobs[it] = getClassJobLevel(character, it)
+        }
+
+        return@coroutineScope classesJobs.toMap()
+    }
+
+    private suspend fun getClassJobLevel(character: Document, classJob: ClassJobName) =
         coroutineScope {
             val name = async {
-                getUnlockState(character, classJob)
+                getUnlockState(character, classJob.name)
             }
             val level = async {
-                getLevel(character, classJob)
+                getLevel(character, classJob.name)
             }
             val experience = async {
-                getExperience(character, classJob)
+                getExperience(character, classJob.name)
             }
 
             if (level.await() == "-") {
