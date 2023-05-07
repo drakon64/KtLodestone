@@ -1,4 +1,4 @@
-import cloud.drakon.ktlodestone.GearSet
+import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
@@ -9,7 +9,7 @@ class GearSetTest {
     @Test fun getAttributes() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
-                println(GearSet.getGearSet(27545492))
+                println(KtLodestone.getGearSet(27545492))
             }
         }
     }
@@ -17,7 +17,7 @@ class GearSetTest {
     @Test fun getInvalidCharacter() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
-                println(GearSet.getGearSet(0))
+                println(KtLodestone.getGearSet(0))
             }
         }
     }

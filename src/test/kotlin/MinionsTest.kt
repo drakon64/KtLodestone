@@ -1,4 +1,4 @@
-import cloud.drakon.ktlodestone.Minions
+import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
@@ -9,7 +9,7 @@ class MinionsTest {
     @Test fun getMinions() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
-                println(Minions.getMinions(27545492))
+                println(KtLodestone.getMinions(27545492))
             }
         }
     }
@@ -17,7 +17,7 @@ class MinionsTest {
     @Test fun getInvalidMinions() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
-                println(Minions.getMinions(0))
+                println(KtLodestone.getMinions(0))
             }
         }
     }

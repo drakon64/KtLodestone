@@ -1,7 +1,5 @@
 package cloud.drakon.ktlodestone
 
-import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
-import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.minions.Minion
 import cloud.drakon.ktlodestone.profile.minions.ProfileMinions
 import kotlinx.coroutines.async
@@ -12,20 +10,15 @@ import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-object Minions {
+internal object Minions {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/minion.json") !!
             .readText()
     )
 
-    /**
-     * Gets the minions that a character on The Lodestone has acquired.
-     * @param id The Lodestone character ID.
-     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
-     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
-     */
     suspend fun getMinions(id: Int) = coroutineScope {
-        val character = getLodestoneProfile(id, "minion", mobileUserAgent = true)
+        val character =
+            KtLodestone.getLodestoneProfile(id, "minion", mobileUserAgent = true)
 
         val minions = async {
             getMinionList(character)

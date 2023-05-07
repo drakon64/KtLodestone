@@ -1,7 +1,5 @@
 package cloud.drakon.ktlodestone
 
-import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
-import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.gearset.Gear
 import cloud.drakon.ktlodestone.profile.gearset.Glamour
 import cloud.drakon.ktlodestone.profile.gearset.ProfileGearSet
@@ -13,20 +11,14 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 
-object GearSet {
+internal object GearSet {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/gearset.json") !!
             .readText()
     )
 
-    /**
-     * Gets a characters equipped gear set from The Lodestone.
-     * @param id The Lodestone character ID.
-     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
-     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
-     */
     suspend fun getGearSet(id: Int) = coroutineScope {
-        val character = getLodestoneProfile(id)
+        val character = KtLodestone.getLodestoneProfile(id)
 
         val mainHand = async {
             getGearSetCss(character, "MAINHAND") !! // Cannot be null

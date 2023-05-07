@@ -1,7 +1,5 @@
 package cloud.drakon.ktlodestone
 
-import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
-import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
 import cloud.drakon.ktlodestone.profile.classjob.Experience
 import cloud.drakon.ktlodestone.profile.classjob.ProfileClassJob
@@ -13,7 +11,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 
-object ClassJob {
+internal object ClassJob {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/classjob.json") !!
             .readText()
@@ -21,14 +19,8 @@ object ClassJob {
 
     private const val noExperience = "-- / --"
 
-    /**
-     * Gets a characters class/job stats from The Lodestone. This is equivalent to what is returned by The Lodestone's `/classjob` endpoint for a character.
-     * @param id The Lodestone character ID.
-     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
-     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
-     */
     suspend fun getClassJob(id: Int) = coroutineScope {
-        val character = getLodestoneProfile(id, "class_job")
+        val character = KtLodestone.getLodestoneProfile(id, "class_job")
 
         val bozja = async { getUniqueDutyLevel(character, "BOZJA") }
         val eureka = async { getUniqueDutyLevel(character, "EUREKA") }
