@@ -1,7 +1,5 @@
 package cloud.drakon.ktlodestone
 
-import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
-import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.character.ActiveClassJob
 import cloud.drakon.ktlodestone.profile.character.GrandCompany
 import cloud.drakon.ktlodestone.profile.character.Guardian
@@ -18,7 +16,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 
-object Character {
+internal object Character {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/character.json") !!
             .readText()
@@ -30,14 +28,8 @@ object Character {
     private val serverRegex = """\S+""".toRegex()
     private val dcRegex = """(?<=\[)\w+(?=\])""".toRegex()
 
-    /**
-     * Gets a character's profile from The Lodestone.
-     * @param id The Lodestone character ID.
-     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
-     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
-     */
     suspend fun getCharacter(id: Int) = coroutineScope {
-        val character = getLodestoneProfile(id)
+        val character = KtLodestone.getLodestoneProfile(id)
 
         val activeClassJob = async { getActiveClassJob(character) }
 

@@ -1,7 +1,5 @@
 package cloud.drakon.ktlodestone
 
-import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
-import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.attributes.ProfileAttributes
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -10,20 +8,14 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 
-object Attributes {
+internal object Attributes {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/attributes.json") !!
             .readText()
     )
 
-    /**
-     * Gets the attributes of character from The Lodestone. This is equivalent to what is returned by The Lodestone's `/attributes` endpoint for a character.
-     * @param id The Lodestone character ID.
-     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
-     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
-     */
     suspend fun getAttributes(id: Int) = coroutineScope {
-        val character = getLodestoneProfile(id)
+        val character = KtLodestone.getLodestoneProfile(id)
 
         val strength = async {
             getAttributeCss(character, "STRENGTH").toShort()
