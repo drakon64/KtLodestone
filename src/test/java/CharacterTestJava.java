@@ -2,17 +2,25 @@ import cloud.drakon.ktlodestone.KtLodestone;
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.ExecutionException;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CharacterTestJava {
     @Test
     void getCharacter() {
-        assertDoesNotThrow(() -> KtLodestone.getCharacterBlocking(27545492));
+        assertDoesNotThrow(() -> System.out.println(KtLodestone.getCharacterAsync(27545492).get()));
     }
 
     @Test
     void getInvalidCharacter() {
-        assertThrows(CharacterNotFoundException.class, () -> KtLodestone.getCharacterBlocking(0));
+        assertThrows(CharacterNotFoundException.class, () -> {
+            try {
+                KtLodestone.getCharacterAsync(0).get();
+            } catch (ExecutionException e) {
+                throw e.getCause();
+            }
+        });
     }
 }
