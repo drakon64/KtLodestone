@@ -14,7 +14,7 @@ class AttributesTest {
         }
     }
 
-    @Test fun getInvalidCharacter() {
+    @Test fun getInvalidAttributes() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
                 println(KtLodestone.getAttributes(0))

@@ -14,7 +14,7 @@ class GearSetTest {
         }
     }
 
-    @Test fun getInvalidCharacter() {
+    @Test fun getInvalidGearSet() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
                 println(KtLodestone.getGearSet(0))
