@@ -7,17 +7,17 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class AttributesTestJava {
+class MountsAsyncTest {
     @Test
-    void getCharacter() {
-        assertDoesNotThrow(() -> System.out.println(KtLodestone.getAttributesAsync(27545492).get()));
+    void getMountsAsync() {
+        assertDoesNotThrow(() -> System.out.println(KtLodestone.getMountsAsync(27545492).get()));
     }
 
     @Test
-    void getInvalidCharacter() {
+    void getInvalidMountsAsync() {
         assertThrows(CharacterNotFoundException.class, () -> {
             try {
-                KtLodestone.getAttributesAsync(0).get();
+                KtLodestone.getMountsAsync(0).get();
             } catch (ExecutionException e) {
                 throw e.getCause();
             }

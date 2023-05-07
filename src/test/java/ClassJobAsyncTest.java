@@ -7,14 +7,14 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ClassJobTestJava {
+class ClassJobAsyncTest {
     @Test
-    void getCharacter() {
+    void getClassJobAsync() {
         assertDoesNotThrow(() -> System.out.println(KtLodestone.getClassJobAsync(27545492).get()));
     }
 
     @Test
-    void getInvalidCharacter() {
+    void getInvalidClassJobAsync() {
         assertThrows(CharacterNotFoundException.class, () -> {
             try {
                 KtLodestone.getClassJobAsync(0).get();
