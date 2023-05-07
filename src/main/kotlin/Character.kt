@@ -31,8 +31,8 @@ object Character {
     private val dcRegex = """(?<=\[)\w+(?=\])""".toRegex()
 
     /**
-     * Gets a character from The Lodestone
-     * @param id The Lodestone character ID
+     * Gets a character's profile from The Lodestone.
+     * @param id The Lodestone character ID.
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
