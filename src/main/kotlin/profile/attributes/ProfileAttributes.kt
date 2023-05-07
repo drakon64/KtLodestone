@@ -1,6 +1,7 @@
 package cloud.drakon.ktlodestone.profile.attributes
 
 /**
+ * A characters attributes.
  * @property strength Affects physical damage dealt by gladiator's arms, marauder's arms, pugilist's arms, lancer's arms, conjurer's arms, thaumaturge's arms, arcanist's arms, dark knight's arms, samurai's arms, reaper's arms, gunbreaker's arms, red mage's arms, astrologian's arms, sage's arms, and blue mage's arms.
  * @property dexterity Affects physical ranged damage and damage dealt by rogue's arms.
  * @property vitality Affects maximum HP.

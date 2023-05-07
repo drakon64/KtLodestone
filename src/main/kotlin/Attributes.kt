@@ -17,8 +17,8 @@ object Attributes {
     )
 
     /**
-     * Gets a characters attributes from The Lodestone
-     * @param id The Lodestone character ID
+     * Gets the attributes of character from The Lodestone. This is equivalent to what is returned by The Lodestone's `/attributes` endpoint for a character.
+     * @param id The Lodestone character ID.
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */

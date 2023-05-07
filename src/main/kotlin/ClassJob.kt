@@ -22,8 +22,8 @@ object ClassJob {
     private const val noExperience = "-- / --"
 
     /**
-     * Gets a characters class/job stats from The Lodestone
-     * @param id The Lodestone character ID
+     * Gets a characters class/job stats from The Lodestone. This is equivalent to what is returned by The Lodestone's `/classjob` endpoint for a character.
+     * @param id The Lodestone character ID.
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
