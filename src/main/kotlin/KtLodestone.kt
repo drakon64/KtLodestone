@@ -184,7 +184,7 @@ object KtLodestone {
         return@coroutineScope when (request.status.value) {
             200 -> Jsoup.parse(request.body() as String)
             404 -> throw CharacterNotFoundException("A character with ID `${id}` could not be found on The Lodestone.")
-            else -> throw LodestoneException("The Lodestone returned an unknown error.")
+            else -> throw LodestoneException()
         }
     }
 }
