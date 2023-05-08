@@ -27,7 +27,7 @@ import org.jsoup.Jsoup
 
 object KtLodestone {
     /**
-     * Gets the attributes of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `/attributes` endpoint for a character.
+     * Gets the attributes of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `#profile` endpoint for a character.
      * @param id The Lodestone character ID.
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
@@ -35,7 +35,7 @@ object KtLodestone {
     suspend fun getAttributes(id: Int) = coroutineScope { Attributes.getAttributes(id) }
 
     /**
-     * Gets the attributes of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `/attributes` endpoint for a character. For use outside of Kotlin coroutines.
+     * Gets the attributes of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `#profile` endpoint for a character. For use outside of Kotlin coroutines.
      * @param id The Lodestone character ID.
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
@@ -44,7 +44,7 @@ object KtLodestone {
         GlobalScope.future { Attributes.getAttributes(id) }
 
     /**
-     * Gets a character's profile from The Lodestone.
+     * Gets a character's profile from The Lodestone. This is equivalent to what is returned by The Lodestone's `#profile` endpoint for a character.
      * @param id The Lodestone character ID.
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
@@ -52,7 +52,7 @@ object KtLodestone {
     suspend fun getCharacter(id: Int) = coroutineScope { Character.getCharacter(id) }
 
     /**
-     * Gets a character's profile from The Lodestone. For use outside of Kotlin coroutines.
+     * Gets a character's profile from The Lodestone. This is equivalent to what is returned by The Lodestone's `#profile` endpoint for a character. For use outside of Kotlin coroutines.
      * @param id The Lodestone character ID.
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
