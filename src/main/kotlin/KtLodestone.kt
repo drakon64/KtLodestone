@@ -4,6 +4,7 @@ package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
+import cloud.drakon.ktlodestone.profile.Achievements
 import cloud.drakon.ktlodestone.profile.Attributes
 import cloud.drakon.ktlodestone.profile.Character
 import cloud.drakon.ktlodestone.profile.ClassJob
@@ -26,6 +27,26 @@ import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.Jsoup
 
 object KtLodestone {
+    /**
+     * Gets the achievements of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `/achievement` endpoint for a character.
+     * @param id The Lodestone character ID.
+     * @param pages The number of pages to get achievements from
+     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
+     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
+     */
+    suspend fun getAchievements(id: Int, pages: Byte? = null) =
+        coroutineScope { Achievements.getAchievements(id, pages) }
+
+    /**
+     * Gets the achievements of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `/achievement` endpoint for a character. For use outside of Kotlin coroutines.
+     * @param id The Lodestone character ID.
+     * * @param pages The number of pages to get achievements from
+     * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
+     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
+     */
+    @JvmStatic fun getAchievementsAsync(id: Int, pages: Byte? = null) =
+        GlobalScope.future { Achievements.getAchievements(id, pages) }
+
     /**
      * Gets the attributes of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `#profile` endpoint for a character.
      * @param id The Lodestone character ID.
@@ -163,7 +184,20 @@ object KtLodestone {
         return@coroutineScope when (request.status.value) {
             200 -> Jsoup.parse(request.body() as String)
             404 -> throw CharacterNotFoundException("A character with ID `${id}` could not be found on The Lodestone.")
-            else -> throw LodestoneException("The Lodestone returned an unknown error.")
+            else -> throw LodestoneException()
         }
     }
+
+    internal suspend fun getLodestoneProfilePaginated(endpoint: String) =
+        coroutineScope {
+            val request = ktorClient.get(endpoint) {
+                header(HttpHeaders.UserAgent, userAgentDesktop)
+            }
+
+            return@coroutineScope if (request.status.value == 200) {
+                Jsoup.parse(request.body() as String)
+            } else {
+                throw LodestoneException()
+            }
+        }
 }

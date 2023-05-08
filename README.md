@@ -1,6 +1,6 @@
 # KtLodestone
 
-![Kotlin Alpha](https://kotl.in/badges/alpha.svg)
+![Kotlin Beta](https://kotl.in/badges/beta.svg)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.8.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![License](https://img.shields.io/github/license/drakon64/KtLodestone)](hhttps://opensource.org/license/mit/)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=KtLodestone&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=KtLodestone)
@@ -14,6 +14,7 @@ KtLodestone is a parser for The Lodestone for the JVM platform (JDK 11+).
 - Supports scraping the following information from The Lodestone:
   - Character
     - Profile
+    - Achievements
     - Attributes
     - Class/job
     - Equipped gear
@@ -32,7 +33,7 @@ KtLodestone is a parser for The Lodestone for the JVM platform (JDK 11+).
 KtLodestone is available from Maven Central:
 ```kotlin
 dependencies {
-    implementation("cloud.drakon.ktlodestone:6.0.0")
+    implementation("cloud.drakon.ktlodestone:6.1.0")
 }
 ```
 
@@ -40,7 +41,7 @@ dependencies {
 
 ---
 
-Kotlin KDocs: [![kdoc](https://img.shields.io/badge/kdoc-6.0.0-brightgreen)](https://drakon64.github.io/KtLodestone/)<br>
+Kotlin KDocs: [![kdoc](https://img.shields.io/badge/kdoc-6.1.0-brightgreen)](https://drakon64.github.io/KtLodestone/)<br>
 Javadocs: [![javadoc](https://javadoc.io/badge2/cloud.drakon/ktlodestone/javadoc.svg)](https://javadoc.io/doc/cloud.drakon/ktlodestone)
 
 # Examples
