@@ -26,7 +26,7 @@ internal object Achievements {
     suspend fun getAchievements(id: Int) = coroutineScope {
         val character = KtLodestone.getLodestoneProfile(id, "achievement")
 
-        val achievements = async { getProfileAchievements(character) }
+        val achievements = async { getProfileAchievements(character, id) }
 
         val totalAchievements = async {
             getAchievementCount(character, "TOTAL_ACHIEVEMENTS")
@@ -45,24 +45,26 @@ internal object Achievements {
     private val achievementIdRegex = """\d+(?=\/$)""".toRegex()
     private val achievementDateRegex = """(?<=ldst_strftime\()\d+""".toRegex()
 
-    private suspend fun getProfileAchievements(character: Document) = coroutineScope {
-        val root =
-            character.select(lodestoneCssSelectors.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
+    private suspend fun getProfileAchievements(character: Document, id: Int) =
+        coroutineScope {
+            val achievements = mutableListOf<Achievement>()
 
-        val achievements = mutableListOf<Achievement>()
+            getPaginatedAchievements(
+                "https://eu.finalfantasyxiv.com/lodestone/character/${id}/achievement",
+                achievements
+            )
 
-        var next =
-            character.select(lodestoneCssSelectors.jsonObject["LIST_NEXT_BUTTON"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
-                .attr("href")
+            var next =
+                character.select(lodestoneCssSelectors.jsonObject["LIST_NEXT_BUTTON"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                    .first() !!
+                    .attr("href")
 
-        while (next != "javascript:void(0);") {
-            next = getPaginatedAchievements(next, achievements)
+            while (next != "javascript:void(0);") {
+                next = getPaginatedAchievements(next, achievements)
+            }
+
+            return@coroutineScope achievements
         }
-
-        return@coroutineScope achievements
-    }
 
     private suspend fun getPaginatedAchievements(
         page: String,
