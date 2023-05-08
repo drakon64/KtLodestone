@@ -151,12 +151,12 @@ object KtLodestone {
             .readText()
     )
 
-    private val userAgentDesktop =
+    internal val userAgentDesktop =
         meta.jsonObject["userAgentDesktop"] !!.jsonPrimitive.content
     private val userAgentMobile =
         meta.jsonObject["userAgentMobile"] !!.jsonPrimitive.content
 
-    private val ktorClient = HttpClient(Java)
+    internal val ktorClient = HttpClient(Java)
 
     internal suspend fun getLodestoneProfile(
         id: Int,
