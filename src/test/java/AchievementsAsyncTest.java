@@ -10,14 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class AchievementsAsyncTest {
     @Test
     void getAchievementsAsync() {
-        assertDoesNotThrow(() -> System.out.println(KtLodestone.getAchievementsAsync(27545492, (byte) 1).get()));
+        assertDoesNotThrow(() -> System.out.println(KtLodestone.getAchievementsAsync(27545492, (byte) 2).get()));
     }
 
     @Test
     void getInvalidAchievementsAsync() {
         assertThrows(CharacterNotFoundException.class, () -> {
             try {
-                KtLodestone.getAchievementsAsync(0, (byte) 1).get();
+                KtLodestone.getAchievementsAsync(0, (byte) 2).get();
             } catch (ExecutionException e) {
                 throw e.getCause();
             }
