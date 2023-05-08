@@ -43,7 +43,7 @@ internal object Achievements {
 
     private suspend fun getProfileAchievements(character: Document, id: Int) =
         coroutineScope {
-            val achievements = mutableListOf<Achievement>()
+            val achievements = mutableMapOf<Short, Achievement>()
 
             getPaginatedAchievements(
                 "https://eu.finalfantasyxiv.com/lodestone/character/${id}/achievement",
@@ -59,7 +59,7 @@ internal object Achievements {
                 next = getPaginatedAchievements(next, achievements)
             }
 
-            return@coroutineScope achievements
+            return@coroutineScope achievements.toMap()
         }
 
     private val achievementNameRegex = """"([^"]*)"""".toRegex()
@@ -68,7 +68,7 @@ internal object Achievements {
 
     private suspend fun getPaginatedAchievements(
         page: String,
-        achievementsList: MutableList<Achievement>,
+        achievementsList: MutableMap<Short, Achievement>,
     ) = coroutineScope {
         val request = KtLodestone.ktorClient.get(page) {
             header(
@@ -108,11 +108,8 @@ internal object Achievements {
                     ) !!.value.toLong()
                 }
 
-                achievementsList.add(
-                    Achievement(
-                        name.await(), id.await(), date.await()
-                    )
-                )
+                achievementsList[id.await()] =
+                    Achievement(name.await(), id.await(), date.await())
             }
 
         return@coroutineScope character.select(lodestoneCssSelectors.jsonObject["LIST_NEXT_BUTTON"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
