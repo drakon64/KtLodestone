@@ -30,20 +30,22 @@ object KtLodestone {
     /**
      * Gets the achievements of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `/achievement` endpoint for a character.
      * @param id The Lodestone character ID.
+     * @param pages The number of pages to get achievements from
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getAchievements(id: Int) =
-        coroutineScope { Achievements.getAchievements(id) }
+    suspend fun getAchievements(id: Int, pages: UByte? = null) =
+        coroutineScope { Achievements.getAchievements(id, pages) }
 
     /**
      * Gets the achievements of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `/achievement` endpoint for a character. For use outside of Kotlin coroutines.
      * @param id The Lodestone character ID.
+     * * @param pages The number of pages to get achievements from
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    @JvmStatic fun getAchievementsAsync(id: Int) =
-        GlobalScope.future { Achievements.getAchievements(id) }
+    @JvmStatic fun getAchievementsAsync(id: Int, pages: UByte? = null) =
+        GlobalScope.future { Achievements.getAchievements(id, pages) }
 
     /**
      * Gets the attributes of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `#profile` endpoint for a character.

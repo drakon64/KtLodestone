@@ -23,10 +23,10 @@ internal object Achievements {
             .readText()
     )
 
-    suspend fun getAchievements(id: Int) = coroutineScope {
+    suspend fun getAchievements(id: Int, pages: UByte?) = coroutineScope {
         val character = KtLodestone.getLodestoneProfile(id, "achievement")
 
-        val achievements = async { getProfileAchievements(character, id) }
+        val achievements = async { getProfileAchievements(character, id, pages) }
 
         val totalAchievements = async {
             getAchievementCount(character, "TOTAL_ACHIEVEMENTS")
@@ -41,26 +41,38 @@ internal object Achievements {
         )
     }
 
-    private suspend fun getProfileAchievements(character: Document, id: Int) =
-        coroutineScope {
-            val achievements = mutableMapOf<Short, Achievement>()
+    private suspend fun getProfileAchievements(
+        character: Document,
+        id: Int,
+        pages: UByte?,
+    ) = coroutineScope {
+        val achievements = mutableMapOf<Short, Achievement>()
 
-            getPaginatedAchievements(
-                "https://eu.finalfantasyxiv.com/lodestone/character/${id}/achievement",
-                achievements
-            )
+        getPaginatedAchievements(
+            "https://eu.finalfantasyxiv.com/lodestone/character/${id}/achievement",
+            achievements
+        )
 
-            var next =
-                character.select(lodestoneCssSelectors.jsonObject["LIST_NEXT_BUTTON"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                    .first() !!
-                    .attr("href")
+        var next =
+            character.select(lodestoneCssSelectors.jsonObject["LIST_NEXT_BUTTON"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+                .first() !!
+                .attr("href")
 
+        if (pages != null) {
+            var page: UByte = 1u
+
+            while (next != "javascript:void(0);" && page != pages) {
+                next = getPaginatedAchievements(next, achievements)
+                page = (page + 1u).toUByte()
+            }
+        } else {
             while (next != "javascript:void(0);") {
                 next = getPaginatedAchievements(next, achievements)
             }
-
-            return@coroutineScope achievements.toMap()
         }
+
+        return@coroutineScope achievements.toMap()
+    }
 
     private val achievementNameRegex = """"([^"]*)"""".toRegex()
     private val achievementIdRegex = """\d+(?=\/$)""".toRegex()

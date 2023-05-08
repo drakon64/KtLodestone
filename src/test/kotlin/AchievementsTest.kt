@@ -9,7 +9,7 @@ class AchievementsTest {
     @Test fun getAchievements() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
-                println(KtLodestone.getAchievements(27545492))
+                println(KtLodestone.getAchievements(27545492, 1u))
             }
         }
     }
@@ -17,7 +17,7 @@ class AchievementsTest {
     @Test fun getInvalidAchievements() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
-                println(KtLodestone.getAchievements(0))
+                println(KtLodestone.getAchievements(0, 1u))
             }
         }
     }
