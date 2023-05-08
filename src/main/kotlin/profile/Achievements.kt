@@ -41,10 +41,6 @@ internal object Achievements {
         )
     }
 
-    private val achievementNameRegex = """"([^"]*)"""".toRegex()
-    private val achievementIdRegex = """\d+(?=\/$)""".toRegex()
-    private val achievementDateRegex = """(?<=ldst_strftime\()\d+""".toRegex()
-
     private suspend fun getProfileAchievements(character: Document, id: Int) =
         coroutineScope {
             val achievements = mutableListOf<Achievement>()
@@ -65,6 +61,10 @@ internal object Achievements {
 
             return@coroutineScope achievements
         }
+
+    private val achievementNameRegex = """"([^"]*)"""".toRegex()
+    private val achievementIdRegex = """\d+(?=\/$)""".toRegex()
+    private val achievementDateRegex = """(?<=ldst_strftime\()\d+""".toRegex()
 
     private suspend fun getPaginatedAchievements(
         page: String,
