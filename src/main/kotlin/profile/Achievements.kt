@@ -3,6 +3,7 @@ package cloud.drakon.ktlodestone.profile
 import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
+import cloud.drakon.ktlodestone.exception.PagesLessThanOneException
 import cloud.drakon.ktlodestone.profile.achievements.Achievement
 import cloud.drakon.ktlodestone.profile.achievements.ProfileAchievements
 import io.ktor.client.call.body
@@ -23,7 +24,11 @@ internal object Achievements {
             .readText()
     )
 
-    suspend fun getAchievements(id: Int, pages: UByte?) = coroutineScope {
+    suspend fun getAchievements(id: Int, pages: Byte?) = coroutineScope {
+        if (pages != null && pages < 1) {
+            throw PagesLessThanOneException("`pages` must be at least 1.")
+        }
+
         val character = KtLodestone.getLodestoneProfile(id, "achievement")
 
         val achievements = async { getProfileAchievements(character, id, pages) }
@@ -44,7 +49,7 @@ internal object Achievements {
     private suspend fun getProfileAchievements(
         character: Document,
         id: Int,
-        pages: UByte?,
+        pages: Byte?,
     ) = coroutineScope {
         val achievements = mutableMapOf<Short, Achievement>()
 
@@ -59,11 +64,11 @@ internal object Achievements {
                 .attr("href")
 
         if (pages != null) {
-            var page: UByte = 1u
+            var page: Byte = 1
 
             while (next != "javascript:void(0);" && page != pages) {
                 next = getPaginatedAchievements(next, achievements)
-                page = (page + 1u).toUByte()
+                page = (page + 1).toByte()
             }
         } else {
             while (next != "javascript:void(0);") {

@@ -34,7 +34,7 @@ object KtLodestone {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getAchievements(id: Int, pages: UByte? = null) =
+    suspend fun getAchievements(id: Int, pages: Byte? = null) =
         coroutineScope { Achievements.getAchievements(id, pages) }
 
     /**
@@ -44,7 +44,7 @@ object KtLodestone {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    @JvmStatic fun getAchievementsAsync(id: Int, pages: UByte? = null) =
+    @JvmStatic fun getAchievementsAsync(id: Int, pages: Byte? = null) =
         GlobalScope.future { Achievements.getAchievements(id, pages) }
 
     /**
