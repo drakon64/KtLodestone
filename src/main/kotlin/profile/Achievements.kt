@@ -1,7 +1,6 @@
 package cloud.drakon.ktlodestone.profile
 
 import cloud.drakon.ktlodestone.KtLodestone
-import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.exception.PagesLessThanOneException
 import cloud.drakon.ktlodestone.profile.achievements.Achievement
@@ -87,18 +86,18 @@ internal object Achievements {
         page: String,
         achievementsList: MutableMap<Short, Achievement>,
     ) = coroutineScope {
+        val character: Document
+
         val request = KtLodestone.ktorClient.get(page) {
             header(
                 HttpHeaders.UserAgent, KtLodestone.userAgentDesktop
             )
         }
 
-        val character: Document
-
-        when (request.status.value) {
-            200 -> character = Jsoup.parse(request.body() as String)
-            404 -> throw CharacterNotFoundException("")
-            else -> throw LodestoneException("The Lodestone returned an unknown error.")
+        if (request.status.value == 200) {
+            character = Jsoup.parse(request.body() as String)
+        } else {
+            throw LodestoneException("The Lodestone returned an unknown error.")
         }
 
         val root =
