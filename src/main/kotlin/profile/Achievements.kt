@@ -1,20 +1,19 @@
 package cloud.drakon.ktlodestone.profile
 
 import cloud.drakon.ktlodestone.KtLodestone
-import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.exception.PagesLessThanOneException
 import cloud.drakon.ktlodestone.profile.achievements.Achievement
 import cloud.drakon.ktlodestone.profile.achievements.ProfileAchievements
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.http.HttpHeaders
+import kotlin.collections.MutableMap
+import kotlin.collections.forEach
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
+import kotlin.collections.toMap
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 internal object Achievements {
@@ -86,19 +85,7 @@ internal object Achievements {
         page: String,
         achievementsList: MutableMap<Short, Achievement>,
     ) = coroutineScope {
-        val character: Document
-
-        val request = KtLodestone.ktorClient.get(page) {
-            header(
-                HttpHeaders.UserAgent, KtLodestone.userAgentDesktop
-            )
-        }
-
-        if (request.status.value == 200) {
-            character = Jsoup.parse(request.body() as String)
-        } else {
-            throw LodestoneException("The Lodestone returned an unknown error.")
-        }
+        val character = KtLodestone.getLodestoneProfilePaginated(page)
 
         val root =
             character.select(lodestoneCssSelectors.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)

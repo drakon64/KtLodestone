@@ -153,12 +153,12 @@ object KtLodestone {
             .readText()
     )
 
-    internal val userAgentDesktop =
+    private val userAgentDesktop =
         meta.jsonObject["userAgentDesktop"] !!.jsonPrimitive.content
     private val userAgentMobile =
         meta.jsonObject["userAgentMobile"] !!.jsonPrimitive.content
 
-    internal val ktorClient = HttpClient(Java)
+    private val ktorClient = HttpClient(Java)
 
     internal suspend fun getLodestoneProfile(
         id: Int,
@@ -187,4 +187,17 @@ object KtLodestone {
             else -> throw LodestoneException()
         }
     }
+
+    internal suspend fun getLodestoneProfilePaginated(endpoint: String) =
+        coroutineScope {
+            val request = ktorClient.get(endpoint) {
+                header(HttpHeaders.UserAgent, userAgentDesktop)
+            }
+
+            return@coroutineScope if (request.status.value == 200) {
+                Jsoup.parse(request.body() as String)
+            } else {
+                throw LodestoneException()
+            }
+        }
 }
