@@ -30,7 +30,7 @@ dependencies {
 
     implementation("org.jsoup:jsoup:1.16.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
     testImplementation(kotlin("test"))
 }
