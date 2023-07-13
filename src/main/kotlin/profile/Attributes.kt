@@ -1,6 +1,5 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.attributes.ProfileAttributes
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -16,7 +15,7 @@ internal object Attributes {
     )
 
     suspend fun getAttributes(id: Int) = coroutineScope {
-        val character = KtLodestone.getLodestoneProfile(id)
+        val character = Profile.getLodestoneProfile(id)
 
         val strength = async {
             getAttributeCss(character, "STRENGTH").toShort()

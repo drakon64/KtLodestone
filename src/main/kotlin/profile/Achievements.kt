@@ -1,14 +1,9 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.exception.PagesLessThanOneException
 import cloud.drakon.ktlodestone.profile.achievements.Achievement
 import cloud.drakon.ktlodestone.profile.achievements.ProfileAchievements
-import kotlin.collections.MutableMap
-import kotlin.collections.forEach
-import kotlin.collections.mutableMapOf
 import kotlin.collections.set
-import kotlin.collections.toMap
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.Json
@@ -27,7 +22,7 @@ internal object Achievements {
             throw PagesLessThanOneException("`pages` must be at least 1.")
         }
 
-        val character = KtLodestone.getLodestoneProfile(id, "achievement")
+        val character = Profile.getLodestoneProfile(id, "achievement")
 
         val achievements = async { getProfileAchievements(character, id, pages) }
 
@@ -85,7 +80,7 @@ internal object Achievements {
         page: String,
         achievementsList: MutableMap<Short, Achievement>,
     ) = coroutineScope {
-        val character = KtLodestone.getLodestoneProfilePaginated(page)
+        val character = Profile.getLodestoneProfilePaginated(page)
 
         val root =
             character.select(lodestoneCssSelectors.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)

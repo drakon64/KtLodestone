@@ -1,6 +1,5 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.classjob.ClassJobLevel
 import cloud.drakon.ktlodestone.profile.classjob.ClassJobName
 import cloud.drakon.ktlodestone.profile.classjob.Experience
@@ -23,7 +22,7 @@ internal object ClassJob {
     private const val noExperience = "-- / --"
 
     suspend fun getClassJob(id: Int) = coroutineScope {
-        val character = KtLodestone.getLodestoneProfile(id, "class_job")
+        val character = Profile.getLodestoneProfile(id, "class_job")
 
         val uniqueDutyLevels = async { getUniqueDutyLevels(character) }
         val classJobLevels = async { getClassJobLevels(character) }

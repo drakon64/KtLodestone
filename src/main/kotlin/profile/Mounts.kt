@@ -1,6 +1,5 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.mounts.Mount
 import cloud.drakon.ktlodestone.profile.mounts.ProfileMounts
 import kotlinx.coroutines.async
@@ -19,7 +18,7 @@ internal object Mounts {
 
     suspend fun getMounts(id: Int) = coroutineScope {
         val character =
-            KtLodestone.getLodestoneProfile(id, "mount", mobileUserAgent = true)
+            Profile.getLodestoneProfile(id, "mount", mobileUserAgent = true)
 
         val mounts = async {
             getMountList(character)

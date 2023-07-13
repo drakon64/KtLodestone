@@ -1,6 +1,5 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.character.ActiveClassJob
 import cloud.drakon.ktlodestone.profile.character.GrandCompany
 import cloud.drakon.ktlodestone.profile.character.Guardian
@@ -30,7 +29,7 @@ internal object Character {
     private val dcRegex = """(?<=\[)\w+(?=\])""".toRegex()
 
     suspend fun getCharacter(id: Int) = coroutineScope {
-        val character = KtLodestone.getLodestoneProfile(id)
+        val character = Profile.getLodestoneProfile(id)
 
         val activeClassJob = async { getActiveClassJob(character) }
 

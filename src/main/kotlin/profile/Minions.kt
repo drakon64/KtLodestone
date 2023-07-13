@@ -1,6 +1,5 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.minions.Minion
 import cloud.drakon.ktlodestone.profile.minions.ProfileMinions
 import kotlinx.coroutines.async
@@ -19,7 +18,7 @@ internal object Minions {
 
     suspend fun getMinions(id: Int) = coroutineScope {
         val character =
-            KtLodestone.getLodestoneProfile(id, "minion", mobileUserAgent = true)
+            Profile.getLodestoneProfile(id, "minion", mobileUserAgent = true)
 
         val minions = async {
             getMinionList(character)
