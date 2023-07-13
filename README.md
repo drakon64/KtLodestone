@@ -33,7 +33,7 @@ KtLodestone is a parser for The Lodestone for the JVM platform (JDK 11+).
 KtLodestone is available from Maven Central:
 ```kotlin
 dependencies {
-    implementation("cloud.drakon.ktlodestone:6.1.1-SNAPSHOT")
+    implementation("cloud.drakon.ktlodestone:6.2.0-SNAPSHOT")
 }
 ```
 
