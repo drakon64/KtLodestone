@@ -11,12 +11,29 @@ import cloud.drakon.ktlodestone.profile.ClassJob
 import cloud.drakon.ktlodestone.profile.GearSet
 import cloud.drakon.ktlodestone.profile.Minions
 import cloud.drakon.ktlodestone.profile.Mounts
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.java.Java
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.future.future
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 object KtLodestone {
+    private val meta = Json.parseToJsonElement(
+        object {}::class.java.classLoader.getResource("lodestone-css-selectors/meta.json") !!
+            .readText()
+    )
+
+    internal val ktorClient = HttpClient(Java)
+
+    internal val userAgentDesktop =
+        meta.jsonObject["userAgentDesktop"] !!.jsonPrimitive.content
+    internal val userAgentMobile =
+        meta.jsonObject["userAgentMobile"] !!.jsonPrimitive.content
+
     /**
      * Gets the achievements of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `/achievement` endpoint for a character.
      * @param id The Lodestone character ID.
