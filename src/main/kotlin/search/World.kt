@@ -5,7 +5,6 @@ enum class World {
     Bismarck,
     Asura,
     Belias,
-    Chaos,
     Hecatoncheir,
     Moomba,
     Pandaemonium,
