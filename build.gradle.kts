@@ -12,7 +12,7 @@ plugins {
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     signing
 
-    id("org.jetbrains.kotlinx.kover") version "0.7.2"
+    id("org.jetbrains.kotlinx.kover") version "0.6.1"
     id("org.sonarqube") version "4.2.1.3168"
 }
 
@@ -140,7 +140,7 @@ signing {
 }
 
 kover {
-    useJacoco()
+    engine.set(kotlinx.kover.api.DefaultJacocoEngine)
 }
 
 sonarqube {
