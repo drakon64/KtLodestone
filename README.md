@@ -1,7 +1,7 @@
 # KtLodestone
 
 ![Kotlin Beta](https://kotl.in/badges/beta.svg)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.8.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.9.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![License](https://img.shields.io/github/license/drakon64/KtLodestone)](hhttps://opensource.org/license/mit/)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=KtLodestone&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=KtLodestone)
 
@@ -33,7 +33,7 @@ KtLodestone is a parser for The Lodestone for the JVM platform (JDK 11+).
 KtLodestone is available from Maven Central:
 ```kotlin
 dependencies {
-    implementation("cloud.drakon.ktlodestone:6.1.0")
+    implementation("cloud.drakon.ktlodestone:6.1.1-SNAPSHOT")
 }
 ```
 

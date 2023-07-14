@@ -1,6 +1,5 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.profile.gearset.Gear
 import cloud.drakon.ktlodestone.profile.gearset.Glamour
 import cloud.drakon.ktlodestone.profile.gearset.ProfileGearSet
@@ -19,7 +18,7 @@ internal object GearSet {
     )
 
     suspend fun getGearSet(id: Int) = coroutineScope {
-        val character = KtLodestone.getLodestoneProfile(id)
+        val character = Profile.getLodestoneProfile(id)
 
         val mainHand = async {
             getGearSetCss(character, "MAINHAND") !! // Cannot be null
