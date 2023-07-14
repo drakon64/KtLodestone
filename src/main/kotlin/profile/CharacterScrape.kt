@@ -16,7 +16,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 
-internal object Character {
+internal object CharacterScrape {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/character.json") !!
             .readText()
@@ -29,7 +29,7 @@ internal object Character {
     private val dcRegex = """(?<=\[)\w+(?=\])""".toRegex()
 
     suspend fun getCharacter(id: Int) = coroutineScope {
-        val character = Profile.getLodestoneProfile(id)
+        val character = ProfileScrape.getLodestoneProfile(id)
 
         val activeClassJob = async { getActiveClassJob(character) }
 

@@ -11,14 +11,14 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 
-internal object GearSet {
+internal object GearSetScrape {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/gearset.json") !!
             .readText()
     )
 
     suspend fun getGearSet(id: Int) = coroutineScope {
-        val character = Profile.getLodestoneProfile(id)
+        val character = ProfileScrape.getLodestoneProfile(id)
 
         val mainHand = async {
             getGearSetCss(character, "MAINHAND") !! // Cannot be null

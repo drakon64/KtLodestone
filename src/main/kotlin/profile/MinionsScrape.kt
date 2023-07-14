@@ -10,7 +10,7 @@ import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-internal object Minions {
+internal object MinionsScrape {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/minion.json") !!
             .readText()
@@ -18,7 +18,7 @@ internal object Minions {
 
     suspend fun getMinions(id: Int) = coroutineScope {
         val character =
-            Profile.getLodestoneProfile(id, "minion", mobileUserAgent = true)
+            ProfileScrape.getLodestoneProfile(id, "minion", mobileUserAgent = true)
 
         val minions = async {
             getMinionList(character)

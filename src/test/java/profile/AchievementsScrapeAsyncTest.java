@@ -1,3 +1,5 @@
+package profile;
+
 import cloud.drakon.ktlodestone.KtLodestone;
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException;
 import cloud.drakon.ktlodestone.exception.PagesLessThanOneException;
@@ -8,7 +10,7 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class AchievementsAsyncTest {
+class AchievementsScrapeAsyncTest {
     @Test
     void getAchievementsAsync() {
         assertDoesNotThrow(() -> System.out.println(KtLodestone.getAchievementsAsync(27545492, (byte) 2).get()));

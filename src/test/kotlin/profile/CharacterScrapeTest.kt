@@ -1,3 +1,5 @@
+package profile
+
 import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import kotlin.test.Test
@@ -5,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
-class CharacterTest {
+class CharacterScrapeTest {
     @Test fun getCharacter() {
         assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {

@@ -13,7 +13,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 
-internal object ClassJob {
+internal object ClassJobScrape {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/classjob.json") !!
             .readText()
@@ -22,7 +22,7 @@ internal object ClassJob {
     private const val noExperience = "-- / --"
 
     suspend fun getClassJob(id: Int) = coroutineScope {
-        val character = Profile.getLodestoneProfile(id, "class_job")
+        val character = ProfileScrape.getLodestoneProfile(id, "class_job")
 
         val uniqueDutyLevels = async { getUniqueDutyLevels(character) }
         val classJobLevels = async { getClassJobLevels(character) }
