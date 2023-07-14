@@ -20,8 +20,9 @@ KtLodestone is a parser for The Lodestone for the JVM platform (JDK 11+).
     - Equipped gear
     - Minions
     - Mounts
+  - Search
+    - Character
 - Asynchronous
-- Reasonably multi-threaded
 - Compatible with Kotlin and Java
   - Kotlin functions are suspendable
   - Java-compatible functions are affixed with `Async` and return a `CompletableFuture`

@@ -1,3 +1,5 @@
+package profile;
+
 import cloud.drakon.ktlodestone.KtLodestone;
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException;
 import cloud.drakon.ktlodestone.exception.PagesLessThanOneException;

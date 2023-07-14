@@ -11,6 +11,7 @@ import cloud.drakon.ktlodestone.profile.ClassJob
 import cloud.drakon.ktlodestone.profile.GearSet
 import cloud.drakon.ktlodestone.profile.Minions
 import cloud.drakon.ktlodestone.profile.Mounts
+import cloud.drakon.ktlodestone.search.World
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.java.Java
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -154,4 +155,29 @@ object KtLodestone {
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
     @JvmStatic fun getMountsAsync(id: Int) = GlobalScope.future { Mounts.getMounts(id) }
+
+    /**
+     * Searches for a character on The Lodestone.
+     * @param name The Lodestone character name.
+     * @param world The Lodestone character world.
+     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
+     */
+    suspend fun searchCharacter(name: String, world: World) = coroutineScope {
+        return@coroutineScope cloud.drakon.ktlodestone.search.Character.characterSearch(
+            name, world
+        )
+    }
+
+    /**
+     * Searches for a character on The Lodestone. For use outside of Kotlin coroutines.
+     * @param name The Lodestone character name.
+     * @param world The Lodestone character world.
+     * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
+     */
+    @JvmStatic fun searchCharacterAsync(name: String, world: World) =
+        GlobalScope.future {
+            return@future cloud.drakon.ktlodestone.search.Character.characterSearch(
+                name, world
+            )
+        }
 }
