@@ -7,19 +7,19 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 
-class GearSetTest {
+class AttributesScrapeTest {
     @Test fun getAttributes() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
-                println(KtLodestone.getGearSet(27545492))
+                println(KtLodestone.getAttributes(27545492))
             }
         }
     }
 
-    @Test fun getInvalidGearSet() {
+    @Test fun getInvalidAttributes() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
-                println(KtLodestone.getGearSet(0))
+                println(KtLodestone.getAttributes(0))
             }
         }
     }

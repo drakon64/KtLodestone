@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ClassJobAsyncTest {
+class ClassJobScrapeAsyncTest {
     @Test
     void getClassJobAsync() {
         assertDoesNotThrow(() -> System.out.println(KtLodestone.getClassJobAsync(27545492).get()));

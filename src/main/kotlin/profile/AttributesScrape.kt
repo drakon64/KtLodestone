@@ -8,14 +8,14 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 
-internal object Attributes {
+internal object AttributesScrape {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/attributes.json") !!
             .readText()
     )
 
     suspend fun getAttributes(id: Int) = coroutineScope {
-        val character = Profile.getLodestoneProfile(id)
+        val character = ProfileScrape.getLodestoneProfile(id)
 
         val strength = async {
             getAttributeCss(character, "STRENGTH").toShort()

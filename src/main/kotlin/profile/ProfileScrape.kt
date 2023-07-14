@@ -13,7 +13,7 @@ import kotlinx.coroutines.coroutineScope
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-internal object Profile {
+internal object ProfileScrape {
     suspend fun getLodestoneProfile(
         id: Int,
         endpoint: String? = null,

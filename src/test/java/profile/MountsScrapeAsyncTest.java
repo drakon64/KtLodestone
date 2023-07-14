@@ -9,17 +9,17 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class GearSetAsyncTest {
+class MountsScrapeAsyncTest {
     @Test
-    void getGearSetAsync() {
-        assertDoesNotThrow(() -> System.out.println(KtLodestone.getGearSetAsync(27545492).get()));
+    void getMountsAsync() {
+        assertDoesNotThrow(() -> System.out.println(KtLodestone.getMountsAsync(27545492).get()));
     }
 
     @Test
-    void getInvalidGearSetAsync() {
+    void getInvalidMountsAsync() {
         assertThrows(CharacterNotFoundException.class, () -> {
             try {
-                KtLodestone.getGearSetAsync(0).get();
+                KtLodestone.getMountsAsync(0).get();
             } catch (ExecutionException e) {
                 throw e.getCause();
             }

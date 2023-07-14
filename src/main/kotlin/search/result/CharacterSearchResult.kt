@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.search.character
+package cloud.drakon.ktlodestone.search.result
 
-data class SearchCharacter(
+data class CharacterSearchResult(
     val avatar: String,
     val id: Int,
     val lang: String,

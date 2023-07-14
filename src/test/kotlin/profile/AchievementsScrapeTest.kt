@@ -8,7 +8,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 
-class AchievementsTest {
+class AchievementsScrapeTest {
     @Test fun getAchievements() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {

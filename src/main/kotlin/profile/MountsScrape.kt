@@ -10,7 +10,7 @@ import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-internal object Mounts {
+internal object MountsScrape {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/mount.json") !!
             .readText()
@@ -18,7 +18,7 @@ internal object Mounts {
 
     suspend fun getMounts(id: Int) = coroutineScope {
         val character =
-            Profile.getLodestoneProfile(id, "mount", mobileUserAgent = true)
+            ProfileScrape.getLodestoneProfile(id, "mount", mobileUserAgent = true)
 
         val mounts = async {
             getMountList(character)

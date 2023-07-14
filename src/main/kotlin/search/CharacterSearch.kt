@@ -3,7 +3,7 @@ package cloud.drakon.ktlodestone.search
 import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
-import cloud.drakon.ktlodestone.search.character.SearchCharacter
+import cloud.drakon.ktlodestone.search.result.CharacterSearchResult
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -47,7 +47,7 @@ internal object CharacterSearch {
             results.select(lodestoneCssSelectors.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                 .select(lodestoneCssSelectors.jsonObject["ENTRY"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
 
-        val characters = mutableListOf<SearchCharacter>()
+        val characters = mutableListOf<CharacterSearchResult>()
 
         for (character in search) {
             characters.add(getCharacter(character))
@@ -134,7 +134,7 @@ internal object CharacterSearch {
             dcRegex.find(serverDc.await()) !!.value
         }
 
-        return@coroutineScope SearchCharacter(
+        return@coroutineScope CharacterSearchResult(
             avatar.await(),
             id.await(),
             language.await(),

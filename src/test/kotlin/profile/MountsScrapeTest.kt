@@ -7,19 +7,19 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 
-class AttributesTest {
-    @Test fun getAttributes() {
+class MountsScrapeTest {
+    @Test fun getMounts() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
-                println(KtLodestone.getAttributes(27545492))
+                println(KtLodestone.getMounts(27545492))
             }
         }
     }
 
-    @Test fun getInvalidAttributes() {
+    @Test fun getInvalidMounts() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
-                println(KtLodestone.getAttributes(0))
+                println(KtLodestone.getMounts(0))
             }
         }
     }

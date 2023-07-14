@@ -29,7 +29,7 @@ internal object CharacterScrape {
     private val dcRegex = """(?<=\[)\w+(?=\])""".toRegex()
 
     suspend fun getCharacter(id: Int) = coroutineScope {
-        val character = Profile.getLodestoneProfile(id)
+        val character = ProfileScrape.getLodestoneProfile(id)
 
         val activeClassJob = async { getActiveClassJob(character) }
 

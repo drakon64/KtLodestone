@@ -7,19 +7,19 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 
-class MinionsTest {
-    @Test fun getMinions() {
+class ClassJobScrapeTest {
+    @Test fun getClassJob() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
-                println(KtLodestone.getMinions(27545492))
+                println(KtLodestone.getClassJob(27545492))
             }
         }
     }
 
-    @Test fun getInvalidMinions() {
+    @Test fun getInvalidClassJob() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
-                println(KtLodestone.getMinions(0))
+                println(KtLodestone.getClassJob(0))
             }
         }
     }

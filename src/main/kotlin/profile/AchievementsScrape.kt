@@ -11,7 +11,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.jsoup.nodes.Document
 
-internal object Achievements {
+internal object AchievementsScrape {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
         this::class.java.classLoader.getResource("lodestone-css-selectors/profile/achievements.json") !!
             .readText()
@@ -22,7 +22,7 @@ internal object Achievements {
             throw PagesLessThanOneException("`pages` must be at least 1.")
         }
 
-        val character = Profile.getLodestoneProfile(id, "achievement")
+        val character = ProfileScrape.getLodestoneProfile(id, "achievement")
 
         val achievements = async { getProfileAchievements(character, id, pages) }
 
@@ -80,7 +80,7 @@ internal object Achievements {
         page: String,
         achievementsList: MutableMap<Short, Achievement>,
     ) = coroutineScope {
-        val character = Profile.getLodestoneProfilePaginated(page)
+        val character = ProfileScrape.getLodestoneProfilePaginated(page)
 
         val root =
             character.select(lodestoneCssSelectors.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)

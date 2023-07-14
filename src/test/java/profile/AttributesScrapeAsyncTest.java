@@ -9,17 +9,17 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class MinionsAsyncTest {
+class AttributesScrapeAsyncTest {
     @Test
-    void getMinionsAsync() {
-        assertDoesNotThrow(() -> System.out.println(KtLodestone.getMinionsAsync(27545492).get()));
+    void getAttributesAsync() {
+        assertDoesNotThrow(() -> System.out.println(KtLodestone.getAttributesAsync(27545492).get()));
     }
 
     @Test
-    void getInvalidMinionsAsync() {
+    void getInvalidAttributesAsync() {
         assertThrows(CharacterNotFoundException.class, () -> {
             try {
-                KtLodestone.getMinionsAsync(0).get();
+                KtLodestone.getAttributesAsync(0).get();
             } catch (ExecutionException e) {
                 throw e.getCause();
             }
