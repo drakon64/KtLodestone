@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class CharacterTest {
+class CharacterSearchTest {
     @Test fun searchCharacter() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {

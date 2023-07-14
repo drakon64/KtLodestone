@@ -6,11 +6,12 @@ import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.profile.Achievements
 import cloud.drakon.ktlodestone.profile.Attributes
-import cloud.drakon.ktlodestone.profile.Character
+import cloud.drakon.ktlodestone.profile.CharacterScrape
 import cloud.drakon.ktlodestone.profile.ClassJob
 import cloud.drakon.ktlodestone.profile.GearSet
 import cloud.drakon.ktlodestone.profile.Minions
 import cloud.drakon.ktlodestone.profile.Mounts
+import cloud.drakon.ktlodestone.search.CharacterSearch
 import cloud.drakon.ktlodestone.search.World
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.java.Java
@@ -78,7 +79,8 @@ object KtLodestone {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getCharacter(id: Int) = coroutineScope { Character.getCharacter(id) }
+    suspend fun getCharacter(id: Int) =
+        coroutineScope { CharacterScrape.getCharacter(id) }
 
     /**
      * Gets a character's profile from The Lodestone. This is equivalent to what is returned by The Lodestone's `#profile` endpoint for a character. For use outside of Kotlin coroutines.
@@ -87,7 +89,7 @@ object KtLodestone {
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
     @JvmStatic fun getCharacterAsync(id: Int) =
-        GlobalScope.future { Character.getCharacter(id) }
+        GlobalScope.future { CharacterScrape.getCharacter(id) }
 
     /**
      * Gets a characters class/job stats from The Lodestone. This is equivalent to what is returned by The Lodestone's `/class_job` endpoint for a character.
@@ -163,9 +165,7 @@ object KtLodestone {
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
     suspend fun searchCharacter(name: String, world: World) = coroutineScope {
-        return@coroutineScope cloud.drakon.ktlodestone.search.Character.characterSearch(
-            name, world
-        )
+        return@coroutineScope CharacterSearch.characterSearch(name, world)
     }
 
     /**
@@ -176,8 +176,6 @@ object KtLodestone {
      */
     @JvmStatic fun searchCharacterAsync(name: String, world: World) =
         GlobalScope.future {
-            return@future cloud.drakon.ktlodestone.search.Character.characterSearch(
-                name, world
-            )
+            return@future CharacterSearch.characterSearch(name, world)
         }
 }

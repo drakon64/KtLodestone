@@ -7,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
-class CharacterTest {
+class CharacterScrapeTest {
     @Test fun getCharacter() {
         assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
