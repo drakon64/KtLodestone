@@ -41,7 +41,7 @@ internal object ClassJob {
     private suspend fun getUniqueDutyLevels(character: Document) = coroutineScope {
         val uniqueDuties = mutableMapOf<UniqueDutyName, UniqueDutyLevel?>()
 
-        UniqueDutyName.values().forEach {
+        UniqueDutyName.entries.forEach {
             uniqueDuties[it] = getUniqueDutyLevel(character, it)
         }
 
@@ -109,7 +109,7 @@ internal object ClassJob {
     private suspend fun getClassJobLevels(character: Document) = coroutineScope {
         val classesJobs = mutableMapOf<ClassJobName, ClassJobLevel?>()
 
-        ClassJobName.values().forEach {
+        ClassJobName.entries.forEach {
             classesJobs[it] = getClassJobLevel(character, it)
         }
 
