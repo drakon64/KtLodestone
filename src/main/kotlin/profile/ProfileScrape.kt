@@ -1,10 +1,10 @@
 package cloud.drakon.ktlodestone.profile
 
-import cloud.drakon.ktlodestone.KtLodestone
-import cloud.drakon.ktlodestone.KtLodestone.userAgentDesktop
-import cloud.drakon.ktlodestone.KtLodestone.userAgentMobile
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
+import cloud.drakon.ktlodestone.ktorClient
+import cloud.drakon.ktlodestone.userAgentDesktop
+import cloud.drakon.ktlodestone.userAgentMobile
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -25,7 +25,7 @@ internal object ProfileScrape {
             "https://eu.finalfantasyxiv.com/lodestone/character/${id}/${endpoint}"
         }
 
-        val request = KtLodestone.ktorClient.get(url) {
+        val request = ktorClient.get(url) {
             header(
                 HttpHeaders.UserAgent, if (! mobileUserAgent) {
                     userAgentDesktop
@@ -44,7 +44,7 @@ internal object ProfileScrape {
 
     suspend fun getLodestoneProfilePaginated(endpoint: String): Document =
         coroutineScope {
-            val request = KtLodestone.ktorClient.get(endpoint) {
+            val request = ktorClient.get(endpoint) {
                 header(HttpHeaders.UserAgent, userAgentDesktop)
             }
 
