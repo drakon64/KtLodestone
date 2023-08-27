@@ -1,10 +1,10 @@
 package cloud.drakon.ktlodestone.search
 
+import cloud.drakon.ktlodestone.KtLodestone.ktorClient
+import cloud.drakon.ktlodestone.KtLodestone.userAgentDesktop
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
-import cloud.drakon.ktlodestone.ktorClient
 import cloud.drakon.ktlodestone.search.result.CharacterSearchResult
-import cloud.drakon.ktlodestone.userAgentDesktop
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header

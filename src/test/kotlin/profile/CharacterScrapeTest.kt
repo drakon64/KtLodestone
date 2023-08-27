@@ -1,7 +1,7 @@
 package profile
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
-import cloud.drakon.ktlodestone.getCharacter
+import cloud.drakon.ktlodestone.Character.getCharacter
 import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow

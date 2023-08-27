@@ -2,7 +2,7 @@ package profile
 
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.PagesLessThanOneException
-import cloud.drakon.ktlodestone.getAchievements
+import cloud.drakon.ktlodestone.Character.getAchievements
 import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions

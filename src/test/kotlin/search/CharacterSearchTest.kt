@@ -1,7 +1,7 @@
 package search
 
+import cloud.drakon.ktlodestone.Search.searchCharacter
 import cloud.drakon.ktlodestone.search.World
-import cloud.drakon.ktlodestone.searchCharacter
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
