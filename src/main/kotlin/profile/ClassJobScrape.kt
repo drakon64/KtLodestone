@@ -38,14 +38,14 @@ internal object ClassJobScrape {
     private val currentExperienceRegex = """^[^ /]*""".toRegex()
     private val experienceToNextLevelRegex = """(?<=/ ).*""".toRegex()
 
-    private suspend fun getUniqueDutyLevels(character: Document) = coroutineScope {
+    private suspend fun getUniqueDutyLevels(character: Document): Map<UniqueDutyName, UniqueDutyLevel?> {
         val uniqueDuties = mutableMapOf<UniqueDutyName, UniqueDutyLevel?>()
 
         UniqueDutyName.entries.forEach {
             uniqueDuties[it] = getUniqueDutyLevel(character, it)
         }
 
-        return@coroutineScope uniqueDuties.toMap()
+        return uniqueDuties.toMap()
     }
 
     private suspend fun getUniqueDutyLevel(character: Document, duty: UniqueDutyName) =
@@ -106,14 +106,14 @@ internal object ClassJobScrape {
             }
         }
 
-    private suspend fun getClassJobLevels(character: Document) = coroutineScope {
+    private suspend fun getClassJobLevels(character: Document): Map<ClassJobName, ClassJobLevel?> {
         val classesJobs = mutableMapOf<ClassJobName, ClassJobLevel?>()
 
         ClassJobName.entries.forEach {
             classesJobs[it] = getClassJobLevel(character, it)
         }
 
-        return@coroutineScope classesJobs.toMap()
+        return classesJobs.toMap()
     }
 
     private suspend fun getClassJobLevel(character: Document, classJob: ClassJobName) =
@@ -159,32 +159,28 @@ internal object ClassJobScrape {
             }
         }
 
-    private suspend fun getLevel(character: Document, classJob: String) =
-        coroutineScope {
-            val selectorJson =
-                lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject["LEVEL"] !!.jsonObject["selector"] !!.jsonPrimitive.content
+    private fun getLevel(character: Document, classJob: String): String? {
+        val selectorJson =
+            lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject["LEVEL"] !!.jsonObject["selector"] !!.jsonPrimitive.content
 
-            character.select(selectorJson).first()?.text()
+        return character.select(selectorJson).first()?.text()
+    }
+
+    private fun getExperience(character: Document, classJob: String): String {
+        val experience = if (classJob != "BOZJA") {
+            "EXP"
+        } else {
+            "METTLE"
         }
 
-    private suspend fun getExperience(character: Document, classJob: String) =
-        coroutineScope {
-            val experience = if (classJob != "BOZJA") {
-                "EXP"
-            } else {
-                "METTLE"
-            }
+        val selectorJson =
+            lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject[experience] !!.jsonObject["selector"] !!.jsonPrimitive.content
 
-            val selectorJson =
-                lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject[experience] !!.jsonObject["selector"] !!.jsonPrimitive.content
+        return character.select(selectorJson).first() !!.text()
+    }
 
-            character.select(selectorJson).first() !!.text()
-        }
-
-    private suspend fun getUnlockState(character: Document, classJob: String) =
-        coroutineScope {
-            character.select(lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject["UNLOCKSTATE"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
-                .text()
-        }
+    private fun getUnlockState(character: Document, classJob: String) =
+        character.select(lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject["UNLOCKSTATE"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+            .first() !!
+            .text()
 }

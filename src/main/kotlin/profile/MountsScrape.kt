@@ -17,8 +17,9 @@ internal object MountsScrape {
     )
 
     suspend fun getMounts(id: Int) = coroutineScope {
-        val character =
-            ProfileScrape.getLodestoneProfile(id, "mount", mobileUserAgent = true)
+        val character = ProfileScrape.getLodestoneProfile(
+            id, "mount", mobileUserAgent = true
+        )
 
         val mounts = async {
             getMountList(character)
@@ -30,7 +31,7 @@ internal object MountsScrape {
         return@coroutineScope ProfileMounts(mounts.await(), total.await())
     }
 
-    private suspend fun getMountList(character: Document) = coroutineScope {
+    private suspend fun getMountList(character: Document): Map<String, Mount> {
         val mounts = mutableMapOf<String, Mount>()
 
         for (i in character.select(lodestoneCssSelectors.jsonObject["MOUNTS"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)) {
@@ -39,7 +40,7 @@ internal object MountsScrape {
             mounts[mount.name] = mount
         }
 
-        return@coroutineScope mounts.toMap()
+        return mounts.toMap()
     }
 
     private suspend fun getMount(mount: Element) = coroutineScope {
@@ -58,10 +59,7 @@ internal object MountsScrape {
         return@coroutineScope Mount(name.await(), icon.await())
     }
 
-    private suspend fun getTotalMounts(character: Document) = coroutineScope {
-        return@coroutineScope character.select(lodestoneCssSelectors.jsonObject["TOTAL"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-            .first() !!
-            .text()
-            .toShort()
-    }
+    private fun getTotalMounts(character: Document) = character.select(
+        lodestoneCssSelectors.jsonObject["TOTAL"] !!.jsonObject["selector"] !!.jsonPrimitive.content
+    ).first() !!.text().toShort()
 }

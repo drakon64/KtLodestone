@@ -13,7 +13,6 @@ import cloud.drakon.ktlodestone.profile.MinionsScrape
 import cloud.drakon.ktlodestone.profile.MountsScrape
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.future.future
 
 object Character {
@@ -25,7 +24,7 @@ object Character {
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
     suspend fun getAchievements(id: Int, pages: Byte? = null) =
-        coroutineScope { AchievementsScrape.getAchievements(id, pages) }
+        AchievementsScrape.getAchievements(id, pages)
 
     /**
      * Gets the achievements of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `/achievement` endpoint for a character. For use outside of Kotlin coroutines.
@@ -43,8 +42,7 @@ object Character {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getAttributes(id: Int) =
-        coroutineScope { AttributesScrape.getAttributes(id) }
+    suspend fun getAttributes(id: Int) = AttributesScrape.getAttributes(id)
 
     /**
      * Gets the attributes of a character from The Lodestone. This is equivalent to what is returned by The Lodestone's `#profile` endpoint for a character. For use outside of Kotlin coroutines.
@@ -61,7 +59,7 @@ object Character {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getCharacter(id: Int) = coroutineScope { CharacterScrape.getCharacter(id) }
+    suspend fun getCharacter(id: Int) = CharacterScrape.getCharacter(id)
 
     /**
      * Gets a character's profile from The Lodestone. This is equivalent to what is returned by The Lodestone's `#profile` endpoint for a character. For use outside of Kotlin coroutines.
@@ -69,7 +67,8 @@ object Character {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    fun getCharacterAsync(id: Int) = GlobalScope.future { CharacterScrape.getCharacter(id) }
+    fun getCharacterAsync(id: Int) =
+        GlobalScope.future { CharacterScrape.getCharacter(id) }
 
     /**
      * Gets a characters class/job stats from The Lodestone. This is equivalent to what is returned by The Lodestone's `/class_job` endpoint for a character.
@@ -77,7 +76,7 @@ object Character {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getClassJob(id: Int) = coroutineScope { ClassJobScrape.getClassJob(id) }
+    suspend fun getClassJob(id: Int) = ClassJobScrape.getClassJob(id)
 
     /**
      * Gets a characters class/job stats from The Lodestone. This is equivalent to what is returned by The Lodestone's `/class_job` endpoint for a character. For use outside of Kotlin coroutines.
@@ -85,7 +84,8 @@ object Character {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    fun getClassJobAsync(id: Int) = GlobalScope.future { ClassJobScrape.getClassJob(id) }
+    fun getClassJobAsync(id: Int) =
+        GlobalScope.future { ClassJobScrape.getClassJob(id) }
 
     /**
      * Gets a characters equipped gear set from The Lodestone.
@@ -93,7 +93,7 @@ object Character {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getGearSet(id: Int) = coroutineScope { GearSetScrape.getGearSet(id) }
+    suspend fun getGearSet(id: Int) = GearSetScrape.getGearSet(id)
 
     /**
      * Gets a characters equipped gear set from The Lodestone. For use outside of Kotlin coroutines.
@@ -109,7 +109,7 @@ object Character {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getMinions(id: Int) = coroutineScope { MinionsScrape.getMinions(id) }
+    suspend fun getMinions(id: Int) = MinionsScrape.getMinions(id)
 
     /**
      * Gets the minions that a character on The Lodestone has acquired. This is equivalent to what is returned by The Lodestone's `/minion` endpoint for a character. For use outside of Kotlin coroutines.
@@ -125,7 +125,7 @@ object Character {
      * @throws CharacterNotFoundException Thrown when a character could not be found on The Lodestone.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun getMounts(id: Int) = coroutineScope { MountsScrape.getMounts(id) }
+    suspend fun getMounts(id: Int) = MountsScrape.getMounts(id)
 
     /**
      * Gets the mounts that a character on The Lodestone has acquired. This is equivalent to what is returned by The Lodestone's `/mount` endpoint for a character. For use outside of Kotlin coroutines.

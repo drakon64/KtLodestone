@@ -157,30 +157,28 @@ internal object GearSetScrape {
 
     private val materiaRegex = """.*(?=<br>)""".toRegex()
 
-    private suspend fun getMateriaCss(character: Document, css: JsonElement) =
-        coroutineScope {
-            val materiaList = mutableListOf<String>()
+    private fun getMateriaCss(character: Document, css: JsonElement): List<String>? {
+        val materiaList = mutableListOf<String>()
 
-            for (i in 1 .. 5) {
-                val materia = character.select(
-                    css.jsonObject["MATERIA_${i}"] !!.jsonObject["selector"] !!.jsonPrimitive.content
-                ).first()?.html()
+        for (i in 1 .. 5) {
+            val materia = character.select(
+                css.jsonObject["MATERIA_${i}"] !!.jsonObject["selector"] !!.jsonPrimitive.content
+            ).first()?.html()
 
-                if (materia != null) {
-                    materiaList.add(materiaRegex.find(materia) !!.value)
-                }
-            }
-
-            if (materiaList.isNotEmpty()) {
-                materiaList.toList()
-            } else {
-                null
+            if (materia != null) {
+                materiaList.add(materiaRegex.find(materia) !!.value)
             }
         }
 
-    private suspend fun getSoulCrystalCss(character: Document) = coroutineScope {
-        return@coroutineScope character.select(lodestoneCssSelectors.jsonObject["SOULCRYSTAL"] !!.jsonObject["NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+        return if (materiaList.isNotEmpty()) {
+            materiaList.toList()
+        } else {
+            null
+        }
+    }
+
+    private fun getSoulCrystalCss(character: Document) =
+        character.select(lodestoneCssSelectors.jsonObject["SOULCRYSTAL"] !!.jsonObject["NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
             .first()
             ?.text()
-    }
 }

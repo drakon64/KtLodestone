@@ -30,7 +30,7 @@ internal object MinionsScrape {
         return@coroutineScope ProfileMinions(minions.await(), total.await())
     }
 
-    private suspend fun getMinionList(character: Document) = coroutineScope {
+    private suspend fun getMinionList(character: Document): Map<String, Minion> {
         val minions = mutableMapOf<String, Minion>()
 
         for (i in character.select(lodestoneCssSelectors.jsonObject["MINIONS"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)) {
@@ -39,7 +39,7 @@ internal object MinionsScrape {
             minions[minion.name] = minion
         }
 
-        return@coroutineScope minions.toMap()
+        return minions.toMap()
     }
 
     private suspend fun getMinion(minion: Element) = coroutineScope {
@@ -58,10 +58,9 @@ internal object MinionsScrape {
         return@coroutineScope Minion(name.await(), icon.await())
     }
 
-    private suspend fun getTotalMinions(character: Document) = coroutineScope {
-        return@coroutineScope character.select(lodestoneCssSelectors.jsonObject["TOTAL"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+    private fun getTotalMinions(character: Document) =
+        character.select(lodestoneCssSelectors.jsonObject["TOTAL"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
             .first() !!
             .text()
             .toShort()
-    }
 }

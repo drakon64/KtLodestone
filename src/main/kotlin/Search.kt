@@ -7,7 +7,6 @@ import cloud.drakon.ktlodestone.search.CharacterSearch
 import cloud.drakon.ktlodestone.search.World
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.future.future
 
 object Search {
@@ -17,9 +16,8 @@ object Search {
      * @param world The Lodestone character world.
      * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
      */
-    suspend fun searchCharacter(name: String, world: World) = coroutineScope {
-        return@coroutineScope CharacterSearch.characterSearch(name, world)
-    }
+    suspend fun searchCharacter(name: String, world: World) =
+        CharacterSearch.characterSearch(name, world)
 
     /**
      * Searches for a character on The Lodestone. For use outside of Kotlin coroutines.

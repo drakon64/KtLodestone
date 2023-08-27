@@ -104,12 +104,10 @@ internal object AttributesScrape {
         )
     }
 
-    private suspend fun getAttributeCss(
+    private fun getAttributeCss(
         character: Document,
         lodestoneProperty: String,
-    ) = coroutineScope {
-        character.select(lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-            .first() !!
-            .text()
-    }
+    ) = character.select(
+        lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject["selector"] !!.jsonPrimitive.content
+    ).first() !!.text()
 }
