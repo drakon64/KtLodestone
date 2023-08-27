@@ -101,12 +101,11 @@ internal object CharacterScrape {
         )
     }
 
-    private suspend fun getLodestoneCss(
+    private fun getLodestoneCss(
         lodestoneProperty: String,
         cssProperty: String = "selector",
-    ) = coroutineScope {
+    ) =
         lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject[cssProperty] !!.jsonPrimitive.content
-    }
 
     private val activeClassJobLevelRegex = """\d+""".toRegex()
 
@@ -236,15 +235,15 @@ internal object CharacterScrape {
             }
         }
 
-    private suspend fun getIconLayer(
+    private fun getIconLayer(
         iconLayer: String,
         character: Document,
         jsonElement: JsonElement,
-    ) = coroutineScope {
+    ): String {
         val selectorJson =
             jsonElement.jsonObject["ICON_LAYERS"] !!.jsonObject[iconLayer] !!
 
-        character.select(selectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
+        return character.select(selectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
             .first() !!
             .attr(selectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
     }

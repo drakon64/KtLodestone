@@ -43,10 +43,12 @@ internal object CharacterSearch {
         }
     }
 
-    private suspend fun getCharacterSearchResults(results: Document) = coroutineScope {
-        val search =
-            results.select(lodestoneCssSelectors.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                .select(lodestoneCssSelectors.jsonObject["ENTRY"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+    private suspend fun getCharacterSearchResults(results: Document): List<CharacterSearchResult>? {
+        val search = results.select(
+            lodestoneCssSelectors.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content
+        ).select(
+            lodestoneCssSelectors.jsonObject["ENTRY"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content
+        )
 
         val characters = mutableListOf<CharacterSearchResult>()
 
@@ -54,7 +56,7 @@ internal object CharacterSearch {
             characters.add(getCharacter(character))
         }
 
-        return@coroutineScope if (characters.isNotEmpty()) {
+        return if (characters.isNotEmpty()) {
             characters.toList()
         } else {
             null

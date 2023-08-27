@@ -40,10 +40,8 @@ internal object AchievementsScrape {
     }
 
     private suspend fun getProfileAchievements(
-        character: Document,
-        id: Int,
-        pages: Byte?,
-    ) = coroutineScope {
+        character: Document, id: Int, pages: Byte?
+    ): Map<Short, Achievement> {
         val achievements = mutableMapOf<Short, Achievement>()
 
         getPaginatedAchievements(
@@ -69,7 +67,7 @@ internal object AchievementsScrape {
             }
         }
 
-        return@coroutineScope achievements.toMap()
+        return achievements.toMap()
     }
 
     private val achievementNameRegex = """"([^"]*)"""".toRegex()
@@ -115,18 +113,16 @@ internal object AchievementsScrape {
             .attr("href")
     }
 
-    private suspend fun getEntrySelector(entry: String) = coroutineScope {
-        return@coroutineScope lodestoneCssSelectors.jsonObject["ENTRY"] !!.jsonObject[entry] !!.jsonObject["selector"] !!.jsonPrimitive.content
-    }
+    private fun getEntrySelector(entry: String) =
+        lodestoneCssSelectors.jsonObject["ENTRY"] !!.jsonObject[entry] !!.jsonObject["selector"] !!.jsonPrimitive.content
 
     private val achievementCountRegex = """\d+""".toRegex()
 
-    private suspend fun getAchievementCount(character: Document, selector: String) =
-        coroutineScope {
-            return@coroutineScope achievementCountRegex.find(
-                character.select(lodestoneCssSelectors.jsonObject[selector] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                    .first() !!
-                    .text()
-            ) !!.value.toShort()
-        }
+    private fun getAchievementCount(
+        character: Document, selector: String
+    ) = achievementCountRegex.find(
+        character.select(lodestoneCssSelectors.jsonObject[selector] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+            .first() !!
+            .text()
+    ) !!.value.toShort()
 }
