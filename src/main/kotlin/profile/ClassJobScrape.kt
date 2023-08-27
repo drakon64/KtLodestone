@@ -38,15 +38,18 @@ internal object ClassJobScrape {
     private val currentExperienceRegex = """^[^ /]*""".toRegex()
     private val experienceToNextLevelRegex = """(?<=/ ).*""".toRegex()
 
-    private suspend fun getUniqueDutyLevels(character: Document): Map<UniqueDutyName, UniqueDutyLevel?> {
-        val uniqueDuties = mutableMapOf<UniqueDutyName, UniqueDutyLevel?>()
+    private suspend fun getUniqueDutyLevels(character: Document) =
+        mutableMapOf<UniqueDutyName, UniqueDutyLevel?>().let {
+            it[UniqueDutyName.EUREKA] = getUniqueDutyLevel(
+                character, UniqueDutyName.EUREKA
+            )
 
-        UniqueDutyName.entries.forEach {
-            uniqueDuties[it] = getUniqueDutyLevel(character, it)
+            it[UniqueDutyName.BOZJA] = getUniqueDutyLevel(
+                character, UniqueDutyName.BOZJA
+            )
+
+            it.toMap()
         }
-
-        return uniqueDuties.toMap()
-    }
 
     private suspend fun getUniqueDutyLevel(character: Document, duty: UniqueDutyName) =
         coroutineScope {
