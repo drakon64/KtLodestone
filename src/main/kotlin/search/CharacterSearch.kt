@@ -25,19 +25,18 @@ internal object CharacterSearch {
             .readText()
     )
 
-    suspend fun characterSearch(name: String, world: World) = coroutineScope {
-        val request =
-            ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/") {
-                header(
-                    HttpHeaders.UserAgent, userAgentDesktop
-                )
+    suspend fun characterSearch(
+        name: String, world: World
+    ) = ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/") {
+        header(
+            HttpHeaders.UserAgent, userAgentDesktop
+        )
 
-                parameter("q", name)
-                parameter("worldname", world.name)
-            }
-
-        return@coroutineScope when (request.status.value) {
-            200 -> getCharacterSearchResults(Jsoup.parse(request.body() as String))
+        parameter("q", name)
+        parameter("worldname", world.name)
+    }.let {
+        when (it.status.value) {
+            200 -> getCharacterSearchResults(Jsoup.parse(it.body() as String))
             404 -> throw CharacterNotFoundException("A character named `$name` on the world `${world.name}` could not be found on The Lodestone.")
             else -> throw LodestoneException()
         }

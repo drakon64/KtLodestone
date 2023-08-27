@@ -252,10 +252,8 @@ internal object CharacterScrape {
     private val grandCompanyRankRegex = """(?<=\/ ).*""".toRegex()
 
     private suspend fun getGrandCompany(character: Document) = coroutineScope {
-        val selectorJson = lodestoneCssSelectors.jsonObject["GRAND_COMPANY"] !!
-
         val grandCompany = async {
-            character.select(selectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
+            character.select(lodestoneCssSelectors.jsonObject["GRAND_COMPANY"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
                 .first()
                 ?.text()
         }
