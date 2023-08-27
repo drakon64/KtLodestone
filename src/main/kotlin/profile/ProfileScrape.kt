@@ -17,37 +17,35 @@ internal object ProfileScrape {
         id: Int,
         endpoint: String? = null,
         mobileUserAgent: Boolean = false,
-    ): Document {
-        val url = if (endpoint == null) {
+    ): Document = ktorClient.get(
+        if (endpoint == null) {
             "https://eu.finalfantasyxiv.com/lodestone/character/${id}/"
         } else {
             "https://eu.finalfantasyxiv.com/lodestone/character/${id}/${endpoint}"
         }
-
-        val request = ktorClient.get(url) {
-            header(
-                HttpHeaders.UserAgent, if (! mobileUserAgent) {
-                    userAgentDesktop
-                } else {
-                    userAgentMobile
-                }
-            )
-        }
-
-        return when (request.status.value) {
-            200 -> Jsoup.parse(request.body() as String)
+    ) {
+        header(
+            HttpHeaders.UserAgent, if (! mobileUserAgent) {
+                userAgentDesktop
+            } else {
+                userAgentMobile
+            }
+        )
+    }.let {
+        when (it.status.value) {
+            200 -> Jsoup.parse(it.body() as String)
             404 -> throw CharacterNotFoundException("A character with ID `${id}` could not be found on The Lodestone.")
             else -> throw LodestoneException()
         }
     }
 
-    suspend fun getLodestoneProfilePaginated(endpoint: String): Document {
-        val request = ktorClient.get(endpoint) {
-            header(HttpHeaders.UserAgent, userAgentDesktop)
-        }
-
-        return if (request.status.value == 200) {
-            Jsoup.parse(request.body() as String)
+    suspend fun getLodestoneProfilePaginated(
+        endpoint: String
+    ): Document = ktorClient.get(endpoint) {
+        header(HttpHeaders.UserAgent, userAgentDesktop)
+    }.let {
+        if (it.status.value == 200) {
+            Jsoup.parse(it.body() as String)
         } else {
             throw LodestoneException()
         }
