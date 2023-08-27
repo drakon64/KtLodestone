@@ -1,17 +1,17 @@
 package profile
 
-import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
+import cloud.drakon.ktlodestone.Character.getAttributes
 import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 
 class AttributesScrapeTest {
-    @Test fun getAttributes() {
+    @Test fun getAttributesTest() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
-                println(KtLodestone.getAttributes(27545492))
+                println(getAttributes(27545492))
             }
         }
     }
@@ -19,7 +19,7 @@ class AttributesScrapeTest {
     @Test fun getInvalidAttributes() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
-                println(KtLodestone.getAttributes(0))
+                println(getAttributes(0))
             }
         }
     }

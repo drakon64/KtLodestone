@@ -1,6 +1,7 @@
 package cloud.drakon.ktlodestone.search
 
-import cloud.drakon.ktlodestone.KtLodestone
+import cloud.drakon.ktlodestone.KtLodestone.ktorClient
+import cloud.drakon.ktlodestone.KtLodestone.userAgentDesktop
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.search.result.CharacterSearchResult
@@ -26,9 +27,9 @@ internal object CharacterSearch {
 
     suspend fun characterSearch(name: String, world: World) = coroutineScope {
         val request =
-            KtLodestone.ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/") {
+            ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/") {
                 header(
-                    HttpHeaders.UserAgent, KtLodestone.userAgentDesktop
+                    HttpHeaders.UserAgent, userAgentDesktop
                 )
 
                 parameter("q", name)

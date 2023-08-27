@@ -1,17 +1,17 @@
 package profile
 
-import cloud.drakon.ktlodestone.KtLodestone
 import cloud.drakon.ktlodestone.exception.CharacterNotFoundException
+import cloud.drakon.ktlodestone.Character.getMinions
 import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 
 class MinionsScrapeTest {
-    @Test fun getMinions() {
+    @Test fun getMinionsTest() {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
-                println(KtLodestone.getMinions(27545492))
+                println(getMinions(27545492))
             }
         }
     }
@@ -19,7 +19,7 @@ class MinionsScrapeTest {
     @Test fun getInvalidMinions() {
         assertThrows<CharacterNotFoundException> {
             return@assertThrows runBlocking {
-                println(KtLodestone.getMinions(0))
+                println(getMinions(0))
             }
         }
     }

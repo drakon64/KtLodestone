@@ -1,7 +1,7 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    val kotlinVersion = "1.9.0"
+    val kotlinVersion = "1.9.10"
 
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
@@ -12,25 +12,25 @@ plugins {
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     signing
 
-    id("org.jetbrains.kotlinx.kover") version "0.6.1"
-    id("org.sonarqube") version "4.2.1.3168"
+    id("org.jetbrains.kotlinx.kover") version "0.7.3"
+    id("org.sonarqube") version "4.3.0.3225"
 }
 
 group = "cloud.drakon"
-version = "6.2.0"
+version = "7.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    val ktorVersion = "2.3.2"
+    val ktorVersion = "2.3.3"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-java:$ktorVersion")
 
     implementation("org.jsoup:jsoup:1.16.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     testImplementation(kotlin("test"))
 }
@@ -140,7 +140,7 @@ signing {
 }
 
 kover {
-    engine.set(kotlinx.kover.api.DefaultJacocoEngine)
+    useJacoco()
 }
 
 sonarqube {
@@ -149,7 +149,7 @@ sonarqube {
         property("sonar.organization", "drakon64")
         property("sonar.host.url", "https://sonarcloud.io")
         property(
-            "sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/xml/report.xml"
+            "sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml"
         )
     }
 }
