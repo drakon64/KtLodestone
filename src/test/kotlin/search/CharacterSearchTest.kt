@@ -11,9 +11,7 @@ class CharacterSearchTest {
         Assertions.assertDoesNotThrow {
             return@assertDoesNotThrow runBlocking {
                 println(
-                    searchCharacter(
-                        "Kumokiri Yamitori", World.Cerberus
-                    )
+                    searchCharacter("Kumokiri Yamitori", World.Cerberus)
                 )
             }
         }

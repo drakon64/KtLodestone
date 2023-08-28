@@ -38,62 +38,39 @@ internal object ClassJobScrape {
     private val currentExperienceRegex = """^[^ /]*""".toRegex()
     private val experienceToNextLevelRegex = """(?<=/ ).*""".toRegex()
 
-    private suspend fun getUniqueDutyLevels(character: Document) =
-        mutableMapOf<UniqueDutyName, UniqueDutyLevel?>().let {
-            it[UniqueDutyName.EUREKA] = getUniqueDutyLevel(
-                character, UniqueDutyName.EUREKA
-            )
+    private suspend fun getUniqueDutyLevels(
+        character: Document
+    ) = mutableMapOf<UniqueDutyName, UniqueDutyLevel?>().let {
+        it[UniqueDutyName.EUREKA] = getUniqueDutyLevel(
+            character, UniqueDutyName.EUREKA
+        )
 
-            it[UniqueDutyName.BOZJA] = getUniqueDutyLevel(
-                character, UniqueDutyName.BOZJA
-            )
+        it[UniqueDutyName.BOZJA] = getUniqueDutyLevel(
+            character, UniqueDutyName.BOZJA
+        )
 
-            it.toMap()
-        }
+        it.toMap()
+    }
 
-    private suspend fun getUniqueDutyLevel(character: Document, duty: UniqueDutyName) =
-        coroutineScope {
-            val uniqueDutyLevel = async { getLevel(character, duty.name) }
+    private suspend fun getUniqueDutyLevel(
+        character: Document, duty: UniqueDutyName
+    ) = coroutineScope {
+        val uniqueDutyLevel = async { getLevel(character, duty.name) }
 
-            if (uniqueDutyLevel.await() != null) {
-                val experience = async { getExperience(character, duty.name) }
+        if (uniqueDutyLevel.await() != null) {
+            val experience = async { getExperience(character, duty.name) }
 
-                if (duty == UniqueDutyName.BOZJA) {
-                    if (experience.await() == "Current Mettle: -- / Mettle to Next Rank: --") {
-                        UniqueDutyLevel(
-                            level = uniqueDutyLevel.await() !!.toByte(),
-                            experience = null
-                        )
-                    } else {
-                        val currentExperience = async {
-                            currentBozjaExperienceRegex.find(experience.await()) !!.value.toInt()
-                        }
-                        val experienceToNextLevel = async {
-                            bozjaExperienceToNextLevelRegex.find(experience.await()) !!.value.toInt()
-                        }
-
-                        UniqueDutyLevel(
-                            level = uniqueDutyLevel.await() !!.toByte(),
-                            experience = Experience(
-                                current = currentExperience.await(),
-                                next = experienceToNextLevel.await()
-                            )
-                        )
-                    }
-                } else if (experience.await() == noExperience) {
+            if (duty == UniqueDutyName.BOZJA) {
+                if (experience.await() == "Current Mettle: -- / Mettle to Next Rank: --") {
                     UniqueDutyLevel(
                         level = uniqueDutyLevel.await() !!.toByte(), experience = null
                     )
                 } else {
                     val currentExperience = async {
-                        currentExperienceRegex.find(experience.await()) !!.value.replace(
-                            ",", ""
-                        ).toInt()
+                        currentBozjaExperienceRegex.find(experience.await()) !!.value.toInt()
                     }
                     val experienceToNextLevel = async {
-                        experienceToNextLevelRegex.find(experience.await()) !!.value.replace(
-                            ",", ""
-                        ).toInt()
+                        bozjaExperienceToNextLevelRegex.find(experience.await()) !!.value.toInt()
                     }
 
                     UniqueDutyLevel(
@@ -104,40 +81,9 @@ internal object ClassJobScrape {
                         )
                     )
                 }
-            } else {
-                null
-            }
-        }
-
-    private suspend fun getClassJobLevels(character: Document): Map<ClassJobName, ClassJobLevel?> {
-        val classesJobs = mutableMapOf<ClassJobName, ClassJobLevel?>()
-
-        ClassJobName.entries.forEach {
-            classesJobs[it] = getClassJobLevel(character, it)
-        }
-
-        return classesJobs.toMap()
-    }
-
-    private suspend fun getClassJobLevel(character: Document, classJob: ClassJobName) =
-        coroutineScope {
-            val name = async {
-                getUnlockState(character, classJob.name)
-            }
-            val level = async {
-                getLevel(character, classJob.name)
-            }
-            val experience = async {
-                getExperience(character, classJob.name)
-            }
-
-            if (level.await() == "-") {
-                null
             } else if (experience.await() == noExperience) {
-                ClassJobLevel(
-                    name = name.await(),
-                    level = level.await() !!.toByte(),
-                    experience = null
+                UniqueDutyLevel(
+                    level = uniqueDutyLevel.await() !!.toByte(), experience = null
                 )
             } else {
                 val currentExperience = async {
@@ -151,16 +97,72 @@ internal object ClassJobScrape {
                     ).toInt()
                 }
 
-                ClassJobLevel(
-                    name = name.await(),
-                    level = level.await() !!.toByte(),
+                UniqueDutyLevel(
+                    level = uniqueDutyLevel.await() !!.toByte(),
                     experience = Experience(
                         current = currentExperience.await(),
                         next = experienceToNextLevel.await()
                     )
                 )
             }
+        } else {
+            null
         }
+    }
+
+    private suspend fun getClassJobLevels(character: Document): Map<ClassJobName, ClassJobLevel?> {
+        val classesJobs = mutableMapOf<ClassJobName, ClassJobLevel?>()
+
+        ClassJobName.entries.forEach {
+            classesJobs[it] = getClassJobLevel(character, it)
+        }
+
+        return classesJobs.toMap()
+    }
+
+    private suspend fun getClassJobLevel(
+        character: Document, classJob: ClassJobName
+    ) = coroutineScope {
+        val name = async {
+            getUnlockState(character, classJob.name)
+        }
+        val level = async {
+            getLevel(character, classJob.name)
+        }
+        val experience = async {
+            getExperience(character, classJob.name)
+        }
+
+        if (level.await() == "-") {
+            null
+        } else if (experience.await() == noExperience) {
+            ClassJobLevel(
+                name = name.await(),
+                level = level.await() !!.toByte(),
+                experience = null
+            )
+        } else {
+            val currentExperience = async {
+                currentExperienceRegex.find(experience.await()) !!.value.replace(
+                    ",", ""
+                ).toInt()
+            }
+            val experienceToNextLevel = async {
+                experienceToNextLevelRegex.find(experience.await()) !!.value.replace(
+                    ",", ""
+                ).toInt()
+            }
+
+            ClassJobLevel(
+                name = name.await(),
+                level = level.await() !!.toByte(),
+                experience = Experience(
+                    current = currentExperience.await(),
+                    next = experienceToNextLevel.await()
+                )
+            )
+        }
+    }
 
     private fun getLevel(character: Document, classJob: String): String? {
         val selectorJson =
