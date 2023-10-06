@@ -34,8 +34,8 @@ internal object MountsScrape {
     private suspend fun getMountList(character: Document): Map<String, Mount> {
         val mounts = mutableMapOf<String, Mount>()
 
-        for (i in character.select(lodestoneCssSelectors.jsonObject["MOUNTS"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)) {
-            val mount = getMount(i)
+        character.select(lodestoneCssSelectors.jsonObject["MOUNTS"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content).forEach {
+            val mount = getMount(it)
 
             mounts[mount.name] = mount
         }

@@ -33,8 +33,8 @@ internal object MinionsScrape {
     private suspend fun getMinionList(character: Document): Map<String, Minion> {
         val minions = mutableMapOf<String, Minion>()
 
-        for (i in character.select(lodestoneCssSelectors.jsonObject["MINIONS"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content)) {
-            val minion = getMinion(i)
+        character.select(lodestoneCssSelectors.jsonObject["MINIONS"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content).forEach {
+            val minion = getMinion(it)
 
             minions[minion.name] = minion
         }
