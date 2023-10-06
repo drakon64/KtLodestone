@@ -44,10 +44,9 @@ internal object ProfileScrape {
     ): Document = ktorClient.get(endpoint) {
         header(HttpHeaders.UserAgent, userAgentDesktop)
     }.let {
-        if (it.status.value == 200) {
-            Jsoup.parse(it.body() as String)
-        } else {
-            throw LodestoneException()
+        when (it.status.value) {
+            200 -> Jsoup.parse(it.body() as String)
+            else -> throw LodestoneException()
         }
     }
 }
