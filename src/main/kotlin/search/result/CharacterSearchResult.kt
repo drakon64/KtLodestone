@@ -9,5 +9,5 @@ data class CharacterSearchResult(
     val rank: String?,
     val rankIcon: String?,
     val server: String,
-    val dc: String
+    val dc: String,
 )

@@ -21,12 +21,12 @@ import org.jsoup.nodes.Element
 
 internal object CharacterSearch {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
-        this::class.java.classLoader.getResource("lodestone-css-selectors/search/character.json") !!
+        this::class.java.classLoader.getResource("lodestone-css-selectors/search/character.json")!!
             .readText()
     )
 
     suspend fun characterSearch(
-        name: String, world: World
+        name: String, world: World,
     ) = ktorClient.get("https://eu.finalfantasyxiv.com/lodestone/character/") {
         header(
             HttpHeaders.UserAgent, userAgentDesktop
@@ -44,9 +44,9 @@ internal object CharacterSearch {
 
     private suspend fun getCharacterSearchResults(results: Document): List<CharacterSearchResult>? {
         val search = results.select(
-            lodestoneCssSelectors.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content
+            lodestoneCssSelectors.jsonObject["ROOT"]!!.jsonObject["selector"]!!.jsonPrimitive.content
         ).select(
-            lodestoneCssSelectors.jsonObject["ENTRY"] !!.jsonObject["ROOT"] !!.jsonObject["selector"] !!.jsonPrimitive.content
+            lodestoneCssSelectors.jsonObject["ENTRY"]!!.jsonObject["ROOT"]!!.jsonObject["selector"]!!.jsonPrimitive.content
         )
 
         val characters = mutableListOf<CharacterSearchResult>()
@@ -71,69 +71,69 @@ internal object CharacterSearch {
     private val dcRegex = """(?<=\[)\w+(?=\])""".toRegex()
 
     private suspend fun getCharacter(character: Element) = coroutineScope {
-        val lodestoneCss = lodestoneCssSelectors.jsonObject["ENTRY"] !!
+        val lodestoneCss = lodestoneCssSelectors.jsonObject["ENTRY"]!!
 
         val avatar = async {
-            val css = lodestoneCss.jsonObject["AVATAR"] !!
-            character.select(css.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
-                .attr(css.jsonObject["attribute"] !!.jsonPrimitive.content)
+            val css = lodestoneCss.jsonObject["AVATAR"]!!
+            character.select(css.jsonObject["selector"]!!.jsonPrimitive.content)
+                .first()!!
+                .attr(css.jsonObject["attribute"]!!.jsonPrimitive.content)
         }
 
         val id = async {
-            val css = lodestoneCss.jsonObject["ID"] !!
+            val css = lodestoneCss.jsonObject["ID"]!!
             idRegex.find(
-                character.select(css.jsonObject["selector"] !!.jsonPrimitive.content)
-                    .first() !!
-                    .attr(css.jsonObject["attribute"] !!.jsonPrimitive.content)
-            ) !!.value.toInt()
+                character.select(css.jsonObject["selector"]!!.jsonPrimitive.content)
+                    .first()!!
+                    .attr(css.jsonObject["attribute"]!!.jsonPrimitive.content)
+            )!!.value.toInt()
         }
 
         val language = async {
-            val css = lodestoneCss.jsonObject["LANG"] !!
-            character.select(css.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
+            val css = lodestoneCss.jsonObject["LANG"]!!
+            character.select(css.jsonObject["selector"]!!.jsonPrimitive.content)
+                .first()!!
                 .text()
         }
 
         val name = async {
-            val css = lodestoneCss.jsonObject["NAME"] !!
-            character.select(css.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
+            val css = lodestoneCss.jsonObject["NAME"]!!
+            character.select(css.jsonObject["selector"]!!.jsonPrimitive.content)
+                .first()!!
                 .text()
         }
 
         val gc = async {
-            val css = lodestoneCss.jsonObject["RANK"] !!
-            character.select(css.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
-                .attr(css.jsonObject["attribute"] !!.jsonPrimitive.content)
+            val css = lodestoneCss.jsonObject["RANK"]!!
+            character.select(css.jsonObject["selector"]!!.jsonPrimitive.content)
+                .first()!!
+                .attr(css.jsonObject["attribute"]!!.jsonPrimitive.content)
         }
         val gcName = async {
-            grandCompanyNameRegex.find(gc.await()) !!.value
+            grandCompanyNameRegex.find(gc.await())!!.value
         }
         val gcRank = async {
-            grandCompanyRankRegex.find(gc.await()) !!.value
+            grandCompanyRankRegex.find(gc.await())!!.value
         }
 
         val gcRankIcon = async {
-            val css = lodestoneCss.jsonObject["RANK_ICON"] !!
-            character.select(css.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
-                .attr(css.jsonObject["attribute"] !!.jsonPrimitive.content)
+            val css = lodestoneCss.jsonObject["RANK_ICON"]!!
+            character.select(css.jsonObject["selector"]!!.jsonPrimitive.content)
+                .first()!!
+                .attr(css.jsonObject["attribute"]!!.jsonPrimitive.content)
         }
 
         val serverDc = async {
-            val css = lodestoneCss.jsonObject["SERVER"] !!
-            character.select(css.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
+            val css = lodestoneCss.jsonObject["SERVER"]!!
+            character.select(css.jsonObject["selector"]!!.jsonPrimitive.content)
+                .first()!!
                 .text()
         }
         val server = async {
-            serverRegex.find(serverDc.await()) !!.value
+            serverRegex.find(serverDc.await())!!.value
         }
         val dc = async {
-            dcRegex.find(serverDc.await()) !!.value
+            dcRegex.find(serverDc.await())!!.value
         }
 
         return@coroutineScope CharacterSearchResult(

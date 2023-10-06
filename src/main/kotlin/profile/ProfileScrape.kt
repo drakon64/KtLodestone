@@ -25,7 +25,7 @@ internal object ProfileScrape {
         }
     ) {
         header(
-            HttpHeaders.UserAgent, if (! mobileUserAgent) {
+            HttpHeaders.UserAgent, if (!mobileUserAgent) {
                 userAgentDesktop
             } else {
                 userAgentMobile
@@ -40,7 +40,7 @@ internal object ProfileScrape {
     }
 
     suspend fun getLodestoneProfilePaginated(
-        endpoint: String
+        endpoint: String,
     ): Document = ktorClient.get(endpoint) {
         header(HttpHeaders.UserAgent, userAgentDesktop)
     }.let {

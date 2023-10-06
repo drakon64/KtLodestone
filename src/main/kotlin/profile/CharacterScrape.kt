@@ -18,7 +18,7 @@ import org.jsoup.nodes.Document
 
 internal object CharacterScrape {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
-        this::class.java.classLoader.getResource("lodestone-css-selectors/profile/character.json") !!
+        this::class.java.classLoader.getResource("lodestone-css-selectors/profile/character.json")!!
             .readText()
     )
 
@@ -35,12 +35,12 @@ internal object CharacterScrape {
 
         val avatar = async {
             character.select(getLodestoneCss("AVATAR"))
-                .first() !!
+                .first()!!
                 .attr(getLodestoneCss("AVATAR", "attribute"))
         }
 
         val bio = async {
-            character.select(getLodestoneCss("BIO")).first() !!.text()
+            character.select(getLodestoneCss("BIO")).first()!!.text()
         }
 
         val freeCompany = async { getGuild(character, GuildType.FREE_COMPANY) }
@@ -48,33 +48,33 @@ internal object CharacterScrape {
         val guardian = async { getGuardian(character) }
 
         val name = async {
-            character.select(getLodestoneCss("NAME")).first() !!.text()
+            character.select(getLodestoneCss("NAME")).first()!!.text()
         }
 
         val nameday = async {
-            character.select(getLodestoneCss("NAMEDAY")).first() !!.text()
+            character.select(getLodestoneCss("NAMEDAY")).first()!!.text()
         }
 
         val portrait = async {
             character.select(getLodestoneCss("PORTRAIT"))
-                .first() !!
+                .first()!!
                 .attr(getLodestoneCss("PORTRAIT", "attribute"))
         }
 
         val pvpTeam = async { getGuild(character, GuildType.PVP_TEAM) }
 
         val raceClanGender = async {
-            character.select(getLodestoneCss("RACE_CLAN_GENDER")).first() !!.html()
+            character.select(getLodestoneCss("RACE_CLAN_GENDER")).first()!!.html()
         }
-        val race = async { raceRegex.find(raceClanGender.await()) !!.value }
-        val clan = async { clanRegex.find(raceClanGender.await()) !!.value }
-        val gender = async { genderRegex.find(raceClanGender.await()) !!.value }
+        val race = async { raceRegex.find(raceClanGender.await())!!.value }
+        val clan = async { clanRegex.find(raceClanGender.await())!!.value }
+        val gender = async { genderRegex.find(raceClanGender.await())!!.value }
 
         val serverDc = async {
-            character.select(getLodestoneCss("SERVER")).first() !!.text()
+            character.select(getLodestoneCss("SERVER")).first()!!.text()
         }
-        val server = async { serverRegex.find(serverDc.await()) !!.value }
-        val dc = async { dcRegex.find(serverDc.await()) !!.value }
+        val server = async { serverRegex.find(serverDc.await())!!.value }
+        val dc = async { dcRegex.find(serverDc.await())!!.value }
 
         val title = async { character.select(getLodestoneCss("TITLE")).first()?.text() }
 
@@ -105,7 +105,7 @@ internal object CharacterScrape {
         lodestoneProperty: String,
         cssProperty: String = "selector",
     ) =
-        lodestoneCssSelectors.jsonObject[lodestoneProperty] !!.jsonObject[cssProperty] !!.jsonPrimitive.content
+        lodestoneCssSelectors.jsonObject[lodestoneProperty]!!.jsonObject[cssProperty]!!.jsonPrimitive.content
 
     private val activeClassJobLevelRegex = """\d+""".toRegex()
 
@@ -113,7 +113,7 @@ internal object CharacterScrape {
         val name = async {
             val classJobUrl =
                 character.select(getLodestoneCss("ACTIVE_CLASSJOB"))
-                    .first() !!
+                    .first()!!
                     .attr(getLodestoneCss("ACTIVE_CLASSJOB", "attribute"))
 
             val classJob = mapOf(
@@ -171,9 +171,9 @@ internal object CharacterScrape {
         val level = async {
             activeClassJobLevelRegex.find(
                 character.select(getLodestoneCss("ACTIVE_CLASSJOB_LEVEL"))
-                    .first() !!
+                    .first()!!
                     .text()
-            ) !!.value.toByte()
+            )!!.value.toByte()
         }
 
         return@coroutineScope ActiveClassJob(name.await(), level.await())
@@ -184,16 +184,16 @@ internal object CharacterScrape {
 
     private suspend fun getGuild(character: Document, type: GuildType) =
         coroutineScope {
-            val selectorJson = lodestoneCssSelectors.jsonObject[type.name] !!
-            val nameSelectorJson = selectorJson.jsonObject["NAME"] !!
+            val selectorJson = lodestoneCssSelectors.jsonObject[type.name]!!
+            val nameSelectorJson = selectorJson.jsonObject["NAME"]!!
 
             val guild = async {
-                character.select(nameSelectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
+                character.select(nameSelectorJson.jsonObject["selector"]!!.jsonPrimitive.content)
                     .first()
             }
 
             if (guild.await() != null) {
-                val guildName = async { guild.await() !!.text() }
+                val guildName = async { guild.await()!!.text() }
                 val guildId = async {
                     val regex = when (type) {
                         GuildType.FREE_COMPANY -> {
@@ -206,9 +206,9 @@ internal object CharacterScrape {
                     }
 
                     regex.find(
-                        guild.await() !!
-                            .attr(nameSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
-                    ) !!.value
+                        guild.await()!!
+                            .attr(nameSelectorJson.jsonObject["attribute"]!!.jsonPrimitive.content)
+                    )!!.value
                 }
 
                 val guildIconLayerBottom = async {
@@ -241,11 +241,11 @@ internal object CharacterScrape {
         jsonElement: JsonElement,
     ): String {
         val selectorJson =
-            jsonElement.jsonObject["ICON_LAYERS"] !!.jsonObject[iconLayer] !!
+            jsonElement.jsonObject["ICON_LAYERS"]!!.jsonObject[iconLayer]!!
 
-        return character.select(selectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
-            .first() !!
-            .attr(selectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
+        return character.select(selectorJson.jsonObject["selector"]!!.jsonPrimitive.content)
+            .first()!!
+            .attr(selectorJson.jsonObject["attribute"]!!.jsonPrimitive.content)
     }
 
     private val grandCompanyNameRegex = """\w+""".toRegex()
@@ -253,7 +253,7 @@ internal object CharacterScrape {
 
     private suspend fun getGrandCompany(character: Document) = coroutineScope {
         val grandCompany = async {
-            character.select(lodestoneCssSelectors.jsonObject["GRAND_COMPANY"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
+            character.select(lodestoneCssSelectors.jsonObject["GRAND_COMPANY"]!!.jsonObject["selector"]!!.jsonPrimitive.content)
                 .first()
                 ?.text()
         }
@@ -261,17 +261,17 @@ internal object CharacterScrape {
         if (grandCompany.await() != null) {
             val grandCompanyName = async {
                 grandCompanyNameRegex.find(
-                    grandCompany.await() !!
-                ) !!.value
+                    grandCompany.await()!!
+                )!!.value
             }
             val grandCompanyRank = async {
                 grandCompanyRankRegex.find(
-                    grandCompany.await() !!
-                ) !!.value
+                    grandCompany.await()!!
+                )!!.value
             }
             val grandCompanyIcon = async {
                 character.select("#character > div.character__content.selected > div.character__profile.clearfix > div.character__profile__data > div:nth-child(1) > div > div:nth-child(4) > img")
-                    .first() !!
+                    .first()!!
                     .attr("src")
             }
 
@@ -286,38 +286,38 @@ internal object CharacterScrape {
     }
 
     private suspend fun getGuardian(character: Document) = coroutineScope {
-        val selectorJson = lodestoneCssSelectors.jsonObject["GUARDIAN_DEITY"] !!
+        val selectorJson = lodestoneCssSelectors.jsonObject["GUARDIAN_DEITY"]!!
 
         val guardianName = async {
-            character.select(selectorJson.jsonObject["NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
+            character.select(selectorJson.jsonObject["NAME"]!!.jsonObject["selector"]!!.jsonPrimitive.content)
+                .first()!!
                 .text()
         }
 
-        val iconSelectorJson = selectorJson.jsonObject["ICON"] !!
+        val iconSelectorJson = selectorJson.jsonObject["ICON"]!!
         val guardianIcon = async {
-            character.select(iconSelectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
-                .attr(iconSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
+            character.select(iconSelectorJson.jsonObject["selector"]!!.jsonPrimitive.content)
+                .first()!!
+                .attr(iconSelectorJson.jsonObject["attribute"]!!.jsonPrimitive.content)
         }
 
         Guardian(name = guardianName.await(), icon = guardianIcon.await())
     }
 
     private suspend fun getTown(character: Document) = coroutineScope {
-        val selectorJson = lodestoneCssSelectors.jsonObject["TOWN"] !!
+        val selectorJson = lodestoneCssSelectors.jsonObject["TOWN"]!!
 
         val townName = async {
-            character.select(selectorJson.jsonObject["NAME"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
+            character.select(selectorJson.jsonObject["NAME"]!!.jsonObject["selector"]!!.jsonPrimitive.content)
+                .first()!!
                 .text()
         }
 
-        val iconSelectorJson = selectorJson.jsonObject["ICON"] !!
+        val iconSelectorJson = selectorJson.jsonObject["ICON"]!!
         val townIcon = async {
-            character.select(iconSelectorJson.jsonObject["selector"] !!.jsonPrimitive.content)
-                .first() !!
-                .attr(iconSelectorJson.jsonObject["attribute"] !!.jsonPrimitive.content)
+            character.select(iconSelectorJson.jsonObject["selector"]!!.jsonPrimitive.content)
+                .first()!!
+                .attr(iconSelectorJson.jsonObject["attribute"]!!.jsonPrimitive.content)
         }
 
         Town(name = townName.await(), icon = townIcon.await())

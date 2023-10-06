@@ -15,7 +15,7 @@ import org.jsoup.nodes.Document
 
 internal object ClassJobScrape {
     private val lodestoneCssSelectors = Json.parseToJsonElement(
-        this::class.java.classLoader.getResource("lodestone-css-selectors/profile/classjob.json") !!
+        this::class.java.classLoader.getResource("lodestone-css-selectors/profile/classjob.json")!!
             .readText()
     )
 
@@ -39,7 +39,7 @@ internal object ClassJobScrape {
     private val experienceToNextLevelRegex = """(?<=/ ).*""".toRegex()
 
     private suspend fun getUniqueDutyLevels(
-        character: Document
+        character: Document,
     ) = mutableMapOf<UniqueDutyName, UniqueDutyLevel?>().let {
         it[UniqueDutyName.EUREKA] = getUniqueDutyLevel(
             character, UniqueDutyName.EUREKA
@@ -53,7 +53,7 @@ internal object ClassJobScrape {
     }
 
     private suspend fun getUniqueDutyLevel(
-        character: Document, duty: UniqueDutyName
+        character: Document, duty: UniqueDutyName,
     ) = coroutineScope {
         val uniqueDutyLevel = async { getLevel(character, duty.name) }
 
@@ -63,18 +63,18 @@ internal object ClassJobScrape {
             if (duty == UniqueDutyName.BOZJA) {
                 if (experience.await() == "Current Mettle: -- / Mettle to Next Rank: --") {
                     UniqueDutyLevel(
-                        level = uniqueDutyLevel.await() !!.toByte(), experience = null
+                        level = uniqueDutyLevel.await()!!.toByte(), experience = null
                     )
                 } else {
                     val currentExperience = async {
-                        currentBozjaExperienceRegex.find(experience.await()) !!.value.toInt()
+                        currentBozjaExperienceRegex.find(experience.await())!!.value.toInt()
                     }
                     val experienceToNextLevel = async {
-                        bozjaExperienceToNextLevelRegex.find(experience.await()) !!.value.toInt()
+                        bozjaExperienceToNextLevelRegex.find(experience.await())!!.value.toInt()
                     }
 
                     UniqueDutyLevel(
-                        level = uniqueDutyLevel.await() !!.toByte(),
+                        level = uniqueDutyLevel.await()!!.toByte(),
                         experience = Experience(
                             current = currentExperience.await(),
                             next = experienceToNextLevel.await()
@@ -83,22 +83,22 @@ internal object ClassJobScrape {
                 }
             } else if (experience.await() == noExperience) {
                 UniqueDutyLevel(
-                    level = uniqueDutyLevel.await() !!.toByte(), experience = null
+                    level = uniqueDutyLevel.await()!!.toByte(), experience = null
                 )
             } else {
                 val currentExperience = async {
-                    currentExperienceRegex.find(experience.await()) !!.value.replace(
+                    currentExperienceRegex.find(experience.await())!!.value.replace(
                         ",", ""
                     ).toInt()
                 }
                 val experienceToNextLevel = async {
-                    experienceToNextLevelRegex.find(experience.await()) !!.value.replace(
+                    experienceToNextLevelRegex.find(experience.await())!!.value.replace(
                         ",", ""
                     ).toInt()
                 }
 
                 UniqueDutyLevel(
-                    level = uniqueDutyLevel.await() !!.toByte(),
+                    level = uniqueDutyLevel.await()!!.toByte(),
                     experience = Experience(
                         current = currentExperience.await(),
                         next = experienceToNextLevel.await()
@@ -121,7 +121,7 @@ internal object ClassJobScrape {
     }
 
     private suspend fun getClassJobLevel(
-        character: Document, classJob: ClassJobName
+        character: Document, classJob: ClassJobName,
     ) = coroutineScope {
         val name = async {
             getUnlockState(character, classJob.name)
@@ -138,24 +138,24 @@ internal object ClassJobScrape {
         } else if (experience.await() == noExperience) {
             ClassJobLevel(
                 name = name.await(),
-                level = level.await() !!.toByte(),
+                level = level.await()!!.toByte(),
                 experience = null
             )
         } else {
             val currentExperience = async {
-                currentExperienceRegex.find(experience.await()) !!.value.replace(
+                currentExperienceRegex.find(experience.await())!!.value.replace(
                     ",", ""
                 ).toInt()
             }
             val experienceToNextLevel = async {
-                experienceToNextLevelRegex.find(experience.await()) !!.value.replace(
+                experienceToNextLevelRegex.find(experience.await())!!.value.replace(
                     ",", ""
                 ).toInt()
             }
 
             ClassJobLevel(
                 name = name.await(),
-                level = level.await() !!.toByte(),
+                level = level.await()!!.toByte(),
                 experience = Experience(
                     current = currentExperience.await(),
                     next = experienceToNextLevel.await()
@@ -166,7 +166,7 @@ internal object ClassJobScrape {
 
     private fun getLevel(character: Document, classJob: String): String? {
         val selectorJson =
-            lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject["LEVEL"] !!.jsonObject["selector"] !!.jsonPrimitive.content
+            lodestoneCssSelectors.jsonObject[classJob]!!.jsonObject["LEVEL"]!!.jsonObject["selector"]!!.jsonPrimitive.content
 
         return character.select(selectorJson).first()?.text()
     }
@@ -179,13 +179,13 @@ internal object ClassJobScrape {
         }
 
         val selectorJson =
-            lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject[experience] !!.jsonObject["selector"] !!.jsonPrimitive.content
+            lodestoneCssSelectors.jsonObject[classJob]!!.jsonObject[experience]!!.jsonObject["selector"]!!.jsonPrimitive.content
 
-        return character.select(selectorJson).first() !!.text()
+        return character.select(selectorJson).first()!!.text()
     }
 
     private fun getUnlockState(character: Document, classJob: String) =
-        character.select(lodestoneCssSelectors.jsonObject[classJob] !!.jsonObject["UNLOCKSTATE"] !!.jsonObject["selector"] !!.jsonPrimitive.content)
-            .first() !!
+        character.select(lodestoneCssSelectors.jsonObject[classJob]!!.jsonObject["UNLOCKSTATE"]!!.jsonObject["selector"]!!.jsonPrimitive.content)
+            .first()!!
             .text()
 }
