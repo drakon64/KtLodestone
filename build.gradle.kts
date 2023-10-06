@@ -6,14 +6,14 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
 
-    id("org.jetbrains.dokka") version "1.8.20"
+    id("org.jetbrains.dokka") version "1.9.0"
 
     id("maven-publish")
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     signing
 
     id("org.jetbrains.kotlinx.kover") version "0.7.3"
-    id("org.sonarqube") version "4.3.0.3225"
+    id("org.sonarqube") version "4.4.1.3373"
 }
 
 group = "cloud.drakon"
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    val ktorVersion = "2.3.3"
+    val ktorVersion = "2.3.5"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-java:$ktorVersion")
 
