@@ -1,5 +1,6 @@
 package cloud.drakon.ktlodestone.character
 
+import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.classjob.ClassJob
 
 /**
