@@ -1,6 +1,6 @@
 package cloud.drakon.ktlodestone.character
 
-/** The [Character]'s Data Center. */
+/** A [Character]'s Data Center. */
 enum class DataCenter {
 
 }
