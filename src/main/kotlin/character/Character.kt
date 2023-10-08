@@ -16,9 +16,9 @@ data class Character private constructor(
     /** The Character's bio. */
     val bio: String,
     /** The Character's Free Company. */
-    val freeCompany: Guild,
+    val freeCompany: Guild?,
     /** The Character's Grand Company. */
-    val grandCompany: GrandCompany,
+    val grandCompany: GrandCompany?,
     /** The Character's Guardian. */
     val guardian: Guardian,
     /** The Character's name. */
@@ -28,7 +28,7 @@ data class Character private constructor(
     /** The Character's portrait. */
     val portrait: String,
     /** The Character's PvP Team. */
-    val pvpTeam: Guild,
+    val pvpTeam: Guild?,
     /** The Character's race. */
     val race: Race,
     /** The Character's clan. */
@@ -42,7 +42,7 @@ data class Character private constructor(
     /** The Character's region. */
     val region: Region,
     /** The Character's title. */
-    val title: String,
+    val title: String?,
     /** The Character's starting town. */
     val town: Town,
 )
