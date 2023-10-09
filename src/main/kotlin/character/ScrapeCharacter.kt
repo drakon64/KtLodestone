@@ -4,7 +4,6 @@ import cloud.drakon.ktlodestone.IconLayers
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
-import cloud.drakon.ktlodestone.classjob.classJobMap
 import cloud.drakon.ktlodestone.selectors.CharacterSelectors
 import cloud.drakon.ktlodestone.selectors.CharacterSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX
 import kotlinx.coroutines.async
@@ -15,7 +14,7 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     val document = Jsoup.parse(response)
 
     val activeClassJob = async {
-        classJobMap.getValue(
+        CharacterSelectors.CLASS_JOB_MAP.getValue(
             document.select(CharacterSelectors.ACTIVE_CLASSJOB)
                 .attr(CharacterSelectors.ACTIVE_CLASSJOB_ATTR)
         )
