@@ -6,7 +6,7 @@ import cloud.drakon.ktlodestone.classjob.ClassJob
 /**
  * A Character returned by The Lodestone's `/character` endpoint.
  */
-data class Character private constructor(
+data class Character(
     /** The Character's active class or job. */
     val activeClassJob: ClassJob,
     /** The level of the Character's active class or job. */
