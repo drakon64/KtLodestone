@@ -36,11 +36,11 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
 
     val freeCompany = async {
         val freeCompanyName = async {
-            document.select(CharacterSelectors.FREE_COMPANY_NAME).text()
+            document.select(CharacterSelectors.FREE_COMPANY).text()
         }
 
         val freeCompanyId = async {
-            document.select(CharacterSelectors.FREE_COMPANY_ID)
+            document.select(CharacterSelectors.FREE_COMPANY)
                 .attr(CharacterSelectors.FREE_COMPANY_ID_ATTR).toInt()
         }
 
@@ -105,11 +105,11 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
 
     val pvpTeam = async {
         val pvpTeamName = async {
-            document.select(CharacterSelectors.PVP_TEAM_NAME).text()
+            document.select(CharacterSelectors.PVP_TEAM).text()
         }
 
         val pvpTeamId = async {
-            document.select(CharacterSelectors.PVP_TEAM_ID)
+            document.select(CharacterSelectors.PVP_TEAM)
                 .attr(CharacterSelectors.PVP_TEAM_ID_ATTR).toInt()
         }
 
