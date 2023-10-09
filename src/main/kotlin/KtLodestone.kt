@@ -4,6 +4,7 @@
 package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.character.scrapeCharacter
+import cloud.drakon.ktlodestone.selectors.CharacterSelectors
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.UserAgent
@@ -12,6 +13,8 @@ import io.ktor.client.request.get
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
+import kotlinx.coroutines.runBlocking
+import org.jsoup.Jsoup
 
 private val ktorClient = HttpClient {
     defaultRequest {
