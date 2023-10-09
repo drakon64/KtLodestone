@@ -114,19 +114,29 @@ internal object CharacterSelectors {
         "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to ClassJob.FISHER,
     )
 
-    val GUARDIAN_MAP = mapOf(
-        "Halone, the Fury" to Guardian.HALONE,
-        "Byregot, the Builder" to Guardian.BYREGOT,
-    )
+    val GUARDIAN_MAP = mutableMapOf<String, Guardian>().let { map ->
+        Guardian.entries.forEach { guardian ->
+            map[guardian.toString()] = guardian
+        }
 
-    val RACE_MAP = mapOf(
-        "Hyur" to Race.HYUR,
-        "Au Ra" to Race.AU_RA,
-    )
+        return@let map
+    }.toMap()
 
-    val CLAN_MAP = mapOf(
-        "Raen" to Clan.RAEN,
-    )
+    val RACE_MAP = mutableMapOf<String, Race>().let { map ->
+        Race.entries.forEach { race ->
+            map[race.toString()] = race
+        }
+
+        return@let map
+    }.toMap()
+
+    val CLAN_MAP = mutableMapOf<String, Clan>().let { map ->
+        Clan.entries.forEach { clan ->
+            map[clan.toString()] = clan
+        }
+
+        return@let map
+    }.toMap()
 
     val GENDER_MAP = mapOf(
         "♀" to Gender.FEMALE,
