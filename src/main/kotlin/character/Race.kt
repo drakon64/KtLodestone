@@ -4,7 +4,7 @@ package cloud.drakon.ktlodestone.character
 enum class Race {
     /** Hyur */
     HYUR {
-        override fun toString() = "HYUR"
+        override fun toString() = "Hyur"
     },
 
     /** Elezen */
