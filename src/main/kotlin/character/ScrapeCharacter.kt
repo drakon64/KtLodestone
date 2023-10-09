@@ -6,6 +6,7 @@ import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
 import cloud.drakon.ktlodestone.classjob.classJobMap
 import cloud.drakon.ktlodestone.selectors.CharacterSelectors
+import cloud.drakon.ktlodestone.selectors.CharacterSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.jsoup.Jsoup
@@ -21,7 +22,9 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val activeClassJobLevel = async {
-        document.select(CharacterSelectors.ACTIVE_CLASSJOB_LEVEL).text().toByte()
+        ACTIVE_CLASSJOB_LEVEL_REGEX.find(
+            document.select(CharacterSelectors.ACTIVE_CLASSJOB_LEVEL).text()
+        )!!.value.toByte()
     }
 
     val avatar = async {

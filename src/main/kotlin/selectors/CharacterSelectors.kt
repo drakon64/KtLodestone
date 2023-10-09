@@ -5,6 +5,7 @@ internal object CharacterSelectors {
     const val ACTIVE_CLASSJOB_ATTR = "src"
 
     const val ACTIVE_CLASSJOB_LEVEL = ".character__class__data > p:nth-child(1)"
+    val ACTIVE_CLASSJOB_LEVEL_REGEX = """\d+""".toRegex()
 
     const val AVATAR = ".frame__chara__face > img:nth-child(1)"
     const val AVATAR_ATTR = "src"
