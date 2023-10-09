@@ -65,6 +65,7 @@ internal object CharacterSelectors {
     const val TOWN =
         "div.character-block:nth-child(3) > div:nth-child(2) > p:nth-child(2)"
 
+    // The currently displayed class/job of a character is actually an image, so we map the image URL to the [ClassJob] enum entry
     val CLASS_JOB_MAP = mapOf(
         "https://img.finalfantasyxiv.com/lds/h/U/F5JzG9RPIKFSogtaKNBk455aYA.png" to ClassJob.GLADIATOR,
         "https://img.finalfantasyxiv.com/lds/h/E/d0Tx-vhnsMYfYpGe9MvslemEfg.png" to ClassJob.PALADIN,
