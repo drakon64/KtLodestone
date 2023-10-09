@@ -35,51 +35,53 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val freeCompany = async {
-        val freeCompanyName = async {
-            document.select(CharacterSelectors.FREE_COMPANY).text()
-        }
+        val freeCompanyName = document.select(CharacterSelectors.FREE_COMPANY).text()
 
-        val freeCompanyId = async {
-            document.select(CharacterSelectors.FREE_COMPANY)
-                .attr(CharacterSelectors.FREE_COMPANY_ID_ATTR).toInt()
-        }
-
-        val freeCompanyIconLayers = async {
-            val bottom = async {
-                document.select(CharacterSelectors.FREE_COMPANY_BOTTOM_ICON_LAYER)
-                    .attr(CharacterSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+        if (freeCompanyName != "") {
+            val freeCompanyId = async {
+                document.select(CharacterSelectors.FREE_COMPANY)
+                    .attr(CharacterSelectors.FREE_COMPANY_ID_ATTR).split("/")[3]
             }
 
-            val middle = async {
-                document.select(CharacterSelectors.FREE_COMPANY_MIDDLE_ICON_LAYER)
-                    .attr(CharacterSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+            val freeCompanyIconLayers = async {
+                val bottom = async {
+                    document.select(CharacterSelectors.FREE_COMPANY_BOTTOM_ICON_LAYER)
+                        .attr(CharacterSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                }
+
+                val middle = async {
+                    document.select(CharacterSelectors.FREE_COMPANY_MIDDLE_ICON_LAYER)
+                        .attr(CharacterSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                }
+
+                val top = async {
+                    document.select(CharacterSelectors.FREE_COMPANY_TOP_ICON_LAYER)
+                        .attr(CharacterSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                }
+
+                IconLayers(bottom.await(), middle.await(), top.await())
             }
 
-            val top = async {
-                document.select(CharacterSelectors.FREE_COMPANY_TOP_ICON_LAYER)
-                    .attr(CharacterSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
-            }
-
-            IconLayers(bottom.await(), middle.await(), top.await())
-        }
-
-        Guild(
-            freeCompanyName.await(),
-            freeCompanyId.await(),
-            freeCompanyIconLayers.await()
-        )
+            Guild(
+                freeCompanyName,
+                freeCompanyId.await(),
+                freeCompanyIconLayers.await()
+            )
+        } else null
     }
 
     val grandCompany = async {
         val grandCompanyName = async {
             GrandCompanyName.valueOf(
                 document.select(CharacterSelectors.GRAND_COMPANY).text()
+                    .split("/")[0].trim().replace(" ", "_").uppercase()
             )
         }
 
         val grandCompanyRank = async {
             GrandCompanyRank.valueOf(
                 document.select(CharacterSelectors.GRAND_COMPANY).text()
+                    .split("/")[1].trim().replace(" ", "_").uppercase()
             )
         }
 
@@ -87,7 +89,9 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val guardian = async {
-        Guardian.valueOf(document.select(CharacterSelectors.GUARDIAN_NAME).text())
+        CharacterSelectors.GUARDIAN_MAP.getValue(
+            document.select(CharacterSelectors.GUARDIAN_NAME).text()
+        )
     }
 
     val name = async {
@@ -104,71 +108,96 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val pvpTeam = async {
-        val pvpTeamName = async {
-            document.select(CharacterSelectors.PVP_TEAM).text()
-        }
+        val pvpTeamName = document.select(CharacterSelectors.PVP_TEAM).text()
 
-        val pvpTeamId = async {
-            document.select(CharacterSelectors.PVP_TEAM)
-                .attr(CharacterSelectors.PVP_TEAM_ID_ATTR).toInt()
-        }
-
-        val pvpTeamIconLayers = async {
-            val bottom = async {
-                document.select(CharacterSelectors.PVP_TEAM_BOTTOM_ICON_LAYER)
-                    .attr(CharacterSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+        if (pvpTeamName != "") {
+            val pvpTeamId = async {
+                document.select(CharacterSelectors.PVP_TEAM)
+                    .attr(CharacterSelectors.PVP_TEAM_ID_ATTR).split("/")[3]
             }
 
-            val middle = async {
-                document.select(CharacterSelectors.PVP_TEAM_MIDDLE_ICON_LAYER)
-                    .attr(CharacterSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+            val pvpTeamIconLayers = async {
+                val bottom = async {
+                    document.select(CharacterSelectors.PVP_TEAM_BOTTOM_ICON_LAYER)
+                        .attr(CharacterSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+                }
+
+                val middle = async {
+                    document.select(CharacterSelectors.PVP_TEAM_MIDDLE_ICON_LAYER)
+                        .attr(CharacterSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+                }
+
+                val top = async {
+                    document.select(CharacterSelectors.PVP_TEAM_TOP_ICON_LAYER)
+                        .attr(CharacterSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+                }
+
+                IconLayers(bottom.await(), middle.await(), top.await())
             }
 
-            val top = async {
-                document.select(CharacterSelectors.PVP_TEAM_TOP_ICON_LAYER)
-                    .attr(CharacterSelectors.PVP_TEAM_ICON_LAYER_ATTR)
-            }
-
-            IconLayers(bottom.await(), middle.await(), top.await())
-        }
-
-        Guild(pvpTeamName.await(), pvpTeamId.await(), pvpTeamIconLayers.await())
+            Guild(
+                pvpTeamName,
+                pvpTeamId.await(),
+                pvpTeamIconLayers.await()
+            )
+        } else null
     }
 
     val raceClanGender = async {
-        document.select(CharacterSelectors.RACE_CLAN_GENDER).text()
+        document.select(CharacterSelectors.RACE_CLAN_GENDER).html()
     }
 
     val race = async {
-        Race.valueOf(raceClanGender.await())
+        CharacterSelectors.RACE_MAP.getValue(
+            CharacterSelectors.RACE_REGEX.find(
+                raceClanGender.await()
+            )!!.value
+        )
     }
 
     val clan = async {
-        Clan.valueOf(raceClanGender.await())
+        CharacterSelectors.CLAN_MAP.getValue(
+            CharacterSelectors.CLAN_REGEX.find(
+                raceClanGender.await()
+            )!!.value
+        )
     }
 
     val gender = async {
-        Gender.valueOf(raceClanGender.await())
+        CharacterSelectors.GENDER_MAP.getValue(
+            CharacterSelectors.GENDER_REGEX.find(
+                raceClanGender.await()
+            )!!.value
+        )
     }
 
     val world = async {
-        World.valueOf(document.select(CharacterSelectors.WORLD).text())
+        World.valueOf(
+            document.select(CharacterSelectors.WORLD).text().split("[")[0].trim()
+        )
     }
 
     val dataCenter = async {
-        DataCenter.valueOf(document.select(CharacterSelectors.WORLD).text())
+        DataCenter.valueOf(
+            document.select(CharacterSelectors.WORLD).text().split("[")[1].replace(
+                "]",
+                ""
+            )
+        )
     }
 
-    val region = async {
-        Region.valueOf(document.select(CharacterSelectors.WORLD).text())
-    }
+//    val region = async {
+//        Region.valueOf(document.select(CharacterSelectors.WORLD).text())
+//    }
 
     val title = async {
         document.select(CharacterSelectors.TITLE).text()
     }
 
     val town = async {
-        Town.valueOf(document.select(CharacterSelectors.TOWN).text())
+        CharacterSelectors.TOWN_MAP.getValue(
+            document.select(CharacterSelectors.TOWN).text()
+        )
     }
 
     Character(
@@ -188,7 +217,7 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
         gender.await(),
         world.await(),
         dataCenter.await(),
-        region.await(),
+//        region.await(),
         title.await(),
         town.await(),
     )
