@@ -14,8 +14,9 @@ internal object CharacterSelectors {
 
     const val BIO = ".character__selfintroduction"
 
-    const val FREE_COMPANY_NAME = ".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)"
-    const val FREE_COMPANY_NAME_ATTR = "href"
+    const val FREE_COMPANY_NAME = ".character__freecompany__name > p"
+    const val FREE_COMPANY_ID = ".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)"
+    const val FREE_COMPANY_ID_ATTR = "href"
     const val FREE_COMPANY_BOTTOM_ICON_LAYER = "div.character__freecompany__crest > div > img:nth-child(1)"
     const val FREE_COMPANY_MIDDLE_ICON_LAYER = "div.character__freecompany__crest > div > img:nth-child(2)"
     const val FREE_COMPANY_TOP_ICON_LAYER = "div.character__freecompany__crest > div > img:nth-child(3)"
@@ -32,11 +33,12 @@ internal object CharacterSelectors {
     const val PORTRAIT = ".js__image_popup > img:nth-child(1)"
     const val PORTRAIT_ATTR = "src"
 
-    const val PVP_TEAM_NAME = ".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)"
-    const val PVP_TEAM_NAME_ATTR = "href"
-    const val PVP_TEAM_BOTTOM_ICON_LAYER = "div.character__freecompany__crest > div > img:nth-child(1)"
-    const val PVP_TEAM_MIDDLE_ICON_LAYER = "div.character__freecompany__crest > div > img:nth-child(2)"
-    const val PVP_TEAM_TOP_ICON_LAYER = "div.character__freecompany__crest > div > img:nth-child(3)"
+    const val PVP_TEAM_NAME = ".character__pvpteam__name > p"
+    const val PVP_TEAM_ID = ".character__pvpteam__name > h4:nth-child(2) > a:nth-child(1)"
+    const val PVP_TEAM_ID_ATTR = "href"
+    const val PVP_TEAM_BOTTOM_ICON_LAYER = ".character__pvpteam__crest__image img:nth-child(1)"
+    const val PVP_TEAM_MIDDLE_ICON_LAYER = ".character__pvpteam__crest__image img:nth-child(2)"
+    const val PVP_TEAM_TOP_ICON_LAYER = ".character__pvpteam__crest__image img:nth-child(3)"
     const val PVP_TEAM_ICON_LAYER_ATTR = "src"
 
     const val RACE_CLAN_GENDER = "div.character-block:nth-child(1) > div:nth-child(2) > p:nth-child(2)"
