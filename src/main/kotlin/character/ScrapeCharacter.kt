@@ -36,8 +36,12 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
 
     val freeCompany = async {
         val freeCompanyName = async {
-            document.select(CharacterSelectors.FREE_COMPANY_NAME)
-                .attr(CharacterSelectors.FREE_COMPANY_NAME_ATTR)
+            document.select(CharacterSelectors.FREE_COMPANY_NAME).text()
+        }
+
+        val freeCompanyId = async {
+            document.select(CharacterSelectors.FREE_COMPANY_ID)
+                .attr(CharacterSelectors.FREE_COMPANY_ID_ATTR).toInt()
         }
 
         val freeCompanyIconLayers = async {
@@ -59,7 +63,11 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
             IconLayers(bottom.await(), middle.await(), top.await())
         }
 
-        Guild(freeCompanyName.await(), freeCompanyIconLayers.await())
+        Guild(
+            freeCompanyName.await(),
+            freeCompanyId.await(),
+            freeCompanyIconLayers.await()
+        )
     }
 
     val grandCompany = async {
@@ -97,8 +105,12 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
 
     val pvpTeam = async {
         val pvpTeamName = async {
-            document.select(CharacterSelectors.PVP_TEAM_NAME)
-                .attr(CharacterSelectors.PVP_TEAM_NAME_ATTR)
+            document.select(CharacterSelectors.PVP_TEAM_NAME).text()
+        }
+
+        val pvpTeamId = async {
+            document.select(CharacterSelectors.PVP_TEAM_ID)
+                .attr(CharacterSelectors.PVP_TEAM_ID_ATTR).toInt()
         }
 
         val pvpTeamIconLayers = async {
@@ -120,7 +132,7 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
             IconLayers(bottom.await(), middle.await(), top.await())
         }
 
-        Guild(pvpTeamName.await(), pvpTeamIconLayers.await())
+        Guild(pvpTeamName.await(), pvpTeamId.await(), pvpTeamIconLayers.await())
     }
 
     val raceClanGender = async {
