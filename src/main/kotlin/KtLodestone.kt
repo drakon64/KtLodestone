@@ -3,7 +3,9 @@
 
 package cloud.drakon.ktlodestone
 
+import cloud.drakon.ktlodestone.character.scrapeCharacter
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
@@ -23,7 +25,7 @@ private val ktorClient = HttpClient {
 
 suspend fun getLodestoneCharacter(id: Int) = ktorClient.get("character/$id/").let {
     when (it.status.value) {
-        200 -> "true"
+        200 -> scrapeCharacter(it.body())
         404 -> throw Exception("")
         else -> throw Exception("")
     }
