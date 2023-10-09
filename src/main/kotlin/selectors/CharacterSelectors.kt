@@ -1,5 +1,10 @@
 package cloud.drakon.ktlodestone.selectors
 
+import cloud.drakon.ktlodestone.character.Clan
+import cloud.drakon.ktlodestone.character.Gender
+import cloud.drakon.ktlodestone.character.Guardian
+import cloud.drakon.ktlodestone.character.Race
+import cloud.drakon.ktlodestone.character.Town
 import cloud.drakon.ktlodestone.classjob.ClassJob
 
 internal object CharacterSelectors {
@@ -14,14 +19,19 @@ internal object CharacterSelectors {
 
     const val BIO = ".character__selfintroduction"
 
-    const val FREE_COMPANY = ".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)"
+    const val FREE_COMPANY =
+        ".character__freecompany__name > h4:nth-child(2) > a:nth-child(1)"
     const val FREE_COMPANY_ID_ATTR = "href"
-    const val FREE_COMPANY_BOTTOM_ICON_LAYER = "div.character__freecompany__crest > div > img:nth-child(1)"
-    const val FREE_COMPANY_MIDDLE_ICON_LAYER = "div.character__freecompany__crest > div > img:nth-child(2)"
-    const val FREE_COMPANY_TOP_ICON_LAYER = "div.character__freecompany__crest > div > img:nth-child(3)"
+    const val FREE_COMPANY_BOTTOM_ICON_LAYER =
+        "div.character__freecompany__crest > div > img:nth-child(1)"
+    const val FREE_COMPANY_MIDDLE_ICON_LAYER =
+        "div.character__freecompany__crest > div > img:nth-child(2)"
+    const val FREE_COMPANY_TOP_ICON_LAYER =
+        "div.character__freecompany__crest > div > img:nth-child(3)"
     const val FREE_COMPANY_ICON_LAYER_ATTR = "src"
 
-    const val GRAND_COMPANY = "div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)"
+    const val GRAND_COMPANY =
+        "div.character-block:nth-child(4) > div:nth-child(2) > p:nth-child(2)"
 
     const val GUARDIAN_NAME = "p.character-block__name:nth-child(4)"
 
@@ -34,18 +44,26 @@ internal object CharacterSelectors {
 
     const val PVP_TEAM = ".character__pvpteam__name > h4:nth-child(2) > a:nth-child(1)"
     const val PVP_TEAM_ID_ATTR = "href"
-    const val PVP_TEAM_BOTTOM_ICON_LAYER = ".character__pvpteam__crest__image img:nth-child(1)"
-    const val PVP_TEAM_MIDDLE_ICON_LAYER = ".character__pvpteam__crest__image img:nth-child(2)"
-    const val PVP_TEAM_TOP_ICON_LAYER = ".character__pvpteam__crest__image img:nth-child(3)"
+    const val PVP_TEAM_BOTTOM_ICON_LAYER =
+        ".character__pvpteam__crest__image img:nth-child(1)"
+    const val PVP_TEAM_MIDDLE_ICON_LAYER =
+        ".character__pvpteam__crest__image img:nth-child(2)"
+    const val PVP_TEAM_TOP_ICON_LAYER =
+        ".character__pvpteam__crest__image img:nth-child(3)"
     const val PVP_TEAM_ICON_LAYER_ATTR = "src"
 
-    const val RACE_CLAN_GENDER = "div.character-block:nth-child(1) > div:nth-child(2) > p:nth-child(2)"
+    const val RACE_CLAN_GENDER =
+        "div.character-block:nth-child(1) > div:nth-child(2) > p:nth-child(2)"
+    val RACE_REGEX = """.*(?=<br>)""".toRegex()
+    val CLAN_REGEX = """(?<=<br>\n)[^ /]+""".toRegex()
+    val GENDER_REGEX = """[♀|♂]""".toRegex()
 
     const val WORLD = "p.frame__chara__world"
 
     const val TITLE = ".frame__chara__title"
 
-    const val TOWN = "div.character-block:nth-child(3) > div:nth-child(2) > p:nth-child(2)"
+    const val TOWN =
+        "div.character-block:nth-child(3) > div:nth-child(2) > p:nth-child(2)"
 
     val CLASS_JOB_MAP = mapOf(
         "https://img.finalfantasyxiv.com/lds/h/U/F5JzG9RPIKFSogtaKNBk455aYA.png" to ClassJob.GLADIATOR,
@@ -94,5 +112,30 @@ internal object CharacterSelectors {
         "https://img.finalfantasyxiv.com/lds/h/A/aM2Dd6Vo4HW_UGasK7tLuZ6fu4.png" to ClassJob.MINER,
         "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to ClassJob.BOTANIST,
         "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to ClassJob.FISHER,
+    )
+
+    val GUARDIAN_MAP = mapOf(
+        "Halone, the Fury" to Guardian.HALONE,
+        "Byregot, the Builder" to Guardian.BYREGOT,
+    )
+
+    val RACE_MAP = mapOf(
+        "Hyur" to Race.HYUR,
+        "Au Ra" to Race.AU_RA,
+    )
+
+    val CLAN_MAP = mapOf(
+        "Raen" to Clan.RAEN,
+    )
+
+    val GENDER_MAP = mapOf(
+        "♀" to Gender.FEMALE,
+        "♂" to Gender.MALE,
+    )
+
+    val TOWN_MAP = mapOf(
+        "Gridania" to Town.GRIDANIA,
+        "Limsa Lominsa" to Town.LIMSA_LOMINSA,
+        "Ul'dah" to Town.ULDAH,
     )
 }
