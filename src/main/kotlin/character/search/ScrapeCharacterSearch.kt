@@ -1,8 +1,8 @@
 package cloud.drakon.ktlodestone.character.search
 
-import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompany
-import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyName
-import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyRank
+import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
+import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
+import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
 import cloud.drakon.ktlodestone.selectors.character.search.CharacterSearchSelectors
 import cloud.drakon.ktlodestone.world.DataCenter

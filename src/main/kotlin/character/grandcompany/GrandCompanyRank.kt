@@ -1,4 +1,4 @@
-package cloud.drakon.ktlodestone.character.profile.grandcompany
+package cloud.drakon.ktlodestone.character.grandcompany
 
 enum class GrandCompanyRank {
     /** Flame Private Third Class */

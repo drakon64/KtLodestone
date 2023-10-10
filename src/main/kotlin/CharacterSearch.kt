@@ -7,7 +7,7 @@ package cloud.drakon.ktlodestone
 import cloud.drakon.ktlodestone.character.classjob.ClassJob
 import cloud.drakon.ktlodestone.character.profile.Clan
 import cloud.drakon.ktlodestone.character.profile.Race
-import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyName
+import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.search.Language
 import cloud.drakon.ktlodestone.character.search.scrapeCharacterSearch
 import cloud.drakon.ktlodestone.exception.LodestoneException

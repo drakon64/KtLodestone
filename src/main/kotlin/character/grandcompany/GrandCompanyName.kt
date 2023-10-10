@@ -1,4 +1,4 @@
-package cloud.drakon.ktlodestone.character.profile.grandcompany
+package cloud.drakon.ktlodestone.character.grandcompany
 
 import org.jetbrains.annotations.ApiStatus.Internal
 
