@@ -1,5 +1,6 @@
 package cloud.drakon.ktlodestone.character.profile
 
+import cloud.drakon.ktlodestone.character.ActiveClassJob
 import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyRank
@@ -16,20 +17,25 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
     val document = Jsoup.parse(response)
 
     val activeClassJob = async {
-        CharacterProfileMaps.CLASS_JOB_MAP.getValue(
-            document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB)
-                .attr(CharacterProfileSelectors.ACTIVE_CLASSJOB_ATTR)
-        )
-    }
+        val classJob = async {
+            CharacterProfileMaps.CLASS_JOB_MAP.getValue(
+                document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB)
+                    .attr(CharacterProfileSelectors.ACTIVE_CLASSJOB_ATTR)
+            )
+        }
 
-    val activeClassJobLevel = async {
-        CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX.find(
-            document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL).text()
-        )!!.value.toByte()
+        val level = async {
+            CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX.find(
+                document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL).text()
+            )!!.value.toByte()
+        }
+
+        ActiveClassJob(classJob.await(), level.await())
     }
 
     val avatar = async {
-        document.select(CharacterProfileSelectors.AVATAR).attr(CharacterProfileSelectors.AVATAR_ATTR)
+        document.select(CharacterProfileSelectors.AVATAR)
+            .attr(CharacterProfileSelectors.AVATAR_ATTR)
     }
 
     val bio = async {
@@ -123,7 +129,8 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
             }
 
             val pvpTeamId = async {
-                pvpTeamElement.attr(CharacterProfileSelectors.PVP_TEAM_ID_ATTR).split("/")[3]
+                pvpTeamElement.attr(CharacterProfileSelectors.PVP_TEAM_ID_ATTR)
+                    .split("/")[3]
             }
 
             val pvpTeamIconLayers = async {
@@ -213,7 +220,6 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
     CharacterProfile(
         activeClassJob.await(),
-        activeClassJobLevel.await(),
         avatar.await(),
         bio.await(),
         freeCompany.await(),

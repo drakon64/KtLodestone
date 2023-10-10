@@ -1,6 +1,6 @@
 package cloud.drakon.ktlodestone.character.profile
 
-import cloud.drakon.ktlodestone.character.classjob.ClassJob
+import cloud.drakon.ktlodestone.character.ActiveClassJob
 import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
@@ -10,9 +10,7 @@ import cloud.drakon.ktlodestone.world.World
  */
 data class CharacterProfile(
     /** The Character's active class or job. */
-    val activeClassJob: ClassJob,
-    /** The level of the Character's active class or job. */
-    val activeClassJobLevel: Byte,
+    val activeClassJob: ActiveClassJob,
     /** The Character's avatar. */
     val avatar: String,
     /** The Character's bio. */
