@@ -1,6 +1,6 @@
 package cloud.drakon.ktlodestone.character
 
-import cloud.drakon.ktlodestone.IconLayers
+import cloud.drakon.ktlodestone.iconlayers.IconLayers
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
