@@ -164,10 +164,10 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val clan = async {
-        CharacterSelectors.CLAN_MAP.getValue(
+        Clan.valueOf(
             CharacterSelectors.CLAN_REGEX.find(
                 raceClanGender.await()
-            )!!.value
+            )!!.value.replace(" ", "_").uppercase()
         )
     }
 
