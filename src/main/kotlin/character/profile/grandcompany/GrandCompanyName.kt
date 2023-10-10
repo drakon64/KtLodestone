@@ -15,4 +15,9 @@ enum class GrandCompanyName {
     ORDER_OF_THE_TWIN_ADDER {
         override fun toString() = "Order of the Twin Adder"
     },
+
+    /** No Affiliation */
+    NO_AFFILIATION {
+        override fun toString() = "No Affiliation"
+    },
 }

@@ -1,4 +1,6 @@
-package cloud.drakon.ktlodestone.character.profile
+package cloud.drakon.ktlodestone.world
+
+import cloud.drakon.ktlodestone.character.profile.CharacterProfile
 
 /** A [CharacterProfile]'s World. */
 enum class World {

@@ -1,11 +1,11 @@
 package cloud.drakon.ktlodestone.selectors.character.profile
 
-import cloud.drakon.ktlodestone.character.profile.DataCenter
+import cloud.drakon.ktlodestone.character.classjob.ClassJob
 import cloud.drakon.ktlodestone.character.profile.Gender
 import cloud.drakon.ktlodestone.character.profile.Guardian
 import cloud.drakon.ktlodestone.character.profile.Race
 import cloud.drakon.ktlodestone.character.profile.Region
-import cloud.drakon.ktlodestone.character.classjob.ClassJob
+import cloud.drakon.ktlodestone.world.DataCenter
 
 internal object CharacterProfileMaps {
     // The currently displayed class/job of a character is actually an image, so we map the image URL to the [ClassJob] enum entry
