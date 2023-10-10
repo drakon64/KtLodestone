@@ -135,10 +135,4 @@ internal object CharacterSelectors {
         '♀' to Gender.FEMALE,
         '♂' to Gender.MALE,
     )
-
-    val TOWN_MAP = mapOf(
-        "Gridania" to Town.GRIDANIA,
-        "Limsa Lominsa" to Town.LIMSA_LOMINSA,
-        "Ul'dah" to Town.ULDAH,
-    )
 }

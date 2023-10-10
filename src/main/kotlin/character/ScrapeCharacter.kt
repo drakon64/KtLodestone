@@ -203,8 +203,10 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val town = async {
-        CharacterSelectors.TOWN_MAP.getValue(
+        Town.valueOf(
             document.select(CharacterSelectors.TOWN).text()
+                .replace(" ", "_")
+                .uppercase()
         )
     }
 
