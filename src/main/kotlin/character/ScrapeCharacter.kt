@@ -165,9 +165,9 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
 
     val clan = async {
         Clan.valueOf(
-            CharacterSelectors.CLAN_REGEX.find(
-                raceClanGender.await()
-            )!!.value.replace(" ", "_").uppercase()
+            CharacterSelectors.CLAN_REGEX.find(raceClanGender.await())!!.value
+                .replace(" ", "_")
+                .uppercase()
         )
     }
 
@@ -187,10 +187,9 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
 
     val dataCenter = async {
         DataCenter.valueOf(
-            document.select(CharacterSelectors.WORLD).text().split("[")[1].replace(
-                "]",
-                ""
-            )
+            document.select(CharacterSelectors.WORLD).text()
+                .split("[")[1]
+                .replace("]", "")
         )
     }
 
