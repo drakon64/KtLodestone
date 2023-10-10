@@ -77,7 +77,8 @@ private suspend fun searchLodestoneCharacterPaginated(
     page: Int? = null,
 ) = ktorClient.get("character/") {
     url {
-        if (name != null) parameters.append("q", name.replace(" ", "+"))
+        // We've already encoded this parameter
+        if (name != null) encodedParameters.append("q", name.replace(" ", "+"))
 
         // If both [world] and [dataCenter] or just [world] are provided, use [world] as it's more specific, otherwise use [dataCenter]
         if ((world != null && dataCenter != null) || world != null) {
