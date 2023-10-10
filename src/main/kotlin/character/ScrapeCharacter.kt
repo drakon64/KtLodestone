@@ -35,12 +35,17 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val freeCompany = async {
-        val freeCompanyName = document.select(CharacterSelectors.FREE_COMPANY).text()
+        val freeCompanyElement =
+            document.select(CharacterSelectors.FREE_COMPANY).first()
 
-        if (freeCompanyName != "") {
+        if (freeCompanyElement != null) {
+            val freeCompanyName = async {
+                freeCompanyElement.text()
+            }
+
             val freeCompanyId = async {
-                document.select(CharacterSelectors.FREE_COMPANY)
-                    .attr(CharacterSelectors.FREE_COMPANY_ID_ATTR).split("/")[3]
+                freeCompanyElement.attr(CharacterSelectors.FREE_COMPANY_ID_ATTR)
+                    .split("/")[3]
             }
 
             val freeCompanyIconLayers = async {
@@ -63,7 +68,7 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
             }
 
             Guild(
-                freeCompanyName,
+                freeCompanyName.await(),
                 freeCompanyId.await(),
                 freeCompanyIconLayers.await()
             )
@@ -108,12 +113,15 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val pvpTeam = async {
-        val pvpTeamName = document.select(CharacterSelectors.PVP_TEAM).text()
+        val pvpTeamElement = document.select(CharacterSelectors.PVP_TEAM).first()
 
-        if (pvpTeamName != "") {
+        if (pvpTeamElement != null) {
+            val pvpTeamName = async {
+                pvpTeamElement.text()
+            }
+
             val pvpTeamId = async {
-                document.select(CharacterSelectors.PVP_TEAM)
-                    .attr(CharacterSelectors.PVP_TEAM_ID_ATTR).split("/")[3]
+                pvpTeamElement.attr(CharacterSelectors.PVP_TEAM_ID_ATTR).split("/")[3]
             }
 
             val pvpTeamIconLayers = async {
@@ -136,7 +144,7 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
             }
 
             Guild(
-                pvpTeamName,
+                pvpTeamName.await(),
                 pvpTeamId.await(),
                 pvpTeamIconLayers.await()
             )
