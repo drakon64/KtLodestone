@@ -13,5 +13,5 @@ data class CharacterSearchResult(
     val grandCompany: GrandCompany?,
     val world: World,
     val dataCenter: DataCenter,
-    val activeClassJob: ActiveClassJob
+//    val activeClassJob: ActiveClassJob
 )
