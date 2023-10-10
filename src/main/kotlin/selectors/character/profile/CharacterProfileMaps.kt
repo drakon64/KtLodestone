@@ -58,21 +58,13 @@ internal object CharacterProfileMaps {
         "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to ClassJob.FISHER,
     )
 
-    val GUARDIAN_MAP = mutableMapOf<String, Guardian>().let { map ->
-        Guardian.entries.forEach { guardian ->
-            map[guardian.toString()] = guardian
-        }
+    val GUARDIAN_MAP = Guardian.entries.associateBy {
+        it.toString()
+    }
 
-        return@let map
-    }.toMap()
-
-    val RACE_MAP = mutableMapOf<String, Race>().let { map ->
-        Race.entries.forEach { race ->
-            map[race.toString()] = race
-        }
-
-        return@let map
-    }.toMap()
+    val RACE_MAP = Race.entries.associateBy {
+        it.toString()
+    }
 
     val GENDER_MAP = mapOf(
         '♀' to Gender.FEMALE,
