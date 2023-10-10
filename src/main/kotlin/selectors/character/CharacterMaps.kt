@@ -1,8 +1,10 @@
 package cloud.drakon.ktlodestone.selectors.character
 
+import cloud.drakon.ktlodestone.character.DataCenter
 import cloud.drakon.ktlodestone.character.Gender
 import cloud.drakon.ktlodestone.character.Guardian
 import cloud.drakon.ktlodestone.character.Race
+import cloud.drakon.ktlodestone.character.Region
 import cloud.drakon.ktlodestone.classjob.ClassJob
 
 internal object CharacterMaps {
@@ -75,5 +77,22 @@ internal object CharacterMaps {
     val GENDER_MAP = mapOf(
         '♀' to Gender.FEMALE,
         '♂' to Gender.MALE,
+    )
+
+    val REGION_MAP = mapOf(
+        DataCenter.Chaos to Region.EUROPE,
+        DataCenter.Light to Region.EUROPE,
+
+        DataCenter.Materia to Region.OCEANIA,
+
+        DataCenter.Aether to Region.NORTH_AMERICA,
+        DataCenter.Crystal to Region.NORTH_AMERICA,
+        DataCenter.Dynamis to Region.NORTH_AMERICA,
+        DataCenter.Primal to Region.NORTH_AMERICA,
+
+        DataCenter.Elemental to Region.JAPAN,
+        DataCenter.Gaia to Region.JAPAN,
+        DataCenter.Mana to Region.JAPAN,
+        DataCenter.Meteor to Region.JAPAN
     )
 }
