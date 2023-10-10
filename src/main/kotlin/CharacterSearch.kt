@@ -19,6 +19,11 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
+/**
+ * Searches for a character on *The Lodestone*.
+ *
+ * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ */
 suspend fun searchLodestoneCharacter(
     name: String? = null,
     world: World? = null,
@@ -77,6 +82,11 @@ suspend fun searchLodestoneCharacter(
     }
 }
 
+/**
+ * Searches for a character on *The Lodestone*.
+ *
+ * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ */
 @JvmName("searchLodestoneCharacter")
 @JvmOverloads
 @Throws(LodestoneException::class)
