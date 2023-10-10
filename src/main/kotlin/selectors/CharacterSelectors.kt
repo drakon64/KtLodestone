@@ -131,14 +131,6 @@ internal object CharacterSelectors {
         return@let map
     }.toMap()
 
-    val CLAN_MAP = mutableMapOf<String, Clan>().let { map ->
-        Clan.entries.forEach { clan ->
-            map[clan.toString()] = clan
-        }
-
-        return@let map
-    }.toMap()
-
     val GENDER_MAP = mapOf(
         "♀" to Gender.FEMALE,
         "♂" to Gender.MALE,
