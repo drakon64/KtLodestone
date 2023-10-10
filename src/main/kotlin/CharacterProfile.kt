@@ -5,7 +5,7 @@
 package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.character.profile.CharacterProfile
-import cloud.drakon.ktlodestone.character.profile.scrapeCharacter
+import cloud.drakon.ktlodestone.character.profile.scrapeCharacterProfile
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.exception.LodestoneNotFoundException
 import io.ktor.client.call.body
@@ -22,7 +22,7 @@ import kotlinx.coroutines.future.future
  */
 suspend fun getLodestoneCharacterProfile(id: Int) = ktorClient.get("character/$id/").let {
     when (it.status.value) {
-        200 -> scrapeCharacter(it.body())
+        200 -> scrapeCharacterProfile(it.body())
         404 -> throw LodestoneNotFoundException("Character", id)
         else -> throw LodestoneException()
     }
