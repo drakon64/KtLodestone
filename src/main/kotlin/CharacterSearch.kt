@@ -5,9 +5,9 @@
 package cloud.drakon.ktlodestone
 
 import cloud.drakon.ktlodestone.character.classjob.ClassJob
+import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.profile.Clan
 import cloud.drakon.ktlodestone.character.profile.Race
-import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.search.Language
 import cloud.drakon.ktlodestone.character.search.scrapeCharacterSearch
 import cloud.drakon.ktlodestone.exception.LodestoneException
@@ -31,7 +31,7 @@ suspend fun searchLodestoneCharacter(
     classJob: ClassJob? = null,
     race: Race? = null,
     clan: Clan? = null,
-    grandCompanies: List<GrandCompanyName>? = null,
+    grandCompanies: List<GrandCompanyName?>? = null,
     languages: List<Language>? = null,
     pages: Byte = 1,
 ) = if (pages == 1.toByte()) {
@@ -72,7 +72,7 @@ private suspend fun searchLodestoneCharacterPaginated(
     classJob: ClassJob?,
     race: Race?,
     clan: Clan?,
-    grandCompanies: List<GrandCompanyName>?,
+    grandCompanies: List<GrandCompanyName?>?,
     languages: List<Language>?,
     page: Int? = null,
 ) = ktorClient.get("character/") {
@@ -101,7 +101,7 @@ private suspend fun searchLodestoneCharacterPaginated(
                 GrandCompanyName.MAELSTROM -> parameters.append("gcid", "1")
                 GrandCompanyName.ORDER_OF_THE_TWIN_ADDER -> parameters.append("gcid", "2")
                 GrandCompanyName.IMMORTAL_FLAMES -> parameters.append("gcid", "3")
-                GrandCompanyName.NO_AFFILIATION -> parameters.append("gcid", "0")
+                null -> parameters.append("gcid", "0")
             }
         }
 
@@ -138,7 +138,7 @@ fun searchLodestoneCharacterAsync(
     classJob: ClassJob? = null,
     race: Race? = null,
     clan: Clan? = null,
-    grandCompanies: List<GrandCompanyName>? = null,
+    grandCompanies: List<GrandCompanyName?>? = null,
     languages: List<Language>? = null,
     pages: Byte = 1,
 ) = GlobalScope.future {
