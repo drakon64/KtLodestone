@@ -58,10 +58,12 @@ internal object CharacterProfileMaps {
         "https://img.finalfantasyxiv.com/lds/h/x/B4Azydbn7Prubxt7OL9p1LZXZ0.png" to ClassJob.FISHER,
     )
 
+    // For each entry in the [Guardian] enum, create a Map where the keys are the `.toString` values of the enum entries and the values are the enum entries themselves
     val GUARDIAN_MAP = Guardian.entries.associateBy {
         it.toString()
     }
 
+    // For each entry in the [Race] enum, create a Map where the keys are the `.toString` values of the enum entries and the values are the enum entries themselves
     val RACE_MAP = Race.entries.associateBy {
         it.toString()
     }
@@ -71,6 +73,7 @@ internal object CharacterProfileMaps {
         '♂' to Gender.MALE,
     )
 
+    // The Lodestone doesn't return what Region a character is in but we can infer it from their data center
     val REGION_MAP = mapOf(
         DataCenter.Chaos to Region.EUROPE,
         DataCenter.Light to Region.EUROPE,

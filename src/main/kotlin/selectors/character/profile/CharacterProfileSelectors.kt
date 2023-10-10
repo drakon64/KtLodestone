@@ -1,5 +1,6 @@
 package cloud.drakon.ktlodestone.selectors.character.profile
 
+// https://github.com/xivapi/lodestone-css-selectors/blob/main/profile/character.json
 internal object CharacterProfileSelectors {
     const val ACTIVE_CLASSJOB = ".character__class_icon > img:nth-child(1)"
     const val ACTIVE_CLASSJOB_ATTR = "src"
