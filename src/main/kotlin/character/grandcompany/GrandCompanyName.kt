@@ -19,7 +19,6 @@ enum class GrandCompanyName {
     },
 
     /** No Affiliation */
-    @Internal
     NO_AFFILIATION {
         override fun toString() = "No Affiliation"
     },
