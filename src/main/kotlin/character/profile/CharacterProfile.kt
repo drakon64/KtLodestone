@@ -1,7 +1,7 @@
 package cloud.drakon.ktlodestone.character.profile
 
 import cloud.drakon.ktlodestone.character.ActiveClassJob
-import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompany
+import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
 

@@ -1,9 +1,9 @@
 package cloud.drakon.ktlodestone.character.profile
 
 import cloud.drakon.ktlodestone.character.ActiveClassJob
-import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompany
-import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyName
-import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyRank
+import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
+import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
+import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
