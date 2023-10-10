@@ -4,8 +4,8 @@ import cloud.drakon.ktlodestone.IconLayers
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
-import cloud.drakon.ktlodestone.selectors.CharacterSelectors
-import cloud.drakon.ktlodestone.selectors.CharacterSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX
+import cloud.drakon.ktlodestone.selectors.character.CharacterMaps
+import cloud.drakon.ktlodestone.selectors.character.CharacterSelectors
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.jsoup.Jsoup
@@ -14,14 +14,14 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     val document = Jsoup.parse(response)
 
     val activeClassJob = async {
-        CharacterSelectors.CLASS_JOB_MAP.getValue(
+        CharacterMaps.CLASS_JOB_MAP.getValue(
             document.select(CharacterSelectors.ACTIVE_CLASSJOB)
                 .attr(CharacterSelectors.ACTIVE_CLASSJOB_ATTR)
         )
     }
 
     val activeClassJobLevel = async {
-        ACTIVE_CLASSJOB_LEVEL_REGEX.find(
+        CharacterSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX.find(
             document.select(CharacterSelectors.ACTIVE_CLASSJOB_LEVEL).text()
         )!!.value.toByte()
     }
@@ -94,7 +94,7 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val guardian = async {
-        CharacterSelectors.GUARDIAN_MAP.getValue(
+        CharacterMaps.GUARDIAN_MAP.getValue(
             document.select(CharacterSelectors.GUARDIAN_NAME).text()
         )
     }
@@ -156,7 +156,7 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val race = async {
-        CharacterSelectors.RACE_MAP.getValue(
+        CharacterMaps.RACE_MAP.getValue(
             CharacterSelectors.RACE_REGEX.find(
                 raceClanGender.await()
             )!!.value
@@ -172,7 +172,7 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val gender = async {
-        CharacterSelectors.GENDER_MAP.getValue(
+        CharacterMaps.GENDER_MAP.getValue(
             CharacterSelectors.GENDER_REGEX.find(
                 raceClanGender.await()
             )!!.value[0]
