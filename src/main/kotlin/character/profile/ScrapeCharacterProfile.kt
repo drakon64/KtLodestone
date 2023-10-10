@@ -12,7 +12,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.jsoup.Jsoup
 
-internal suspend fun scrapeCharacter(response: String) = coroutineScope {
+internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
     val document = Jsoup.parse(response)
 
     val activeClassJob = async {
