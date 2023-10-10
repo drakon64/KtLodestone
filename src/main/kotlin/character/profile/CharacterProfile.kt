@@ -1,7 +1,9 @@
 package cloud.drakon.ktlodestone.character.profile
 
-import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.classjob.ClassJob
+import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompany
+import cloud.drakon.ktlodestone.world.DataCenter
+import cloud.drakon.ktlodestone.world.World
 
 /**
  * A Character returned by The Lodestone's `/character` endpoint.
