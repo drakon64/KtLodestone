@@ -39,8 +39,8 @@ data class Character(
     val world: World,
     /** The Character's data center. */
     val dataCenter: DataCenter,
-//    /** The Character's region. */
-//    val region: Region,
+    /** The Character's region. */
+    val region: Region,
     /** The Character's title. */
     val title: String?,
     /** The Character's starting town. */

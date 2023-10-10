@@ -193,9 +193,9 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
         )
     }
 
-//    val region = async {
-//        Region.valueOf(document.select(CharacterSelectors.WORLD).text())
-//    }
+    val region = async {
+        CharacterMaps.REGION_MAP.getValue(dataCenter.await())
+    }
 
     val title = async {
         document.select(CharacterSelectors.TITLE).text()
@@ -226,7 +226,7 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
         gender.await(),
         world.await(),
         dataCenter.await(),
-//        region.await(),
+        region.await(),
         title.await(),
         town.await(),
     )
