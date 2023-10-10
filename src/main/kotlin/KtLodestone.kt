@@ -26,6 +26,12 @@ private val ktorClient = HttpClient {
     }
 }
 
+/**
+ * Returns [Character] with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character` endpoint.
+
+ * @throws LodestoneNotFoundException Thrown when the character isn't found on *The Lodestone*.
+ * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ */
 suspend fun getLodestoneCharacter(id: Int) = ktorClient.get("character/$id/").let {
     when (it.status.value) {
         200 -> scrapeCharacter(it.body())
@@ -34,6 +40,12 @@ suspend fun getLodestoneCharacter(id: Int) = ktorClient.get("character/$id/").le
     }
 }
 
+/**
+ * Returns [Character] with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character` endpoint.
+
+ * @throws LodestoneNotFoundException Thrown when the character isn't found on *The Lodestone*.
+ * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ */
 @JvmName("getLodestoneCharacter")
 @Throws(LodestoneNotFoundException::class, LodestoneException::class)
 fun getLodestoneCharacterAsync(id: Int) = GlobalScope.future {
