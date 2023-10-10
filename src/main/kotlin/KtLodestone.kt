@@ -6,7 +6,6 @@ package cloud.drakon.ktlodestone
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.defaultRequest
-import kotlinx.coroutines.DelicateCoroutinesApi
 
 internal val ktorClient = HttpClient {
     defaultRequest {
