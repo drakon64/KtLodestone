@@ -175,7 +175,7 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
         CharacterSelectors.GENDER_MAP.getValue(
             CharacterSelectors.GENDER_REGEX.find(
                 raceClanGender.await()
-            )!!.value
+            )!!.value[0]
         )
     }
 

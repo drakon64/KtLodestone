@@ -2,13 +2,13 @@ package cloud.drakon.ktlodestone.character
 
 /** A [Character]'s Gender. */
 enum class Gender {
-    /** Male */
-    MALE {
-        override fun toString() = "Male"
+    /** ♀ */
+    FEMALE {
+        override fun toString() = "♀"
     },
 
-    /** Female */
-    FEMALE {
-        override fun toString() = "Female"
+    /** ♂ */
+    MALE {
+        override fun toString() = "♂"
     },
 }

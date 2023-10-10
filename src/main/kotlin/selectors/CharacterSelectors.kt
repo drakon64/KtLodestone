@@ -132,8 +132,8 @@ internal object CharacterSelectors {
     }.toMap()
 
     val GENDER_MAP = mapOf(
-        "♀" to Gender.FEMALE,
-        "♂" to Gender.MALE,
+        '♀' to Gender.FEMALE,
+        '♂' to Gender.MALE,
     )
 
     val TOWN_MAP = mapOf(
