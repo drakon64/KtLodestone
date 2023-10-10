@@ -1,13 +1,13 @@
-package cloud.drakon.ktlodestone.selectors.character
+package cloud.drakon.ktlodestone.selectors.character.profile
 
-import cloud.drakon.ktlodestone.character.DataCenter
-import cloud.drakon.ktlodestone.character.Gender
-import cloud.drakon.ktlodestone.character.Guardian
-import cloud.drakon.ktlodestone.character.Race
-import cloud.drakon.ktlodestone.character.Region
-import cloud.drakon.ktlodestone.classjob.ClassJob
+import cloud.drakon.ktlodestone.character.profile.DataCenter
+import cloud.drakon.ktlodestone.character.profile.Gender
+import cloud.drakon.ktlodestone.character.profile.Guardian
+import cloud.drakon.ktlodestone.character.profile.Race
+import cloud.drakon.ktlodestone.character.profile.Region
+import cloud.drakon.ktlodestone.character.classjob.ClassJob
 
-internal object CharacterMaps {
+internal object CharacterProfileMaps {
     // The currently displayed class/job of a character is actually an image, so we map the image URL to the [ClassJob] enum entry
     val CLASS_JOB_MAP = mapOf(
         "https://img.finalfantasyxiv.com/lds/h/U/F5JzG9RPIKFSogtaKNBk455aYA.png" to ClassJob.GLADIATOR,

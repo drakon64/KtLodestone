@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.selectors.character
+package cloud.drakon.ktlodestone.selectors.character.profile
 
-internal object CharacterSelectors {
+internal object CharacterProfileSelectors {
     const val ACTIVE_CLASSJOB = ".character__class_icon > img:nth-child(1)"
     const val ACTIVE_CLASSJOB_ATTR = "src"
 

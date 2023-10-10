@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
-/** A [Character]'s Data Center. */
+/** A [CharacterProfile]'s Data Center. */
 enum class DataCenter {
     Elemental,
     Gaia,

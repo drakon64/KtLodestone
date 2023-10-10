@@ -1,12 +1,12 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
-import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
-import cloud.drakon.ktlodestone.classjob.ClassJob
+import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompany
+import cloud.drakon.ktlodestone.character.classjob.ClassJob
 
 /**
  * A Character returned by The Lodestone's `/character` endpoint.
  */
-data class Character(
+data class CharacterProfile(
     /** The Character's active class or job. */
     val activeClassJob: ClassJob,
     /** The level of the Character's active class or job. */

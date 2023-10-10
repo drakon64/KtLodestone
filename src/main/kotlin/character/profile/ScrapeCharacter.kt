@@ -1,11 +1,11 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
-import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
-import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
-import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
-import cloud.drakon.ktlodestone.selectors.character.CharacterMaps
-import cloud.drakon.ktlodestone.selectors.character.CharacterSelectors
+import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompany
+import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyName
+import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyRank
+import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
+import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.jsoup.Jsoup
@@ -14,29 +14,29 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     val document = Jsoup.parse(response)
 
     val activeClassJob = async {
-        CharacterMaps.CLASS_JOB_MAP.getValue(
-            document.select(CharacterSelectors.ACTIVE_CLASSJOB)
-                .attr(CharacterSelectors.ACTIVE_CLASSJOB_ATTR)
+        CharacterProfileMaps.CLASS_JOB_MAP.getValue(
+            document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB)
+                .attr(CharacterProfileSelectors.ACTIVE_CLASSJOB_ATTR)
         )
     }
 
     val activeClassJobLevel = async {
-        CharacterSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX.find(
-            document.select(CharacterSelectors.ACTIVE_CLASSJOB_LEVEL).text()
+        CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX.find(
+            document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL).text()
         )!!.value.toByte()
     }
 
     val avatar = async {
-        document.select(CharacterSelectors.AVATAR).attr(CharacterSelectors.AVATAR_ATTR)
+        document.select(CharacterProfileSelectors.AVATAR).attr(CharacterProfileSelectors.AVATAR_ATTR)
     }
 
     val bio = async {
-        document.select(CharacterSelectors.BIO).text()
+        document.select(CharacterProfileSelectors.BIO).text()
     }
 
     val freeCompany = async {
         val freeCompanyElement =
-            document.select(CharacterSelectors.FREE_COMPANY).first()
+            document.select(CharacterProfileSelectors.FREE_COMPANY).first()
 
         if (freeCompanyElement != null) {
             val freeCompanyName = async {
@@ -44,24 +44,24 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
             }
 
             val freeCompanyId = async {
-                freeCompanyElement.attr(CharacterSelectors.FREE_COMPANY_ID_ATTR)
+                freeCompanyElement.attr(CharacterProfileSelectors.FREE_COMPANY_ID_ATTR)
                     .split("/")[3]
             }
 
             val freeCompanyIconLayers = async {
                 val bottom = async {
-                    document.select(CharacterSelectors.FREE_COMPANY_BOTTOM_ICON_LAYER)
-                        .attr(CharacterSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                    document.select(CharacterProfileSelectors.FREE_COMPANY_BOTTOM_ICON_LAYER)
+                        .attr(CharacterProfileSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
                 }
 
                 val middle = async {
-                    document.select(CharacterSelectors.FREE_COMPANY_MIDDLE_ICON_LAYER)
-                        .attr(CharacterSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                    document.select(CharacterProfileSelectors.FREE_COMPANY_MIDDLE_ICON_LAYER)
+                        .attr(CharacterProfileSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
                 }
 
                 val top = async {
-                    document.select(CharacterSelectors.FREE_COMPANY_TOP_ICON_LAYER)
-                        .attr(CharacterSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                    document.select(CharacterProfileSelectors.FREE_COMPANY_TOP_ICON_LAYER)
+                        .attr(CharacterProfileSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
                 }
 
                 IconLayers(bottom.await(), middle.await(), top.await())
@@ -78,14 +78,14 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     val grandCompany = async {
         val grandCompanyName = async {
             GrandCompanyName.valueOf(
-                document.select(CharacterSelectors.GRAND_COMPANY).text()
+                document.select(CharacterProfileSelectors.GRAND_COMPANY).text()
                     .split("/")[0].trim().replace(" ", "_").uppercase()
             )
         }
 
         val grandCompanyRank = async {
             GrandCompanyRank.valueOf(
-                document.select(CharacterSelectors.GRAND_COMPANY).text()
+                document.select(CharacterProfileSelectors.GRAND_COMPANY).text()
                     .split("/")[1].trim().replace(" ", "_").uppercase()
             )
         }
@@ -94,26 +94,26 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val guardian = async {
-        CharacterMaps.GUARDIAN_MAP.getValue(
-            document.select(CharacterSelectors.GUARDIAN_NAME).text()
+        CharacterProfileMaps.GUARDIAN_MAP.getValue(
+            document.select(CharacterProfileSelectors.GUARDIAN_NAME).text()
         )
     }
 
     val name = async {
-        document.select(CharacterSelectors.NAME).text()
+        document.select(CharacterProfileSelectors.NAME).text()
     }
 
     val nameday = async {
-        document.select(CharacterSelectors.NAMEDAY).text()
+        document.select(CharacterProfileSelectors.NAMEDAY).text()
     }
 
     val portrait = async {
-        document.select(CharacterSelectors.PORTRAIT)
-            .attr(CharacterSelectors.PORTRAIT_ATTR)
+        document.select(CharacterProfileSelectors.PORTRAIT)
+            .attr(CharacterProfileSelectors.PORTRAIT_ATTR)
     }
 
     val pvpTeam = async {
-        val pvpTeamElement = document.select(CharacterSelectors.PVP_TEAM).first()
+        val pvpTeamElement = document.select(CharacterProfileSelectors.PVP_TEAM).first()
 
         if (pvpTeamElement != null) {
             val pvpTeamName = async {
@@ -121,23 +121,23 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
             }
 
             val pvpTeamId = async {
-                pvpTeamElement.attr(CharacterSelectors.PVP_TEAM_ID_ATTR).split("/")[3]
+                pvpTeamElement.attr(CharacterProfileSelectors.PVP_TEAM_ID_ATTR).split("/")[3]
             }
 
             val pvpTeamIconLayers = async {
                 val bottom = async {
-                    document.select(CharacterSelectors.PVP_TEAM_BOTTOM_ICON_LAYER)
-                        .attr(CharacterSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+                    document.select(CharacterProfileSelectors.PVP_TEAM_BOTTOM_ICON_LAYER)
+                        .attr(CharacterProfileSelectors.PVP_TEAM_ICON_LAYER_ATTR)
                 }
 
                 val middle = async {
-                    document.select(CharacterSelectors.PVP_TEAM_MIDDLE_ICON_LAYER)
-                        .attr(CharacterSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+                    document.select(CharacterProfileSelectors.PVP_TEAM_MIDDLE_ICON_LAYER)
+                        .attr(CharacterProfileSelectors.PVP_TEAM_ICON_LAYER_ATTR)
                 }
 
                 val top = async {
-                    document.select(CharacterSelectors.PVP_TEAM_TOP_ICON_LAYER)
-                        .attr(CharacterSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+                    document.select(CharacterProfileSelectors.PVP_TEAM_TOP_ICON_LAYER)
+                        .attr(CharacterProfileSelectors.PVP_TEAM_ICON_LAYER_ATTR)
                 }
 
                 IconLayers(bottom.await(), middle.await(), top.await())
@@ -152,12 +152,12 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
     }
 
     val raceClanGender = async {
-        document.select(CharacterSelectors.RACE_CLAN_GENDER).html()
+        document.select(CharacterProfileSelectors.RACE_CLAN_GENDER).html()
     }
 
     val race = async {
-        CharacterMaps.RACE_MAP.getValue(
-            CharacterSelectors.RACE_REGEX.find(
+        CharacterProfileMaps.RACE_MAP.getValue(
+            CharacterProfileSelectors.RACE_REGEX.find(
                 raceClanGender.await()
             )!!.value
         )
@@ -165,15 +165,15 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
 
     val clan = async {
         Clan.valueOf(
-            CharacterSelectors.CLAN_REGEX.find(raceClanGender.await())!!.value
+            CharacterProfileSelectors.CLAN_REGEX.find(raceClanGender.await())!!.value
                 .replace(" ", "_")
                 .uppercase()
         )
     }
 
     val gender = async {
-        CharacterMaps.GENDER_MAP.getValue(
-            CharacterSelectors.GENDER_REGEX.find(
+        CharacterProfileMaps.GENDER_MAP.getValue(
+            CharacterProfileSelectors.GENDER_REGEX.find(
                 raceClanGender.await()
             )!!.value[0]
         )
@@ -181,35 +181,35 @@ internal suspend fun scrapeCharacter(response: String) = coroutineScope {
 
     val world = async {
         World.valueOf(
-            document.select(CharacterSelectors.WORLD).text().split("[")[0].trim()
+            document.select(CharacterProfileSelectors.WORLD).text().split("[")[0].trim()
         )
     }
 
     val dataCenter = async {
         DataCenter.valueOf(
-            document.select(CharacterSelectors.WORLD).text()
+            document.select(CharacterProfileSelectors.WORLD).text()
                 .split("[")[1]
                 .replace("]", "")
         )
     }
 
     val region = async {
-        CharacterMaps.REGION_MAP.getValue(dataCenter.await())
+        CharacterProfileMaps.REGION_MAP.getValue(dataCenter.await())
     }
 
     val title = async {
-        document.select(CharacterSelectors.TITLE).text()
+        document.select(CharacterProfileSelectors.TITLE).text()
     }
 
     val town = async {
         Town.valueOf(
-            document.select(CharacterSelectors.TOWN).text()
+            document.select(CharacterProfileSelectors.TOWN).text()
                 .replace(" ", "_")
                 .uppercase()
         )
     }
 
-    Character(
+    CharacterProfile(
         activeClassJob.await(),
         activeClassJobLevel.await(),
         avatar.await(),

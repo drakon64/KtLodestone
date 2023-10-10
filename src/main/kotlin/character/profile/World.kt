@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
-/** A [Character]'s World. */
+/** A [CharacterProfile]'s World. */
 enum class World {
     Ravana,
     Bismarck,

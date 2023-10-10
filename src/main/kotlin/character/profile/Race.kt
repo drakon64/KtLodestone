@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
-/** A [Character]'s Race. */
+/** A [CharacterProfile]'s Race. */
 enum class Race {
     /** Hyur */
     HYUR {
