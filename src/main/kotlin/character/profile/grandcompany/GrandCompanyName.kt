@@ -1,5 +1,7 @@
 package cloud.drakon.ktlodestone.character.profile.grandcompany
 
+import org.jetbrains.annotations.ApiStatus.Internal
+
 enum class GrandCompanyName {
     /** Immortal Flames */
     IMMORTAL_FLAMES {
@@ -17,6 +19,7 @@ enum class GrandCompanyName {
     },
 
     /** No Affiliation */
+    @Internal
     NO_AFFILIATION {
         override fun toString() = "No Affiliation"
     },
