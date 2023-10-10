@@ -1,12 +1,12 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
 
-/** A [Character]'s [FreeCompany] or [PvpTeam]. */
+/** A [CharacterProfile]'s [FreeCompany] or [PvpTeam]. */
 data class Guild(val name: String, val id: String, val iconLayers: IconLayers)
 
-/** A [Character]'s Free Company. */
+/** A [CharacterProfile]'s Free Company. */
 typealias FreeCompany = Guild
 
-/** A [Character]'s PvP Team. */
+/** A [CharacterProfile]'s PvP Team. */
 typealias PvpTeam = Guild

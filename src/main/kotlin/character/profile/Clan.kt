@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
-/** A [Character]'s Clan. */
+/** A [CharacterProfile]'s Clan. */
 enum class Clan {
     /** Hyur, Midlander */
     MIDLANDER {

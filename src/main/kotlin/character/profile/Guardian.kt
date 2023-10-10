@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
-/** A [Character]'s Guardian. */
+/** A [CharacterProfile]'s Guardian. */
 enum class Guardian {
     /** Halone, the Fury */
     HALONE {

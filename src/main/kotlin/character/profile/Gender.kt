@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
-/** A [Character]'s Gender. */
+/** A [CharacterProfile]'s Gender. */
 enum class Gender {
     /** ♀ */
     FEMALE {

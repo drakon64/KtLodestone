@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
-/** A [Character]'s Region. */
+/** A [CharacterProfile]'s Region. */
 enum class Region {
     /** Europe */
     EUROPE {

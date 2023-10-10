@@ -1,4 +1,4 @@
-package cloud.drakon.ktlodestone.classjob
+package cloud.drakon.ktlodestone.character.classjob
 
 enum class ClassJob {
     /** Gladiator */

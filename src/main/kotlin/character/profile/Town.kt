@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.character
+package cloud.drakon.ktlodestone.character.profile
 
-/** A [Character]'s starting Town. */
+/** A [CharacterProfile]'s starting Town. */
 enum class Town {
     /** Gridania */
     GRIDANIA {

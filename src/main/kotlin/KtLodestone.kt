@@ -3,7 +3,8 @@
 
 package cloud.drakon.ktlodestone
 
-import cloud.drakon.ktlodestone.character.scrapeCharacter
+import cloud.drakon.ktlodestone.character.profile.CharacterProfile
+import cloud.drakon.ktlodestone.character.profile.scrapeCharacter
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.exception.LodestoneNotFoundException
 import io.ktor.client.HttpClient
@@ -11,7 +12,6 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
-import kotlin.jvm.Throws
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
@@ -27,12 +27,12 @@ private val ktorClient = HttpClient {
 }
 
 /**
- * Returns [Character] with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character` endpoint.
+ * Returns [CharacterProfile] with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character` endpoint.
 
  * @throws LodestoneNotFoundException Thrown when the character isn't found on *The Lodestone*.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
  */
-suspend fun getLodestoneCharacter(id: Int) = ktorClient.get("character/$id/").let {
+suspend fun getLodestoneCharacterProfile(id: Int) = ktorClient.get("character/$id/").let {
     when (it.status.value) {
         200 -> scrapeCharacter(it.body())
         404 -> throw LodestoneNotFoundException("Character", id)
@@ -41,13 +41,13 @@ suspend fun getLodestoneCharacter(id: Int) = ktorClient.get("character/$id/").le
 }
 
 /**
- * Returns [Character] with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character` endpoint.
+ * Returns [CharacterProfile] with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character` endpoint.
 
  * @throws LodestoneNotFoundException Thrown when the character isn't found on *The Lodestone*.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
  */
 @JvmName("getLodestoneCharacter")
 @Throws(LodestoneNotFoundException::class, LodestoneException::class)
-fun getLodestoneCharacterAsync(id: Int) = GlobalScope.future {
-    getLodestoneCharacter(id)
+fun getLodestoneCharacterProfileAsync(id: Int) = GlobalScope.future {
+    getLodestoneCharacterProfile(id)
 }
