@@ -37,7 +37,7 @@ internal object CharacterProfileMaps {
         "https://img.finalfantasyxiv.com/lds/h/E/vmtbIlf6Uv8rVp2YFCWA25X0dc.png" to ClassJob.MACHINIST,
         "https://img.finalfantasyxiv.com/lds/h/t/HK0jQ1y7YV9qm30cxGOVev6Cck.png" to ClassJob.DANCER,
 
-        "https://img.finalfantasyxiv.com/lds/h/t/HK0jQ1y7YV9qm30cxGOVev6Cck.png" to ClassJob.THAUMATURGE,
+        "https://img.finalfantasyxiv.com/lds/h/4/IM3PoP6p06GqEyReygdhZNh7fU.png" to ClassJob.THAUMATURGE,
         "https://img.finalfantasyxiv.com/lds/h/P/V01m8YRBYcIs5vgbRtpDiqltSE.png" to ClassJob.BLACK_MAGE,
         "https://img.finalfantasyxiv.com/lds/h/e/VYP1LKTDpt8uJVvUT7OKrXNL9E.png" to ClassJob.ARCANIST,
         "https://img.finalfantasyxiv.com/lds/h/h/4ghjpyyuNelzw1Bl0sM_PBA_FE.png" to ClassJob.SUMMONER,
@@ -55,7 +55,7 @@ internal object CharacterProfileMaps {
 
         "https://img.finalfantasyxiv.com/lds/h/A/aM2Dd6Vo4HW_UGasK7tLuZ6fu4.png" to ClassJob.MINER,
         "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to ClassJob.BOTANIST,
-        "https://img.finalfantasyxiv.com/lds/h/I/jGRnjIlwWridqM-mIPNew6bhHM.png" to ClassJob.FISHER,
+        "https://img.finalfantasyxiv.com/lds/h/x/B4Azydbn7Prubxt7OL9p1LZXZ0.png" to ClassJob.FISHER,
     )
 
     val GUARDIAN_MAP = Guardian.entries.associateBy {
