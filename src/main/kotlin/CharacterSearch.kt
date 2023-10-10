@@ -8,7 +8,6 @@ import cloud.drakon.ktlodestone.character.classjob.ClassJob
 import cloud.drakon.ktlodestone.character.profile.Clan
 import cloud.drakon.ktlodestone.character.profile.Race
 import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyName
-import cloud.drakon.ktlodestone.character.search.CharacterSearchResult
 import cloud.drakon.ktlodestone.character.search.Language
 import cloud.drakon.ktlodestone.character.search.scrapeCharacterSearch
 import cloud.drakon.ktlodestone.exception.LodestoneException
@@ -47,9 +46,9 @@ suspend fun searchLodestoneCharacter(
         languages
     )
 } else {
-    mutableListOf<List<CharacterSearchResult>>().let {
+    buildList {
         for (page in 1..pages) {
-            it.add(
+            add(
                 searchLodestoneCharacterPaginated(
                     name,
                     world,
@@ -63,9 +62,7 @@ suspend fun searchLodestoneCharacter(
                 )
             )
         }
-
-        it.flatten()
-    }
+    }.flatten()
 }
 
 private suspend fun searchLodestoneCharacterPaginated(
