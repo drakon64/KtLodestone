@@ -8,6 +8,7 @@ import cloud.drakon.ktlodestone.character.classjob.ClassJob
 import cloud.drakon.ktlodestone.character.profile.Clan
 import cloud.drakon.ktlodestone.character.profile.Race
 import cloud.drakon.ktlodestone.character.profile.grandcompany.GrandCompanyName
+import cloud.drakon.ktlodestone.character.search.CharacterSearchResult
 import cloud.drakon.ktlodestone.character.search.Language
 import cloud.drakon.ktlodestone.character.search.scrapeCharacterSearch
 import cloud.drakon.ktlodestone.exception.LodestoneException
@@ -33,6 +34,50 @@ suspend fun searchLodestoneCharacter(
     clan: Clan? = null,
     grandCompanies: List<GrandCompanyName>? = null,
     languages: List<Language>? = null,
+    pages: Byte = 1,
+) = if (pages == 1.toByte()) {
+    searchLodestoneCharacterPaginated(
+        name,
+        world,
+        dataCenter,
+        classJob,
+        race,
+        clan,
+        grandCompanies,
+        languages
+    )
+} else {
+    mutableListOf<List<CharacterSearchResult>>().let {
+        for (page in 1..pages) {
+            it.add(
+                searchLodestoneCharacterPaginated(
+                    name,
+                    world,
+                    dataCenter,
+                    classJob,
+                    race,
+                    clan,
+                    grandCompanies,
+                    languages,
+                    page
+                )
+            )
+        }
+
+        it.flatten()
+    }
+}
+
+private suspend fun searchLodestoneCharacterPaginated(
+    name: String?,
+    world: World?,
+    dataCenter: DataCenter?,
+    classJob: ClassJob?,
+    race: Race?,
+    clan: Clan?,
+    grandCompanies: List<GrandCompanyName>?,
+    languages: List<Language>?,
+    page: Int? = null,
 ) = ktorClient.get("character/") {
     url {
         if (name != null) parameters.append("q", name.replace(" ", "+"))
@@ -56,11 +101,7 @@ suspend fun searchLodestoneCharacter(
         grandCompanies?.forEach {
             when (it) {
                 GrandCompanyName.MAELSTROM -> parameters.append("gcid", "1")
-                GrandCompanyName.ORDER_OF_THE_TWIN_ADDER -> parameters.append(
-                    "gcid",
-                    "2"
-                )
-
+                GrandCompanyName.ORDER_OF_THE_TWIN_ADDER -> parameters.append("gcid", "2")
                 GrandCompanyName.IMMORTAL_FLAMES -> parameters.append("gcid", "3")
                 GrandCompanyName.NO_AFFILIATION -> parameters.append("gcid", "0")
             }
@@ -74,6 +115,8 @@ suspend fun searchLodestoneCharacter(
                 Language.FRENCH -> parameters.append("blog_lang", "fr")
             }
         }
+
+        if (page != null) parameters.append("page", "$page")
     }
 }.let {
     when (it.status.value) {
@@ -99,6 +142,7 @@ fun searchLodestoneCharacterAsync(
     clan: Clan? = null,
     grandCompanies: List<GrandCompanyName>? = null,
     languages: List<Language>? = null,
+    pages: Byte = 1,
 ) = GlobalScope.future {
     searchLodestoneCharacter(
         name,
@@ -109,5 +153,6 @@ fun searchLodestoneCharacterAsync(
         clan,
         grandCompanies,
         languages,
+        pages,
     )
 }
