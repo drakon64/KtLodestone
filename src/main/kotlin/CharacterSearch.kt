@@ -31,12 +31,7 @@ suspend fun searchLodestoneCharacter(
     classJob: ClassJob? = null,
     race: Race? = null,
     clan: Clan? = null,
-    grandCompanies: Set<GrandCompanyName?> = setOf(
-        GrandCompanyName.MAELSTROM,
-        GrandCompanyName.ORDER_OF_THE_TWIN_ADDER,
-        GrandCompanyName.IMMORTAL_FLAMES,
-        null
-    ),
+    grandCompanies: Set<GrandCompanyName?>? = null,
     languages: List<Language>? = null,
     pages: Byte = 1,
 ) = if (pages == 1.toByte()) {
@@ -77,7 +72,7 @@ private suspend fun searchLodestoneCharacterPaginated(
     classJob: ClassJob?,
     race: Race?,
     clan: Clan?,
-    grandCompanies: Set<GrandCompanyName?>,
+    grandCompanies: Set<GrandCompanyName?>?,
     languages: List<Language>?,
     page: Int? = null,
 ) = ktorClient.get("character/") {
@@ -101,7 +96,7 @@ private suspend fun searchLodestoneCharacterPaginated(
             parameters.append("race_tribe", race.name)
         }
 
-        grandCompanies.forEach {
+        grandCompanies?.forEach {
             when (it) {
                 GrandCompanyName.MAELSTROM -> parameters.append("gcid", "1")
                 GrandCompanyName.ORDER_OF_THE_TWIN_ADDER -> parameters.append("gcid", "2")
@@ -143,12 +138,7 @@ fun searchLodestoneCharacterAsync(
     classJob: ClassJob? = null,
     race: Race? = null,
     clan: Clan? = null,
-    grandCompanies: Set<GrandCompanyName?> = setOf(
-        GrandCompanyName.MAELSTROM,
-        GrandCompanyName.ORDER_OF_THE_TWIN_ADDER,
-        GrandCompanyName.IMMORTAL_FLAMES,
-        null
-    ),
+    grandCompanies: Set<GrandCompanyName?>? = null,
     languages: List<Language>? = null,
     pages: Byte = 1,
 ) = GlobalScope.future {
