@@ -18,5 +18,9 @@ internal object CharacterSearchSelectors {
     const val ENTRY_GRAND_COMPANY_RANK = ".entry__chara_info > .js__tooltip"
     const val ENTRY_GRAND_COMPANY_RANK_ATTR = "data-tooltip"
 
+    const val ENTRY_FREE_COMPANY_ID = ".entry__freecompany__link"
+    const val ENTRY_FREE_COMPANY_ID_ATTR = "href"
+    const val ENTRY_FREE_COMPANY_NAME = "span"
+
     const val ENTRY_WORLD = ".entry__world"
 }

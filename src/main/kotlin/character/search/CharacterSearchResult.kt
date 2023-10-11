@@ -1,6 +1,7 @@
 package cloud.drakon.ktlodestone.character.search
 
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
+import cloud.drakon.ktlodestone.character.profile.Guild
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
 
@@ -15,6 +16,8 @@ data class CharacterSearchResult(
     val name: String,
     /** The character's Grand Company. */
     val grandCompany: GrandCompany?,
+    /** The Character's Free Company. */
+    val freeCompany: Guild?,
     /** The character's world. */
     val world: World,
     /** The character's data center. */
