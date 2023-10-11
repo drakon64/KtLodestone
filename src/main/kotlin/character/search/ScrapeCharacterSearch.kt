@@ -54,8 +54,7 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
 
                 val grandCompany = async {
                     val grandCompanyTooltip = it.select(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK)
-                        .attr(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK_ATTR)
-                        .let {
+                        .attr(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK_ATTR).let {
                             it.ifEmpty { null }
                         }
 
