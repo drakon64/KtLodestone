@@ -65,6 +65,38 @@ suspend fun searchLodestoneCharacter(
     }.flatten()
 }
 
+/**
+ * Searches for a character on *The Lodestone*.
+ *
+ * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ */
+@JvmName("searchLodestoneCharacter")
+@JvmOverloads
+@Throws(LodestoneException::class)
+fun searchLodestoneCharacterAsync(
+    name: String? = null,
+    world: World? = null,
+    dataCenter: DataCenter? = null,
+    classJob: ClassJob? = null,
+    race: Race? = null,
+    clan: Clan? = null,
+    grandCompanies: Set<GrandCompanyName?>? = null,
+    languages: List<Language>? = null,
+    pages: Byte = 1,
+) = GlobalScope.future {
+    searchLodestoneCharacter(
+        name,
+        world,
+        dataCenter,
+        classJob,
+        race,
+        clan,
+        grandCompanies,
+        languages,
+        pages,
+    )
+}
+
 private suspend fun searchLodestoneCharacterPaginated(
     name: String?,
     world: World?,
@@ -121,36 +153,4 @@ private suspend fun searchLodestoneCharacterPaginated(
         200 -> scrapeCharacterSearch(it.body())
         else -> throw LodestoneException()
     }
-}
-
-/**
- * Searches for a character on *The Lodestone*.
- *
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
- */
-@JvmName("searchLodestoneCharacter")
-@JvmOverloads
-@Throws(LodestoneException::class)
-fun searchLodestoneCharacterAsync(
-    name: String? = null,
-    world: World? = null,
-    dataCenter: DataCenter? = null,
-    classJob: ClassJob? = null,
-    race: Race? = null,
-    clan: Clan? = null,
-    grandCompanies: Set<GrandCompanyName?>? = null,
-    languages: List<Language>? = null,
-    pages: Byte = 1,
-) = GlobalScope.future {
-    searchLodestoneCharacter(
-        name,
-        world,
-        dataCenter,
-        classJob,
-        race,
-        clan,
-        grandCompanies,
-        languages,
-        pages,
-    )
 }
