@@ -3,6 +3,7 @@ package cloud.drakon.ktlodestone.character.search
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
+import cloud.drakon.ktlodestone.character.profile.Guild
 import cloud.drakon.ktlodestone.selectors.character.search.CharacterSearchSelectors
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
@@ -84,6 +85,24 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                     } else null
                 }
 
+                val freeCompany = async {
+                    val freeCompanyLink = it.select(CharacterSearchSelectors.ENTRY_FREE_COMPANY_ID)
+                        .first()
+
+                    if (freeCompanyLink != null) {
+                        val freeCompanyName = async {
+                            freeCompanyLink.select(CharacterSearchSelectors.ENTRY_FREE_COMPANY_NAME).text()
+                        }
+
+                        val freeCompanyId = async {
+                            freeCompanyLink.attr(CharacterSearchSelectors.ENTRY_FREE_COMPANY_ID_ATTR)
+                                .split("/")[3]
+                        }
+
+                        Guild(freeCompanyName.await(), freeCompanyId.await(), null)
+                    } else null
+                }
+
                 val world = async {
                     World.valueOf(
                         it.select(CharacterSearchSelectors.ENTRY_WORLD)
@@ -109,6 +128,7 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                         language.await(),
                         name.await(),
                         grandCompany.await(),
+                        freeCompany.await(),
                         world.await(),
                         dataCenter.await(),
                     )
