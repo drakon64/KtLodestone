@@ -1,7 +1,7 @@
 package cloud.drakon.ktlodestone.character.search
 
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
-import cloud.drakon.ktlodestone.character.profile.Guild
+import cloud.drakon.ktlodestone.character.Guild
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
 
