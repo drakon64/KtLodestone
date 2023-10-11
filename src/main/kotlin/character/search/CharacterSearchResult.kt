@@ -16,7 +16,7 @@ data class CharacterSearchResult(
     val name: String,
     /** The character's Grand Company. */
     val grandCompany: GrandCompany?,
-    /** The Character's Free Company. */
+    /** The character's Free Company. */
     val freeCompany: Guild?,
     /** The character's world. */
     val world: World,
