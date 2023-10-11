@@ -7,7 +7,7 @@ import cloud.drakon.ktlodestone.world.World
 data class CharacterSearchResult(
     val avatar: String,
     val id: Int,
-    val language: List<Language>,
+    val languages: List<Language>,
     val name: String,
     val grandCompany: GrandCompany?,
     val world: World,
