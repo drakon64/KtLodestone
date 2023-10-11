@@ -53,30 +53,51 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                 }
 
                 val grandCompany = async {
-                    val grandCompanyRank = it.select(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK).text()
+                    val grandCompanyTooltip = it.select(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK)
+                        .attr(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK_ATTR)
+                        .let {
+                            it.ifEmpty { null }
+                        }
 
-                    val grandCompanyName = when {
-                        grandCompanyRank.contains("Flame") -> GrandCompanyName.IMMORTAL_FLAMES
-                        grandCompanyRank.contains("Serpent") -> GrandCompanyName.ORDER_OF_THE_TWIN_ADDER
-                        grandCompanyRank.contains("Storm") -> GrandCompanyName.MAELSTROM
-                        else -> null
-                    }
+                    if (grandCompanyTooltip != null) {
+                        val grandCompanyName = async {
+                            GrandCompanyName.valueOf(
+                                grandCompanyTooltip.split("/")[0]
+                                    .trim()
+                                    .replace(" ", "_")
+                                    .uppercase()
+                            )
+                        }
 
-                    if (grandCompanyName != null) GrandCompany(
-                        grandCompanyName,
-                        GrandCompanyRank.valueOf(grandCompanyRank)
-                    ) else null
+                        val grandCompanyRank = async {
+                            GrandCompanyRank.valueOf(
+                                grandCompanyTooltip.split("/")[1]
+                                    .trim()
+                                    .replace(" ", "_")
+                                    .uppercase()
+                            )
+                        }
+
+                        GrandCompany(
+                            grandCompanyName.await(),
+                            grandCompanyRank.await()
+                        )
+                    } else null
                 }
 
                 val world = async {
                     World.valueOf(
-                        it.select(CharacterSearchSelectors.ENTRY_WORLD).text().split("[")[0].trim()
+                        it.select(CharacterSearchSelectors.ENTRY_WORLD)
+                            .text()
+                            .split("[")[0]
+                            .trim()
                     )
                 }
 
                 val dataCenter = async {
                     DataCenter.valueOf(
-                        it.select(CharacterSearchSelectors.ENTRY_WORLD).text()
+                        it.select(CharacterSearchSelectors.ENTRY_WORLD)
+                            .text()
                             .split("[")[1]
                             .replace("]", "")
                     )
