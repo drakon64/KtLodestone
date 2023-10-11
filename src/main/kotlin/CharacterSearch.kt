@@ -22,6 +22,15 @@ import kotlinx.coroutines.future.future
 /**
  * Searches for a character on *The Lodestone*.
  *
+ * @param name The name of the character to search for.
+ * @param world Search this [World] for characters. Takes priority over [dataCenter].
+ * @param dataCenter Search this [DataCenter] for characters.
+ * @param classJob Search for characters that have this [ClassJob] active.
+ * @param race Search for characters of this [Race].
+ * @param clan Search for characters of this [Clan]. Takes priority over [race].
+ * @param grandCompanies Search for characters that a member of one of these [GrandCompanyName]. If `null`, all [GrandCompanyName] entries are considered, as are "Non Affiliated" characters. If a [Set] with a `null` element is provided, `null` is treated as "Non Affiliated".
+ * @param languages Search for characters with this [Set] of [Language] selected.
+ * @param pages The number of pages of characters to return. One page contains twenty characters.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
  */
 suspend fun searchLodestoneCharacter(
@@ -32,7 +41,7 @@ suspend fun searchLodestoneCharacter(
     race: Race? = null,
     clan: Clan? = null,
     grandCompanies: Set<GrandCompanyName?>? = null,
-    languages: List<Language>? = null,
+    languages: Set<Language>? = null,
     pages: Byte = 1,
 ) = if (pages == 1.toByte()) {
     searchLodestoneCharacterPaginated(
@@ -68,6 +77,15 @@ suspend fun searchLodestoneCharacter(
 /**
  * Searches for a character on *The Lodestone*.
  *
+ * @param name The name of the character to search for.
+ * @param world Search this [World] for characters. Takes priority over [dataCenter].
+ * @param dataCenter Search this [DataCenter] for characters.
+ * @param classJob Search for characters that have this [ClassJob] active.
+ * @param race Search for characters of this [Race].
+ * @param clan Search for characters of this [Clan]. Takes priority over [race].
+ * @param grandCompanies Search for characters that a member of one of these [GrandCompanyName]. If `null`, all [GrandCompanyName] entries are considered, as are "Non Affiliated" characters. If a [Set] with a `null` element is provided, `null` is treated as "Non Affiliated".
+ * @param languages Search for characters with this [Set] of [Language] selected.
+ * @param pages The number of pages of characters to return. One page contains twenty characters.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
  */
 @JvmName("searchLodestoneCharacter")
@@ -81,7 +99,7 @@ fun searchLodestoneCharacterAsync(
     race: Race? = null,
     clan: Clan? = null,
     grandCompanies: Set<GrandCompanyName?>? = null,
-    languages: List<Language>? = null,
+    languages: Set<Language>? = null,
     pages: Byte = 1,
 ) = GlobalScope.future {
     searchLodestoneCharacter(
@@ -105,7 +123,7 @@ private suspend fun searchLodestoneCharacterPaginated(
     race: Race?,
     clan: Clan?,
     grandCompanies: Set<GrandCompanyName?>?,
-    languages: List<Language>?,
+    languages: Set<Language>?,
     page: Int? = null,
 ) = ktorClient.get("character/") {
     url {
