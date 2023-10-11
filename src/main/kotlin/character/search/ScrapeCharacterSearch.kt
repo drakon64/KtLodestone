@@ -3,7 +3,6 @@ package cloud.drakon.ktlodestone.character.search
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
-import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
 import cloud.drakon.ktlodestone.selectors.character.search.CharacterSearchSelectors
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
@@ -71,13 +70,13 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
 
                 val world = async {
                     World.valueOf(
-                        it.select(CharacterProfileSelectors.WORLD).text().split("[")[0].trim()
+                        it.select(CharacterSearchSelectors.ENTRY_WORLD).text().split("[")[0].trim()
                     )
                 }
 
                 val dataCenter = async {
                     DataCenter.valueOf(
-                        it.select(CharacterProfileSelectors.WORLD).text()
+                        it.select(CharacterSearchSelectors.ENTRY_WORLD).text()
                             .split("[")[1]
                             .replace("]", "")
                     )
