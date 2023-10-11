@@ -1,5 +1,6 @@
-package cloud.drakon.ktlodestone.character.profile
+package cloud.drakon.ktlodestone.character
 
+import cloud.drakon.ktlodestone.character.profile.CharacterProfile
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
 
 /** A character's [FreeCompany] or [PvpTeam]. */
