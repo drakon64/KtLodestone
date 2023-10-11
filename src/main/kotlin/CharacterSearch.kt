@@ -15,6 +15,7 @@ import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import java.security.InvalidParameterException
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
@@ -31,6 +32,7 @@ import kotlinx.coroutines.future.future
  * @param grandCompanies Search for characters that a member of one of these [GrandCompanyName]. If `null`, all [GrandCompanyName] entries are considered, as are "Non Affiliated" characters. If a [Set] with a `null` element is provided, `null` is treated as "Non Affiliated".
  * @param languages Search for characters with this [Set] of [Language] selected.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
+ * @throws InvalidParameterException Thrown when [pages] is a value less than 1.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
  */
 suspend fun searchLodestoneCharacter(
@@ -54,7 +56,7 @@ suspend fun searchLodestoneCharacter(
         grandCompanies,
         languages
     )
-} else {
+} else if (pages > 1.toByte()) {
     buildList {
         for (page in 1..pages) {
             add(
@@ -72,6 +74,8 @@ suspend fun searchLodestoneCharacter(
             )
         }
     }.flatten()
+} else {
+    throw InvalidParameterException("`pages` must be at least 1.")
 }
 
 /**
@@ -86,11 +90,12 @@ suspend fun searchLodestoneCharacter(
  * @param grandCompanies Search for characters that a member of one of these [GrandCompanyName]. If `null`, all [GrandCompanyName] entries are considered, as are "Non Affiliated" characters. If a [Set] with a `null` element is provided, `null` is treated as "Non Affiliated".
  * @param languages Search for characters with this [Set] of [Language] selected.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
+ * @throws InvalidParameterException Thrown when [pages] is a value less than 1.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
  */
 @JvmName("searchLodestoneCharacter")
 @JvmOverloads
-@Throws(LodestoneException::class)
+@Throws(InvalidParameterException::class, LodestoneException::class)
 fun searchLodestoneCharacterAsync(
     name: String? = null,
     world: World? = null,
