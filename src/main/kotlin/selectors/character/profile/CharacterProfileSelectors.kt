@@ -4,9 +4,14 @@ package cloud.drakon.ktlodestone.selectors.character.profile
 internal object CharacterProfileSelectors {
     const val ACTIVE_CLASSJOB = ".character__class_icon > img:nth-child(1)"
     const val ACTIVE_CLASSJOB_ATTR = "src"
-
     const val ACTIVE_CLASSJOB_LEVEL = ".character__class__data > p:nth-child(1)"
     val ACTIVE_CLASSJOB_LEVEL_REGEX = """\d+""".toRegex()
+
+    const val CLASSJOB_CLEARFIX = "div.character__level"
+    const val CLASSJOB_ENTRIES = "div > ul"
+    const val CLASSJOB = "li"
+    const val CLASSJOB_ICON = "img"
+    const val CLASSJOB_ICON_ATTR = "src"
 
     const val AVATAR = ".frame__chara__face > img:nth-child(1)"
     const val AVATAR_ATTR = "src"
