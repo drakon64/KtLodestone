@@ -4,6 +4,7 @@ import cloud.drakon.ktlodestone.character.ActiveClassJob
 import cloud.drakon.ktlodestone.character.Guild
 import cloud.drakon.ktlodestone.character.classjob.ClassJob
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
+import cloud.drakon.ktlodestone.character.profile.gearset.GearSet
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.Region
 import cloud.drakon.ktlodestone.world.World
@@ -30,6 +31,8 @@ data class CharacterProfile(
     val name: String,
     /** The Character's nameday. */
     val nameday: String,
+    /** The Character's gear set */
+    val gearSet: GearSet,
     /** The Character's portrait. */
     val portrait: String,
     /** The Character's PvP Team. */

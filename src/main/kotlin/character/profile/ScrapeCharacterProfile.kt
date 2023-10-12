@@ -6,9 +6,12 @@ import cloud.drakon.ktlodestone.character.classjob.ClassJob
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
+import cloud.drakon.ktlodestone.character.profile.gearset.GearSet
+import cloud.drakon.ktlodestone.character.profile.gearset.Item
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
+import cloud.drakon.ktlodestone.selectors.character.profile.gearset.MainHandSelectors
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
 import kotlinx.coroutines.async
@@ -147,6 +150,37 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         document.select(CharacterProfileSelectors.NAMEDAY).text()
     }
 
+    val gearSet = async {
+        val mainHand = async {
+            val name = async {
+                document.select(MainHandSelectors.NAME_SELECTOR).text()
+            }
+
+            val dbLink = async {
+                "https://eu.finalfantasyxiv.com" +
+                document.select(MainHandSelectors.DB_LINK)
+                    .attr(MainHandSelectors.DB_LINK_ATTR)
+            }
+
+            Item(name.await(), dbLink.await(), null, null, null, null)
+        }
+
+        GearSet(
+            mainHand.await(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+    }
+
     val portrait = async {
         document.select(CharacterProfileSelectors.PORTRAIT)
             .attr(CharacterProfileSelectors.PORTRAIT_ATTR)
@@ -267,6 +301,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         guardian.await(),
         name.await(),
         nameday.await(),
+        gearSet.await(),
         portrait.await(),
         pvpTeam.await(),
         race.await(),
