@@ -4,6 +4,7 @@ import cloud.drakon.ktlodestone.character.ActiveClassJob
 import cloud.drakon.ktlodestone.character.Guild
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.world.DataCenter
+import cloud.drakon.ktlodestone.world.Region
 import cloud.drakon.ktlodestone.world.World
 
 /**
