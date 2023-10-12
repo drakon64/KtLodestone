@@ -2,6 +2,7 @@ package cloud.drakon.ktlodestone.character.profile
 
 import cloud.drakon.ktlodestone.character.ActiveClassJob
 import cloud.drakon.ktlodestone.character.Guild
+import cloud.drakon.ktlodestone.character.classjob.ClassJob
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
@@ -32,6 +33,31 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         ActiveClassJob(classJob.await(), level.await())
+    }
+
+    val classJob = async {
+        with(mutableMapOf<ClassJob, Byte>()) {
+            document.select(CharacterProfileSelectors.CLASSJOB_CLEARFIX).forEach {
+                it.select(CharacterProfileSelectors.CLASSJOB_ENTRIES).forEach {
+                    it.select(CharacterProfileSelectors.CLASSJOB).forEach {
+                        val classJob = async {
+                            CharacterProfileMaps.CLASS_JOB_MAP.getValue(
+                                it.select(CharacterProfileSelectors.CLASSJOB_ICON)
+                                    .attr(CharacterProfileSelectors.CLASSJOB_ICON_ATTR)
+                            )
+                        }
+
+                        val level = async {
+                            it.text().toByte()
+                        }
+
+                        this[classJob.await()] = level.await()
+                    }
+                }
+            }
+
+            this.toMap()
+        }
     }
 
     val avatar = async {
@@ -186,7 +212,8 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
     val world = async {
         World.valueOf(
-            document.select(CharacterProfileSelectors.WORLD).text().split("[")[0].trim()
+            document.select(CharacterProfileSelectors.WORLD).text()
+                .split("[")[0].trim()
         )
     }
 
@@ -216,6 +243,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
     CharacterProfile(
         activeClassJob.await(),
+        classJob.await(),
         avatar.await(),
         bio.await(),
         freeCompany.await(),
