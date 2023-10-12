@@ -110,15 +110,23 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
     val grandCompany = async {
         val grandCompanyName = async {
             GrandCompanyName.valueOf(
-                document.select(CharacterProfileSelectors.GRAND_COMPANY).text()
-                    .split("/")[0].trim().replace(" ", "_").uppercase()
+                document.select(CharacterProfileSelectors.GRAND_COMPANY)
+                    .text()
+                    .split("/")[0]
+                    .trim()
+                    .replace(" ", "_")
+                    .uppercase()
             )
         }
 
         val grandCompanyRank = async {
             GrandCompanyRank.valueOf(
-                document.select(CharacterProfileSelectors.GRAND_COMPANY).text()
-                    .split("/")[1].trim().replace(" ", "_").uppercase()
+                document.select(CharacterProfileSelectors.GRAND_COMPANY)
+                    .text()
+                    .split("/")[1]
+                    .trim()
+                    .replace(" ", "_")
+                    .uppercase()
             )
         }
 
@@ -190,13 +198,16 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         CharacterProfileMaps.RACE_MAP.getValue(
             CharacterProfileSelectors.RACE_REGEX.find(
                 raceClanGender.await()
-            )!!.value
+            )
+            !!.value
         )
     }
 
     val clan = async {
         Clan.valueOf(
-            CharacterProfileSelectors.CLAN_REGEX.find(raceClanGender.await())!!.value
+            CharacterProfileSelectors.CLAN_REGEX.find(
+                raceClanGender.await()
+            )!!.value
                 .replace(" ", "_")
                 .uppercase()
         )
@@ -206,20 +217,24 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         CharacterProfileMaps.GENDER_MAP.getValue(
             CharacterProfileSelectors.GENDER_REGEX.find(
                 raceClanGender.await()
-            )!!.value[0]
+            )
+            !!.value[0]
         )
     }
 
     val world = async {
         World.valueOf(
-            document.select(CharacterProfileSelectors.WORLD).text()
-                .split("[")[0].trim()
+            document.select(CharacterProfileSelectors.WORLD)
+                .text()
+                .split("[")[0]
+                .trim()
         )
     }
 
     val dataCenter = async {
         DataCenter.valueOf(
-            document.select(CharacterProfileSelectors.WORLD).text()
+            document.select(CharacterProfileSelectors.WORLD)
+                .text()
                 .split("[")[1]
                 .replace("]", "")
         )
@@ -235,7 +250,8 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
     val town = async {
         Town.valueOf(
-            document.select(CharacterProfileSelectors.TOWN).text()
+            document.select(CharacterProfileSelectors.TOWN)
+                .text()
                 .replace(" ", "_")
                 .uppercase()
         )
