@@ -54,10 +54,8 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                 }
 
                 val grandCompany = async {
-                    it.select(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK)
-                        .attr(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK_ATTR).let {
-                            it.ifEmpty { null }
-                        }?.let {
+                    it.select(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK).first()
+                        ?.attr(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK_ATTR)?.let {
                             val grandCompanyName = async {
                                 GrandCompanyName.valueOf(
                                     it.split("/")[0]
