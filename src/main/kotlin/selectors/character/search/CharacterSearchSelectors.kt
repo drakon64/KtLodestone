@@ -15,6 +15,11 @@ internal object CharacterSearchSelectors {
 
     const val ENTRY_NAME = ".entry__name"
 
+    const val ENTRY_CHARA_INFO = ".entry__chara_info > li"
+    const val ENTRY_ACTIVE_CLASSJOB = "i > img"
+    const val ENTRY_ACTIVE_CLASSJOB_ATTR = "src"
+    const val ENTRY_ACTIVE_CLASSJOB_LEVEL = "span"
+
     const val ENTRY_GRAND_COMPANY_RANK = ".entry__chara_info > .js__tooltip"
     const val ENTRY_GRAND_COMPANY_RANK_ATTR = "data-tooltip"
 

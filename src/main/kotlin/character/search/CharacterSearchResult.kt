@@ -1,5 +1,6 @@
 package cloud.drakon.ktlodestone.character.search
 
+import cloud.drakon.ktlodestone.character.ActiveClassJob
 import cloud.drakon.ktlodestone.character.Guild
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.world.DataCenter
@@ -25,5 +26,6 @@ data class CharacterSearchResult(
     val dataCenter: DataCenter,
     /** The character's region. */
     val region: Region,
-//    val activeClassJob: ActiveClassJob
+    /** The character's active class/job. */
+    val activeClassJob: ActiveClassJob
 )
