@@ -44,16 +44,13 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
     }
 
     val freeCompany = async {
-        val freeCompanyElement =
-            document.select(CharacterProfileSelectors.FREE_COMPANY).first()
-
-        if (freeCompanyElement != null) {
+        document.select(CharacterProfileSelectors.FREE_COMPANY).first()?.let {
             val freeCompanyName = async {
-                freeCompanyElement.text()
+                it.text()
             }
 
             val freeCompanyId = async {
-                freeCompanyElement.attr(CharacterProfileSelectors.FREE_COMPANY_ID_ATTR)
+                it.attr(CharacterProfileSelectors.FREE_COMPANY_ID_ATTR)
                     .split("/")[3]
             }
 
@@ -81,7 +78,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
                 freeCompanyId.await(),
                 freeCompanyIconLayers.await()
             )
-        } else null
+        }
     }
 
     val grandCompany = async {
@@ -122,15 +119,13 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
     }
 
     val pvpTeam = async {
-        val pvpTeamElement = document.select(CharacterProfileSelectors.PVP_TEAM).first()
-
-        if (pvpTeamElement != null) {
+        document.select(CharacterProfileSelectors.PVP_TEAM).first()?.let {
             val pvpTeamName = async {
-                pvpTeamElement.text()
+                it.text()
             }
 
             val pvpTeamId = async {
-                pvpTeamElement.attr(CharacterProfileSelectors.PVP_TEAM_ID_ATTR)
+                it.attr(CharacterProfileSelectors.PVP_TEAM_ID_ATTR)
                     .split("/")[3]
             }
 
@@ -158,7 +153,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
                 pvpTeamId.await(),
                 pvpTeamIconLayers.await()
             )
-        } else null
+        }
     }
 
     val raceClanGender = async {
