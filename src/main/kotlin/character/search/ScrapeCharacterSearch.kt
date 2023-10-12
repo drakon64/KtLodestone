@@ -1,5 +1,6 @@
 package cloud.drakon.ktlodestone.character.search
 
+import cloud.drakon.ktlodestone.character.ActiveClassJob
 import cloud.drakon.ktlodestone.character.Guild
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
@@ -56,7 +57,8 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
 
                 val grandCompany = async {
                     it.select(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK).first()
-                        ?.attr(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK_ATTR)?.let {
+                        ?.attr(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK_ATTR)
+                        ?.let {
                             val grandCompanyName = async {
                                 GrandCompanyName.valueOf(
                                     it.split("/")[0]
@@ -83,18 +85,20 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                 }
 
                 val freeCompany = async {
-                    it.select(CharacterSearchSelectors.ENTRY_FREE_COMPANY_ID).first()?.let {
-                        val freeCompanyName = async {
-                            it.select(CharacterSearchSelectors.ENTRY_FREE_COMPANY_NAME).text()
-                        }
+                    it.select(CharacterSearchSelectors.ENTRY_FREE_COMPANY_ID).first()
+                        ?.let {
+                            val freeCompanyName = async {
+                                it.select(CharacterSearchSelectors.ENTRY_FREE_COMPANY_NAME)
+                                    .text()
+                            }
 
-                        val freeCompanyId = async {
-                            it.attr(CharacterSearchSelectors.ENTRY_FREE_COMPANY_ID_ATTR)
-                                .split("/")[3]
-                        }
+                            val freeCompanyId = async {
+                                it.attr(CharacterSearchSelectors.ENTRY_FREE_COMPANY_ID_ATTR)
+                                    .split("/")[3]
+                            }
 
-                        Guild(freeCompanyName.await(), freeCompanyId.await(), null)
-                    }
+                            Guild(freeCompanyName.await(), freeCompanyId.await(), null)
+                        }
                 }
 
                 val world = async {
@@ -119,6 +123,25 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                     CharacterProfileMaps.REGION_MAP.getValue(dataCenter.await())
                 }
 
+                val activeClassJob = async {
+                    it.select(CharacterSearchSelectors.ENTRY_CHARA_INFO).let {
+                        val classJob = async {
+                            CharacterProfileMaps.CLASS_JOB_MAP.getValue(
+                                it.select(CharacterSearchSelectors.ENTRY_ACTIVE_CLASSJOB)
+                                    .attr(CharacterSearchSelectors.ENTRY_ACTIVE_CLASSJOB_ATTR)
+                            )
+                        }
+
+                        val level = async {
+                            it.select(CharacterSearchSelectors.ENTRY_ACTIVE_CLASSJOB_LEVEL)
+                                .text()
+                                .toByte()
+                        }
+
+                        ActiveClassJob(classJob.await(), level.await())
+                    }
+                }
+
                 add(
                     CharacterSearchResult(
                         avatar.await(),
@@ -130,6 +153,7 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                         world.await(),
                         dataCenter.await(),
                         region.await(),
+                        activeClassJob.await(),
                     )
                 )
             }
