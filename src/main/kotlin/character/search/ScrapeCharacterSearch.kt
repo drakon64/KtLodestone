@@ -56,7 +56,8 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                 }
 
                 val grandCompany = async {
-                    it.select(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK).first()
+                    it.select(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK)
+                        .first()
                         ?.attr(CharacterSearchSelectors.ENTRY_GRAND_COMPANY_RANK_ATTR)
                         ?.let {
                             val grandCompanyName = async {
@@ -85,7 +86,8 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                 }
 
                 val freeCompany = async {
-                    it.select(CharacterSearchSelectors.ENTRY_FREE_COMPANY_ID).first()
+                    it.select(CharacterSearchSelectors.ENTRY_FREE_COMPANY_ID)
+                        .first()
                         ?.let {
                             val freeCompanyName = async {
                                 it.select(CharacterSearchSelectors.ENTRY_FREE_COMPANY_NAME)
