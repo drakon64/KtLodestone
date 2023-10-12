@@ -4,6 +4,7 @@ import cloud.drakon.ktlodestone.character.Guild
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
+import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.character.search.CharacterSearchSelectors
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
@@ -114,6 +115,10 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                     )
                 }
 
+                val region = async {
+                    CharacterProfileMaps.REGION_MAP.getValue(dataCenter.await())
+                }
+
                 add(
                     CharacterSearchResult(
                         avatar.await(),
@@ -124,6 +129,7 @@ internal suspend fun scrapeCharacterSearch(response: String) = coroutineScope {
                         freeCompany.await(),
                         world.await(),
                         dataCenter.await(),
+                        region.await(),
                     )
                 )
             }
