@@ -10,6 +10,7 @@ import cloud.drakon.ktlodestone.character.profile.gearset.GearSet
 import cloud.drakon.ktlodestone.character.profile.gearset.Glamour
 import cloud.drakon.ktlodestone.character.profile.gearset.Item
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
+import cloud.drakon.ktlodestone.selectors.character.profile.AttributeSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.BodySelectors
@@ -349,6 +350,106 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         )
     }
 
+    val attributes = async {
+        val strength = async {
+            document.select(AttributeSelectors.STRENGTH).text().toShort()
+        }
+
+        val dexterity = async {
+            document.select(AttributeSelectors.DEXTERITY).text().toShort()
+        }
+
+        val vitality = async {
+            document.select(AttributeSelectors.VITALITY).text().toShort()
+        }
+
+        val intelligence = async {
+            document.select(AttributeSelectors.INTELLIGENCE).text().toShort()
+        }
+
+        val mind = async {
+            document.select(AttributeSelectors.MIND).text().toShort()
+        }
+
+        val criticalHitRate = async {
+            document.select(AttributeSelectors.CRITICAL_HIT_RATE).text().toShort()
+        }
+
+        val determination = async {
+            document.select(AttributeSelectors.DETERMINATION).text().toShort()
+        }
+
+        val directHitRate = async {
+            document.select(AttributeSelectors.DIRECT_HIT_RATE).text().toShort()
+        }
+
+        val defense = async {
+            document.select(AttributeSelectors.DEFENSE).text().toShort()
+        }
+
+        val magicDefense = async {
+            document.select(AttributeSelectors.MAGIC_DEFENSE).text().toShort()
+        }
+
+        val attackPower = async {
+            document.select(AttributeSelectors.ATTACK_POWER).text().toShort()
+        }
+
+        val skillSpeed = async {
+            document.select(AttributeSelectors.SKILL_SPEED).text().toShort()
+        }
+
+        val attackMagicPotency = async {
+            document.select(AttributeSelectors.ATTACK_MAGIC_POTENCY).text().toShort()
+        }
+
+        val healingMagicPotency = async {
+            document.select(AttributeSelectors.HEALING_MAGIC_POTENCY).text().toShort()
+        }
+
+        val spellSpeed = async {
+            document.select(AttributeSelectors.SPELL_SPEED).text().toShort()
+        }
+
+        val tenacity = async {
+            document.select(AttributeSelectors.TENACITY).text().toShort()
+        }
+
+        val piety = async {
+            document.select(AttributeSelectors.PIETY).text().toShort()
+        }
+
+        val hp = async {
+            document.select(AttributeSelectors.HP).text().toInt()
+        }
+
+        val mpCpGp = async {
+            document.select(AttributeSelectors.MP_CP_GP).text().toShort()
+        }
+
+        Attributes(
+            strength.await(),
+            dexterity.await(),
+            vitality.await(),
+            intelligence.await(),
+            mind.await(),
+            criticalHitRate.await(),
+            determination.await(),
+            directHitRate.await(),
+            defense.await(),
+            magicDefense.await(),
+            attackPower.await(),
+            skillSpeed.await(),
+            attackMagicPotency.await(),
+            healingMagicPotency.await(),
+            spellSpeed.await(),
+            tenacity.await(),
+            piety.await(),
+            hp.await(),
+            mpCpGp.await()
+        )
+    }
+
     CharacterProfile(
         activeClassJob.await(),
         classJob.await(),
@@ -370,6 +471,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         region.await(),
         title.await(),
         town.await(),
+        attributes.await()
     )
 }
 

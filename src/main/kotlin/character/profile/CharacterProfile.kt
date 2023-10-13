@@ -53,4 +53,6 @@ data class CharacterProfile(
     val title: String?,
     /** The Character's starting town. */
     val town: Town,
+    /** The Character's attributes. */
+    val attributes: Attributes,
 )
