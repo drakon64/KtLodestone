@@ -27,5 +27,5 @@ data class CharacterSearchResult(
     /** The character's region. */
     val region: Region,
     /** The character's active class/job. */
-    val activeClassJob: ActiveClassJob
+    val activeClassJob: ActiveClassJob,
 )

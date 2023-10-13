@@ -15,10 +15,10 @@ import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import java.security.InvalidParameterException
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
+import java.security.InvalidParameterException
 
 /**
  * Searches for a character on *The Lodestone*.
