@@ -380,7 +380,7 @@ private suspend fun getGearSetItem(
 ) = coroutineScope {
     document.select(selector.ITEM).first()?.let {
         val name = async {
-            document.select(selector.NAME_SELECTOR).text()
+            document.select(selector.NAME_SELECTOR).text().replace("", "")
         }
 
         val dbLink = async {
@@ -393,6 +393,7 @@ private suspend fun getGearSetItem(
         val dye: Deferred<String?>
         val materia: Deferred<List<String>>
         val creatorName: Deferred<String?>
+        val hq: Deferred<Boolean>
 
         if (!soulCrystal) {
             glamour = async {
@@ -445,6 +446,10 @@ private suspend fun getGearSetItem(
             creatorName = async {
                 document.select(selector.CREATOR_NAME).first()?.text()
             }
+
+            hq = async {
+                document.select(selector.NAME_SELECTOR).text().contains('')
+            }
         } else {
             glamour = async {
                 null
@@ -461,6 +466,10 @@ private suspend fun getGearSetItem(
             creatorName = async {
                 null
             }
+
+            hq = async {
+                false
+            }
         }
 
         Item(
@@ -469,7 +478,8 @@ private suspend fun getGearSetItem(
             glamour.await(),
             dye.await(),
             materia.await(),
-            creatorName.await()
+            creatorName.await(),
+            hq.await(),
         )
     }
 }
