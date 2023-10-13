@@ -9,6 +9,7 @@ internal sealed interface GearSetSelectors {
     val DB_LINK_ATTR: String
 
     val GLAMOUR: String
+    val GLAMOUR_NAME: String
     val GLAMOUR_DB_LINK: String
     val GLAMOUR_DB_LINK_ATTR: String
 
