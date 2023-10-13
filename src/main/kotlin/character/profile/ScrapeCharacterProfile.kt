@@ -12,7 +12,9 @@ import cloud.drakon.ktlodestone.character.profile.gearset.Item
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
+import cloud.drakon.ktlodestone.selectors.character.profile.gearset.HeadSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.MainHandSelectors
+import cloud.drakon.ktlodestone.selectors.character.profile.gearset.OffHandSelectors
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
 import kotlinx.coroutines.async
@@ -203,10 +205,117 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
             )
         }
 
+        val offHand = async {
+            document.select(OffHandSelectors.ITEM).first()?.let {
+                val name = async {
+                    document.select(OffHandSelectors.NAME_SELECTOR).text()
+                }
+
+                val dbLink = async {
+                    "https://eu.finalfantasyxiv.com" +
+                            document.select(OffHandSelectors.DB_LINK)
+                                .attr(OffHandSelectors.DB_LINK_ATTR)
+                }
+
+                val glamour = async {
+                    val name = async {
+                        document.select(OffHandSelectors.GLAMOUR).text()
+                    }
+
+                    val dbLink = async {
+                        "https://eu.finalfantasyxiv.com" +
+                                document.select(OffHandSelectors.GLAMOUR_DB_LINK)
+                                    .attr(OffHandSelectors.GLAMOUR_DB_LINK_ATTR)
+                    }
+
+                    Glamour(name.await(), dbLink.await())
+                }
+
+                val dye = async {
+                    document.select(OffHandSelectors.DYE).text()
+                }
+
+                val materia = async {
+                    buildList {
+                        document.select(OffHandSelectors.MATERIA_1).first()?.html()
+                            ?.let {
+                                add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
+                            }
+                    }
+                }
+
+                val creatorName = async {
+                    document.select(OffHandSelectors.CREATOR_NAME).first()?.text()
+                }
+
+                Item(
+                    name.await(),
+                    dbLink.await(),
+                    glamour.await(),
+                    dye.await(),
+                    materia.await(),
+                    creatorName.await()
+                )
+            }
+        }
+
+        val head = async {
+            document.select(OffHandSelectors.ITEM).first()?.let {
+                val name = async {
+                    document.select(HeadSelectors.NAME_SELECTOR).text()
+                }
+
+                val dbLink = async {
+                    "https://eu.finalfantasyxiv.com" +
+                            document.select(MainHandSelectors.DB_LINK)
+                                .attr(HeadSelectors.DB_LINK_ATTR)
+                }
+
+                val glamour = async {
+                    val name = async {
+                        document.select(HeadSelectors.GLAMOUR).text()
+                    }
+
+                    val dbLink = async {
+                        "https://eu.finalfantasyxiv.com" +
+                                document.select(HeadSelectors.GLAMOUR_DB_LINK)
+                                    .attr(HeadSelectors.GLAMOUR_DB_LINK_ATTR)
+                    }
+
+                    Glamour(name.await(), dbLink.await())
+                }
+
+                val dye = async {
+                    document.select(HeadSelectors.DYE).text()
+                }
+
+                val materia = async {
+                    buildList {
+                        document.select(HeadSelectors.MATERIA_1).first()?.html()?.let {
+                            add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+                    }
+                }
+
+                val creatorName = async {
+                    document.select(HeadSelectors.CREATOR_NAME).first()?.text()
+                }
+
+                Item(
+                    name.await(),
+                    dbLink.await(),
+                    glamour.await(),
+                    dye.await(),
+                    materia.await(),
+                    creatorName.await()
+                )
+            }
+        }
+
         GearSet(
             mainHand.await(),
-            null,
-            null,
+            offHand.await(),
+            head.await(),
             null,
             null,
             null,
