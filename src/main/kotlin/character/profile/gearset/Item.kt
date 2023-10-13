@@ -7,4 +7,5 @@ data class Item(
     val dye: String?,
     val materia: List<String>,
     val creatorName: String?,
+    val hq: Boolean,
 )
