@@ -10,8 +10,8 @@ object MainHandSelectors: GearSetSelectors {
     override val DB_LINK_ATTR = "href"
 
     override val GLAMOUR = ".icon-c--0 > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3)"
-    override val GLAMOUR_NAME = ".icon-c--0 > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > p:nth-child(2)"
-    override val GLAMOUR_DB_LINK = ".icon-c--0 > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > p:nth-child(2) > a:nth-child(1)"
+    override val GLAMOUR_NAME = "p:nth-child(2)" // Child of GLAMOUR
+    override val GLAMOUR_DB_LINK = "a:nth-child(1)" // Child of GLAMOUR_NAME
     override val GLAMOUR_DB_LINK_ATTR = "href"
 
     override val DYE = ".icon-c--0 > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(3) > div:nth-child(1) > a:nth-child(1)"
