@@ -380,12 +380,12 @@ private suspend fun getGearSetItem(
 ) = coroutineScope {
     document.select(selector.ITEM).first()?.let {
         val name = async {
-            document.select(selector.NAME_SELECTOR).text().replace("", "")
+            it.select(selector.NAME_SELECTOR).text().replace("", "")
         }
 
         val dbLink = async {
             "https://eu.finalfantasyxiv.com" +
-                    document.select(MainHandSelectors.DB_LINK)
+                    it.select(MainHandSelectors.DB_LINK)
                         .attr(selector.DB_LINK_ATTR)
         }
 
@@ -397,7 +397,7 @@ private suspend fun getGearSetItem(
 
         if (!soulCrystal) {
             glamour = async {
-                document.select(selector.GLAMOUR).first()?.let {
+                it.select(selector.GLAMOUR).first()?.let {
                     it.select(selector.GLAMOUR_NAME).let {
                         val name = async {
                             it.text()
@@ -444,11 +444,11 @@ private suspend fun getGearSetItem(
             }
 
             creatorName = async {
-                document.select(selector.CREATOR_NAME).first()?.text()
+                it.select(selector.CREATOR_NAME).first()?.text()
             }
 
             hq = async {
-                document.select(selector.NAME_SELECTOR).text().contains('')
+                it.select(selector.NAME_SELECTOR).text().contains('')
             }
         } else {
             glamour = async {

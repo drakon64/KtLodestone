@@ -4,9 +4,9 @@ package cloud.drakon.ktlodestone.selectors.character.profile.gearset
 object SoulCrystalSelectors : GearSetSelectors {
     override val ITEM = ".icon-c--13 > .db-tooltip"
 
-    override val NAME_SELECTOR = ".icon-c--13 > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h2:nth-child(2)"
+    override val NAME_SELECTOR = "div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h2:nth-child(2)"
 
-    override val DB_LINK = ".icon-c--13 > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > a:nth-child(1)"
+    override val DB_LINK = "div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > a:nth-child(1)"
     override val DB_LINK_ATTR = "href"
 
     // Soul Crystal's can't have a glamour
