@@ -4,7 +4,6 @@
 
 package cloud.drakon.ktlodestone
 
-import cloud.drakon.ktlodestone.character.minions.CharacterMinions
 import cloud.drakon.ktlodestone.character.minions.scrapeCharacterMinions
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.exception.LodestoneNotFoundException
@@ -14,10 +13,9 @@ import io.ktor.http.userAgent
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
-import kotlin.jvm.Throws
 
 /**
- * Returns a [CharacterMinions] with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character/minion` endpoint.
+ * Returns a list of minions unlocked by a character with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character/minion` endpoint.
 
  * @throws LodestoneNotFoundException Thrown when the character isn't found on *The Lodestone*.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
@@ -33,7 +31,7 @@ suspend fun getLodestoneCharacterMinions(id: Int) = ktorClient.get("character/$i
 }
 
 /**
- * Returns a [CharacterMinions] with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character/minion` endpoint.
+ * Returns a list of minions unlocked by a character with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character/minion` endpoint.
 
  * @throws LodestoneNotFoundException Thrown when the character isn't found on *The Lodestone*.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.

@@ -1,4 +1,3 @@
-import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.exception.LodestoneNotFoundException
 import cloud.drakon.ktlodestone.getLodestoneCharacterMinions
 import kotlinx.coroutines.runBlocking
