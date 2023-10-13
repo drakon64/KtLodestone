@@ -188,6 +188,22 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
                     document.select(MainHandSelectors.MATERIA_1).first()?.html()?.let {
                         add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
                     }
+
+                    document.select(MainHandSelectors.MATERIA_2).first()?.html()?.let {
+                        add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
+                    }
+
+                    document.select(MainHandSelectors.MATERIA_3).first()?.html()?.let {
+                        add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
+                    }
+
+                    document.select(MainHandSelectors.MATERIA_4).first()?.html()?.let {
+                        add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
+                    }
+
+                    document.select(MainHandSelectors.MATERIA_5).first()?.html()?.let {
+                        add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
+                    }
                 }
             }
 
@@ -241,6 +257,26 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
                             ?.let {
                                 add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
                             }
+
+                        document.select(OffHandSelectors.MATERIA_2).first()?.html()
+                            ?.let {
+                                add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
+                            }
+
+                        document.select(OffHandSelectors.MATERIA_3).first()?.html()
+                            ?.let {
+                                add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
+                            }
+
+                        document.select(OffHandSelectors.MATERIA_4).first()?.html()
+                            ?.let {
+                                add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
+                            }
+
+                        document.select(OffHandSelectors.MATERIA_5).first()?.html()
+                            ?.let {
+                                add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
+                            }
                     }
                 }
 
@@ -260,7 +296,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         val head = async {
-            document.select(OffHandSelectors.ITEM).first()?.let {
+            document.select(HeadSelectors.ITEM).first()?.let {
                 val name = async {
                     document.select(HeadSelectors.NAME_SELECTOR).text()
                 }
@@ -292,6 +328,22 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
                 val materia = async {
                     buildList {
                         document.select(HeadSelectors.MATERIA_1).first()?.html()?.let {
+                            add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(HeadSelectors.MATERIA_2).first()?.html()?.let {
+                            add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(HeadSelectors.MATERIA_3).first()?.html()?.let {
+                            add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(HeadSelectors.MATERIA_4).first()?.html()?.let {
+                            add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(HeadSelectors.MATERIA_5).first()?.html()?.let {
                             add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
                         }
                     }
