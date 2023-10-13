@@ -7,14 +7,14 @@ import org.junit.jupiter.api.assertThrows
 
 class GetLodestoneCharacterProfileTest {
     @Test
-    fun getLodestoneCharacterTest() = assertDoesNotThrow {
+    fun getLodestoneCharacterProfileTest() = assertDoesNotThrow {
         runBlocking {
             println(getLodestoneCharacterProfile(27545492))
         }
     }
 
     @Test
-    fun getInvalidLodestoneCharacterTest() {
+    fun getInvalidLodestoneCharacterProfileTest() {
         assertThrows<LodestoneNotFoundException> {
             runBlocking {
                 getLodestoneCharacterProfile(-1)
