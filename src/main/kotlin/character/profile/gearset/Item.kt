@@ -5,6 +5,6 @@ data class Item(
     val dbLink: String,
     val glamour: Glamour?,
     val dye: String?,
-    val materia: List<String>?,
+    val materia: List<String>,
     val creatorName: String?,
 )

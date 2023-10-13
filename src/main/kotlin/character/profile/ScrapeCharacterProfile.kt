@@ -7,6 +7,7 @@ import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
 import cloud.drakon.ktlodestone.character.profile.gearset.GearSet
+import cloud.drakon.ktlodestone.character.profile.gearset.Glamour
 import cloud.drakon.ktlodestone.character.profile.gearset.Item
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
@@ -158,11 +159,48 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
             val dbLink = async {
                 "https://eu.finalfantasyxiv.com" +
-                document.select(MainHandSelectors.DB_LINK)
-                    .attr(MainHandSelectors.DB_LINK_ATTR)
+                        document.select(MainHandSelectors.DB_LINK)
+                            .attr(MainHandSelectors.DB_LINK_ATTR)
             }
 
-            Item(name.await(), dbLink.await(), null, null, null, null)
+            val glamour = async {
+                val name = async {
+                    document.select(MainHandSelectors.GLAMOUR).text()
+                }
+
+                val dbLink = async {
+                    "https://eu.finalfantasyxiv.com" +
+                            document.select(MainHandSelectors.GLAMOUR_DB_LINK)
+                                .attr(MainHandSelectors.GLAMOUR_DB_LINK_ATTR)
+                }
+
+                Glamour(name.await(), dbLink.await())
+            }
+
+            val dye = async {
+                document.select(MainHandSelectors.DYE).text()
+            }
+
+            val materia = async {
+                buildList {
+                    document.select(MainHandSelectors.MATERIA_1).first()?.html()?.let {
+                        add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
+                    }
+                }
+            }
+
+            val creatorName = async {
+                document.select(MainHandSelectors.CREATOR_NAME).first()?.text()
+            }
+
+            Item(
+                name.await(),
+                dbLink.await(),
+                glamour.await(),
+                dye.await(),
+                materia.await(),
+                creatorName.await()
+            )
         }
 
         GearSet(
