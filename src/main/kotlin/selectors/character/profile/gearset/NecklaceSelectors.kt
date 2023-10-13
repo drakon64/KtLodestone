@@ -1,7 +1,7 @@
 package cloud.drakon.ktlodestone.selectors.character.profile.gearset
 
 // https://github.com/xivapi/lodestone-css-selectors/blob/main/profile/gearset.json
-object NecklaceSelectors : GearSetSelectors {
+internal object NecklaceSelectors : GearSetSelectors {
     override val ITEM = ".icon-c--9 > .db-tooltip"
 
     override val NAME_SELECTOR = "div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h2:nth-child(2)"
