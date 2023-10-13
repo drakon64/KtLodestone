@@ -12,7 +12,11 @@ import cloud.drakon.ktlodestone.character.profile.gearset.Item
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
+import cloud.drakon.ktlodestone.selectors.character.profile.gearset.BodySelectors
+import cloud.drakon.ktlodestone.selectors.character.profile.gearset.FeetSelectors
+import cloud.drakon.ktlodestone.selectors.character.profile.gearset.HandsSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.HeadSelectors
+import cloud.drakon.ktlodestone.selectors.character.profile.gearset.LegsSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.MainHandSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.OffHandSelectors
 import cloud.drakon.ktlodestone.world.DataCenter
@@ -364,14 +368,290 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
             }
         }
 
+        val body = async {
+            document.select(BodySelectors.ITEM).first()?.let {
+                val name = async {
+                    document.select(BodySelectors.NAME_SELECTOR).text()
+                }
+
+                val dbLink = async {
+                    "https://eu.finalfantasyxiv.com" +
+                            document.select(MainHandSelectors.DB_LINK)
+                                .attr(BodySelectors.DB_LINK_ATTR)
+                }
+
+                val glamour = async {
+                    val name = async {
+                        document.select(BodySelectors.GLAMOUR).text()
+                    }
+
+                    val dbLink = async {
+                        "https://eu.finalfantasyxiv.com" +
+                                document.select(BodySelectors.GLAMOUR_DB_LINK)
+                                    .attr(BodySelectors.GLAMOUR_DB_LINK_ATTR)
+                    }
+
+                    Glamour(name.await(), dbLink.await())
+                }
+
+                val dye = async {
+                    document.select(BodySelectors.DYE).text()
+                }
+
+                val materia = async {
+                    buildList {
+                        document.select(BodySelectors.MATERIA_1).first()?.html()?.let {
+                            add(BodySelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(BodySelectors.MATERIA_2).first()?.html()?.let {
+                            add(BodySelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(BodySelectors.MATERIA_3).first()?.html()?.let {
+                            add(BodySelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(BodySelectors.MATERIA_4).first()?.html()?.let {
+                            add(BodySelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(BodySelectors.MATERIA_5).first()?.html()?.let {
+                            add(BodySelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+                    }
+                }
+
+                val creatorName = async {
+                    document.select(BodySelectors.CREATOR_NAME).first()?.text()
+                }
+
+                Item(
+                    name.await(),
+                    dbLink.await(),
+                    glamour.await(),
+                    dye.await(),
+                    materia.await(),
+                    creatorName.await()
+                )
+            }
+        }
+
+        val hands = async {
+            document.select(HandsSelectors.ITEM).first()?.let {
+                val name = async {
+                    document.select(HandsSelectors.NAME_SELECTOR).text()
+                }
+
+                val dbLink = async {
+                    "https://eu.finalfantasyxiv.com" +
+                            document.select(MainHandSelectors.DB_LINK)
+                                .attr(HandsSelectors.DB_LINK_ATTR)
+                }
+
+                val glamour = async {
+                    val name = async {
+                        document.select(HandsSelectors.GLAMOUR).text()
+                    }
+
+                    val dbLink = async {
+                        "https://eu.finalfantasyxiv.com" +
+                                document.select(HandsSelectors.GLAMOUR_DB_LINK)
+                                    .attr(HandsSelectors.GLAMOUR_DB_LINK_ATTR)
+                    }
+
+                    Glamour(name.await(), dbLink.await())
+                }
+
+                val dye = async {
+                    document.select(HandsSelectors.DYE).text()
+                }
+
+                val materia = async {
+                    buildList {
+                        document.select(HandsSelectors.MATERIA_1).first()?.html()?.let {
+                            add(HandsSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(HandsSelectors.MATERIA_2).first()?.html()?.let {
+                            add(HandsSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(HandsSelectors.MATERIA_3).first()?.html()?.let {
+                            add(HandsSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(HandsSelectors.MATERIA_4).first()?.html()?.let {
+                            add(HandsSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(HandsSelectors.MATERIA_5).first()?.html()?.let {
+                            add(HandsSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+                    }
+                }
+
+                val creatorName = async {
+                    document.select(HandsSelectors.CREATOR_NAME).first()?.text()
+                }
+
+                Item(
+                    name.await(),
+                    dbLink.await(),
+                    glamour.await(),
+                    dye.await(),
+                    materia.await(),
+                    creatorName.await()
+                )
+            }
+        }
+
+        val legs = async {
+            document.select(LegsSelectors.ITEM).first()?.let {
+                val name = async {
+                    document.select(LegsSelectors.NAME_SELECTOR).text()
+                }
+
+                val dbLink = async {
+                    "https://eu.finalfantasyxiv.com" +
+                            document.select(MainHandSelectors.DB_LINK)
+                                .attr(LegsSelectors.DB_LINK_ATTR)
+                }
+
+                val glamour = async {
+                    val name = async {
+                        document.select(LegsSelectors.GLAMOUR).text()
+                    }
+
+                    val dbLink = async {
+                        "https://eu.finalfantasyxiv.com" +
+                                document.select(LegsSelectors.GLAMOUR_DB_LINK)
+                                    .attr(LegsSelectors.GLAMOUR_DB_LINK_ATTR)
+                    }
+
+                    Glamour(name.await(), dbLink.await())
+                }
+
+                val dye = async {
+                    document.select(LegsSelectors.DYE).text()
+                }
+
+                val materia = async {
+                    buildList {
+                        document.select(LegsSelectors.MATERIA_1).first()?.html()?.let {
+                            add(LegsSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(LegsSelectors.MATERIA_2).first()?.html()?.let {
+                            add(LegsSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(LegsSelectors.MATERIA_3).first()?.html()?.let {
+                            add(LegsSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(LegsSelectors.MATERIA_4).first()?.html()?.let {
+                            add(LegsSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(LegsSelectors.MATERIA_5).first()?.html()?.let {
+                            add(LegsSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+                    }
+                }
+
+                val creatorName = async {
+                    document.select(LegsSelectors.CREATOR_NAME).first()?.text()
+                }
+
+                Item(
+                    name.await(),
+                    dbLink.await(),
+                    glamour.await(),
+                    dye.await(),
+                    materia.await(),
+                    creatorName.await()
+                )
+            }
+        }
+
+        val feet = async {
+            document.select(FeetSelectors.ITEM).first()?.let {
+                val name = async {
+                    document.select(FeetSelectors.NAME_SELECTOR).text()
+                }
+
+                val dbLink = async {
+                    "https://eu.finalfantasyxiv.com" +
+                            document.select(MainHandSelectors.DB_LINK)
+                                .attr(FeetSelectors.DB_LINK_ATTR)
+                }
+
+                val glamour = async {
+                    val name = async {
+                        document.select(FeetSelectors.GLAMOUR).text()
+                    }
+
+                    val dbLink = async {
+                        "https://eu.finalfantasyxiv.com" +
+                                document.select(FeetSelectors.GLAMOUR_DB_LINK)
+                                    .attr(FeetSelectors.GLAMOUR_DB_LINK_ATTR)
+                    }
+
+                    Glamour(name.await(), dbLink.await())
+                }
+
+                val dye = async {
+                    document.select(FeetSelectors.DYE).text()
+                }
+
+                val materia = async {
+                    buildList {
+                        document.select(FeetSelectors.MATERIA_1).first()?.html()?.let {
+                            add(FeetSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(FeetSelectors.MATERIA_2).first()?.html()?.let {
+                            add(FeetSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(FeetSelectors.MATERIA_3).first()?.html()?.let {
+                            add(FeetSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(FeetSelectors.MATERIA_4).first()?.html()?.let {
+                            add(FeetSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+
+                        document.select(FeetSelectors.MATERIA_5).first()?.html()?.let {
+                            add(FeetSelectors.MATERIA_REGEX.find(it)!!.value)
+                        }
+                    }
+                }
+
+                val creatorName = async {
+                    document.select(FeetSelectors.CREATOR_NAME).first()?.text()
+                }
+
+                Item(
+                    name.await(),
+                    dbLink.await(),
+                    glamour.await(),
+                    dye.await(),
+                    materia.await(),
+                    creatorName.await()
+                )
+            }
+        }
+
         GearSet(
             mainHand.await(),
             offHand.await(),
             head.await(),
-            null,
-            null,
-            null,
-            null,
+            body.await(),
+            hands.await(),
+            legs.await(),
+            feet.await(),
             null,
             null,
             null,
