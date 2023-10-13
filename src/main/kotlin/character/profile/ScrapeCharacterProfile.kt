@@ -14,6 +14,7 @@ import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.BodySelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.FeetSelectors
+import cloud.drakon.ktlodestone.selectors.character.profile.gearset.GearSetSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.HandsSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.HeadSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.LegsSelectors
@@ -24,6 +25,7 @@ import cloud.drakon.ktlodestone.world.World
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 
 internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
     val document = Jsoup.parse(response)
@@ -159,489 +161,31 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
     val gearSet = async {
         val mainHand = async {
-            val name = async {
-                document.select(MainHandSelectors.NAME_SELECTOR).text()
-            }
-
-            val dbLink = async {
-                "https://eu.finalfantasyxiv.com" +
-                        document.select(MainHandSelectors.DB_LINK)
-                            .attr(MainHandSelectors.DB_LINK_ATTR)
-            }
-
-            val glamour = async {
-                val name = async {
-                    document.select(MainHandSelectors.GLAMOUR).text()
-                }
-
-                val dbLink = async {
-                    "https://eu.finalfantasyxiv.com" +
-                            document.select(MainHandSelectors.GLAMOUR_DB_LINK)
-                                .attr(MainHandSelectors.GLAMOUR_DB_LINK_ATTR)
-                }
-
-                Glamour(name.await(), dbLink.await())
-            }
-
-            val dye = async {
-                document.select(MainHandSelectors.DYE).text()
-            }
-
-            val materia = async {
-                buildList {
-                    document.select(MainHandSelectors.MATERIA_1).first()?.html()?.let {
-                        add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
-                    }
-
-                    document.select(MainHandSelectors.MATERIA_2).first()?.html()?.let {
-                        add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
-                    }
-
-                    document.select(MainHandSelectors.MATERIA_3).first()?.html()?.let {
-                        add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
-                    }
-
-                    document.select(MainHandSelectors.MATERIA_4).first()?.html()?.let {
-                        add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
-                    }
-
-                    document.select(MainHandSelectors.MATERIA_5).first()?.html()?.let {
-                        add(MainHandSelectors.MATERIA_REGEX.find(it)!!.value)
-                    }
-                }
-            }
-
-            val creatorName = async {
-                document.select(MainHandSelectors.CREATOR_NAME).first()?.text()
-            }
-
-            Item(
-                name.await(),
-                dbLink.await(),
-                glamour.await(),
-                dye.await(),
-                materia.await(),
-                creatorName.await()
-            )
+            getGearSetItem(document, MainHandSelectors)!!
         }
 
         val offHand = async {
-            document.select(OffHandSelectors.ITEM).first()?.let {
-                val name = async {
-                    document.select(OffHandSelectors.NAME_SELECTOR).text()
-                }
-
-                val dbLink = async {
-                    "https://eu.finalfantasyxiv.com" +
-                            document.select(OffHandSelectors.DB_LINK)
-                                .attr(OffHandSelectors.DB_LINK_ATTR)
-                }
-
-                val glamour = async {
-                    val name = async {
-                        document.select(OffHandSelectors.GLAMOUR).text()
-                    }
-
-                    val dbLink = async {
-                        "https://eu.finalfantasyxiv.com" +
-                                document.select(OffHandSelectors.GLAMOUR_DB_LINK)
-                                    .attr(OffHandSelectors.GLAMOUR_DB_LINK_ATTR)
-                    }
-
-                    Glamour(name.await(), dbLink.await())
-                }
-
-                val dye = async {
-                    document.select(OffHandSelectors.DYE).text()
-                }
-
-                val materia = async {
-                    buildList {
-                        document.select(OffHandSelectors.MATERIA_1).first()?.html()
-                            ?.let {
-                                add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
-                            }
-
-                        document.select(OffHandSelectors.MATERIA_2).first()?.html()
-                            ?.let {
-                                add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
-                            }
-
-                        document.select(OffHandSelectors.MATERIA_3).first()?.html()
-                            ?.let {
-                                add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
-                            }
-
-                        document.select(OffHandSelectors.MATERIA_4).first()?.html()
-                            ?.let {
-                                add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
-                            }
-
-                        document.select(OffHandSelectors.MATERIA_5).first()?.html()
-                            ?.let {
-                                add(OffHandSelectors.MATERIA_REGEX.find(it)!!.value)
-                            }
-                    }
-                }
-
-                val creatorName = async {
-                    document.select(OffHandSelectors.CREATOR_NAME).first()?.text()
-                }
-
-                Item(
-                    name.await(),
-                    dbLink.await(),
-                    glamour.await(),
-                    dye.await(),
-                    materia.await(),
-                    creatorName.await()
-                )
-            }
+            getGearSetItem(document, OffHandSelectors)
         }
 
         val head = async {
-            document.select(HeadSelectors.ITEM).first()?.let {
-                val name = async {
-                    document.select(HeadSelectors.NAME_SELECTOR).text()
-                }
-
-                val dbLink = async {
-                    "https://eu.finalfantasyxiv.com" +
-                            document.select(MainHandSelectors.DB_LINK)
-                                .attr(HeadSelectors.DB_LINK_ATTR)
-                }
-
-                val glamour = async {
-                    val name = async {
-                        document.select(HeadSelectors.GLAMOUR).text()
-                    }
-
-                    val dbLink = async {
-                        "https://eu.finalfantasyxiv.com" +
-                                document.select(HeadSelectors.GLAMOUR_DB_LINK)
-                                    .attr(HeadSelectors.GLAMOUR_DB_LINK_ATTR)
-                    }
-
-                    Glamour(name.await(), dbLink.await())
-                }
-
-                val dye = async {
-                    document.select(HeadSelectors.DYE).text()
-                }
-
-                val materia = async {
-                    buildList {
-                        document.select(HeadSelectors.MATERIA_1).first()?.html()?.let {
-                            add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(HeadSelectors.MATERIA_2).first()?.html()?.let {
-                            add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(HeadSelectors.MATERIA_3).first()?.html()?.let {
-                            add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(HeadSelectors.MATERIA_4).first()?.html()?.let {
-                            add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(HeadSelectors.MATERIA_5).first()?.html()?.let {
-                            add(HeadSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-                    }
-                }
-
-                val creatorName = async {
-                    document.select(HeadSelectors.CREATOR_NAME).first()?.text()
-                }
-
-                Item(
-                    name.await(),
-                    dbLink.await(),
-                    glamour.await(),
-                    dye.await(),
-                    materia.await(),
-                    creatorName.await()
-                )
-            }
+            getGearSetItem(document, HeadSelectors)
         }
 
         val body = async {
-            document.select(BodySelectors.ITEM).first()?.let {
-                val name = async {
-                    document.select(BodySelectors.NAME_SELECTOR).text()
-                }
-
-                val dbLink = async {
-                    "https://eu.finalfantasyxiv.com" +
-                            document.select(MainHandSelectors.DB_LINK)
-                                .attr(BodySelectors.DB_LINK_ATTR)
-                }
-
-                val glamour = async {
-                    val name = async {
-                        document.select(BodySelectors.GLAMOUR).text()
-                    }
-
-                    val dbLink = async {
-                        "https://eu.finalfantasyxiv.com" +
-                                document.select(BodySelectors.GLAMOUR_DB_LINK)
-                                    .attr(BodySelectors.GLAMOUR_DB_LINK_ATTR)
-                    }
-
-                    Glamour(name.await(), dbLink.await())
-                }
-
-                val dye = async {
-                    document.select(BodySelectors.DYE).text()
-                }
-
-                val materia = async {
-                    buildList {
-                        document.select(BodySelectors.MATERIA_1).first()?.html()?.let {
-                            add(BodySelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(BodySelectors.MATERIA_2).first()?.html()?.let {
-                            add(BodySelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(BodySelectors.MATERIA_3).first()?.html()?.let {
-                            add(BodySelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(BodySelectors.MATERIA_4).first()?.html()?.let {
-                            add(BodySelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(BodySelectors.MATERIA_5).first()?.html()?.let {
-                            add(BodySelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-                    }
-                }
-
-                val creatorName = async {
-                    document.select(BodySelectors.CREATOR_NAME).first()?.text()
-                }
-
-                Item(
-                    name.await(),
-                    dbLink.await(),
-                    glamour.await(),
-                    dye.await(),
-                    materia.await(),
-                    creatorName.await()
-                )
-            }
+            getGearSetItem(document, BodySelectors)
         }
 
         val hands = async {
-            document.select(HandsSelectors.ITEM).first()?.let {
-                val name = async {
-                    document.select(HandsSelectors.NAME_SELECTOR).text()
-                }
-
-                val dbLink = async {
-                    "https://eu.finalfantasyxiv.com" +
-                            document.select(MainHandSelectors.DB_LINK)
-                                .attr(HandsSelectors.DB_LINK_ATTR)
-                }
-
-                val glamour = async {
-                    val name = async {
-                        document.select(HandsSelectors.GLAMOUR).text()
-                    }
-
-                    val dbLink = async {
-                        "https://eu.finalfantasyxiv.com" +
-                                document.select(HandsSelectors.GLAMOUR_DB_LINK)
-                                    .attr(HandsSelectors.GLAMOUR_DB_LINK_ATTR)
-                    }
-
-                    Glamour(name.await(), dbLink.await())
-                }
-
-                val dye = async {
-                    document.select(HandsSelectors.DYE).text()
-                }
-
-                val materia = async {
-                    buildList {
-                        document.select(HandsSelectors.MATERIA_1).first()?.html()?.let {
-                            add(HandsSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(HandsSelectors.MATERIA_2).first()?.html()?.let {
-                            add(HandsSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(HandsSelectors.MATERIA_3).first()?.html()?.let {
-                            add(HandsSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(HandsSelectors.MATERIA_4).first()?.html()?.let {
-                            add(HandsSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(HandsSelectors.MATERIA_5).first()?.html()?.let {
-                            add(HandsSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-                    }
-                }
-
-                val creatorName = async {
-                    document.select(HandsSelectors.CREATOR_NAME).first()?.text()
-                }
-
-                Item(
-                    name.await(),
-                    dbLink.await(),
-                    glamour.await(),
-                    dye.await(),
-                    materia.await(),
-                    creatorName.await()
-                )
-            }
+            getGearSetItem(document, HandsSelectors)
         }
 
         val legs = async {
-            document.select(LegsSelectors.ITEM).first()?.let {
-                val name = async {
-                    document.select(LegsSelectors.NAME_SELECTOR).text()
-                }
-
-                val dbLink = async {
-                    "https://eu.finalfantasyxiv.com" +
-                            document.select(MainHandSelectors.DB_LINK)
-                                .attr(LegsSelectors.DB_LINK_ATTR)
-                }
-
-                val glamour = async {
-                    val name = async {
-                        document.select(LegsSelectors.GLAMOUR).text()
-                    }
-
-                    val dbLink = async {
-                        "https://eu.finalfantasyxiv.com" +
-                                document.select(LegsSelectors.GLAMOUR_DB_LINK)
-                                    .attr(LegsSelectors.GLAMOUR_DB_LINK_ATTR)
-                    }
-
-                    Glamour(name.await(), dbLink.await())
-                }
-
-                val dye = async {
-                    document.select(LegsSelectors.DYE).text()
-                }
-
-                val materia = async {
-                    buildList {
-                        document.select(LegsSelectors.MATERIA_1).first()?.html()?.let {
-                            add(LegsSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(LegsSelectors.MATERIA_2).first()?.html()?.let {
-                            add(LegsSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(LegsSelectors.MATERIA_3).first()?.html()?.let {
-                            add(LegsSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(LegsSelectors.MATERIA_4).first()?.html()?.let {
-                            add(LegsSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(LegsSelectors.MATERIA_5).first()?.html()?.let {
-                            add(LegsSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-                    }
-                }
-
-                val creatorName = async {
-                    document.select(LegsSelectors.CREATOR_NAME).first()?.text()
-                }
-
-                Item(
-                    name.await(),
-                    dbLink.await(),
-                    glamour.await(),
-                    dye.await(),
-                    materia.await(),
-                    creatorName.await()
-                )
-            }
+            getGearSetItem(document, LegsSelectors)
         }
 
         val feet = async {
-            document.select(FeetSelectors.ITEM).first()?.let {
-                val name = async {
-                    document.select(FeetSelectors.NAME_SELECTOR).text()
-                }
-
-                val dbLink = async {
-                    "https://eu.finalfantasyxiv.com" +
-                            document.select(MainHandSelectors.DB_LINK)
-                                .attr(FeetSelectors.DB_LINK_ATTR)
-                }
-
-                val glamour = async {
-                    val name = async {
-                        document.select(FeetSelectors.GLAMOUR).text()
-                    }
-
-                    val dbLink = async {
-                        "https://eu.finalfantasyxiv.com" +
-                                document.select(FeetSelectors.GLAMOUR_DB_LINK)
-                                    .attr(FeetSelectors.GLAMOUR_DB_LINK_ATTR)
-                    }
-
-                    Glamour(name.await(), dbLink.await())
-                }
-
-                val dye = async {
-                    document.select(FeetSelectors.DYE).text()
-                }
-
-                val materia = async {
-                    buildList {
-                        document.select(FeetSelectors.MATERIA_1).first()?.html()?.let {
-                            add(FeetSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(FeetSelectors.MATERIA_2).first()?.html()?.let {
-                            add(FeetSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(FeetSelectors.MATERIA_3).first()?.html()?.let {
-                            add(FeetSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(FeetSelectors.MATERIA_4).first()?.html()?.let {
-                            add(FeetSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-
-                        document.select(FeetSelectors.MATERIA_5).first()?.html()?.let {
-                            add(FeetSelectors.MATERIA_REGEX.find(it)!!.value)
-                        }
-                    }
-                }
-
-                val creatorName = async {
-                    document.select(FeetSelectors.CREATOR_NAME).first()?.text()
-                }
-
-                Item(
-                    name.await(),
-                    dbLink.await(),
-                    glamour.await(),
-                    dye.await(),
-                    materia.await(),
-                    creatorName.await()
-                )
-            }
+            getGearSetItem(document, FeetSelectors)
         }
 
         GearSet(
@@ -792,4 +336,76 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         title.await(),
         town.await(),
     )
+}
+
+private suspend fun getGearSetItem(
+    document: Document,
+    selector: GearSetSelectors,
+) = coroutineScope {
+    document.select(selector.ITEM).first()?.let {
+        val name = async {
+            document.select(selector.NAME_SELECTOR).text()
+        }
+
+        val dbLink = async {
+            "https://eu.finalfantasyxiv.com" +
+                    document.select(MainHandSelectors.DB_LINK)
+                        .attr(selector.DB_LINK_ATTR)
+        }
+
+        val glamour = async {
+            val name = async {
+                document.select(selector.GLAMOUR).text()
+            }
+
+            val dbLink = async {
+                "https://eu.finalfantasyxiv.com" +
+                        document.select(selector.GLAMOUR_DB_LINK)
+                            .attr(selector.GLAMOUR_DB_LINK_ATTR)
+            }
+
+            Glamour(name.await(), dbLink.await())
+        }
+
+        val dye = async {
+            document.select(selector.DYE).text()
+        }
+
+        val materia = async {
+            buildList {
+                document.select(selector.MATERIA_1).first()?.html()?.let {
+                    add(selector.MATERIA_REGEX.find(it)!!.value)
+                }
+
+                document.select(selector.MATERIA_2).first()?.html()?.let {
+                    add(selector.MATERIA_REGEX.find(it)!!.value)
+                }
+
+                document.select(selector.MATERIA_3).first()?.html()?.let {
+                    add(selector.MATERIA_REGEX.find(it)!!.value)
+                }
+
+                document.select(selector.MATERIA_4).first()?.html()?.let {
+                    add(selector.MATERIA_REGEX.find(it)!!.value)
+                }
+
+                document.select(selector.MATERIA_5).first()?.html()?.let {
+                    add(selector.MATERIA_REGEX.find(it)!!.value)
+                }
+            }
+        }
+
+        val creatorName = async {
+            document.select(selector.CREATOR_NAME).first()?.text()
+        }
+
+        Item(
+            name.await(),
+            dbLink.await(),
+            glamour.await(),
+            dye.await(),
+            materia.await(),
+            creatorName.await()
+        )
+    }
 }
