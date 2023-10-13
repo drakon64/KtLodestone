@@ -419,24 +419,25 @@ private suspend fun getGearSetItem(
 
             materia = async {
                 buildList {
+                    // Search materia in sequence and stop if we find a `null`
                     document.select(selector.MATERIA_1).first()?.html()?.let {
                         add(selector.MATERIA_REGEX.find(it)!!.value)
-                    }
-
-                    document.select(selector.MATERIA_2).first()?.html()?.let {
-                        add(selector.MATERIA_REGEX.find(it)!!.value)
-                    }
-
-                    document.select(selector.MATERIA_3).first()?.html()?.let {
-                        add(selector.MATERIA_REGEX.find(it)!!.value)
-                    }
-
-                    document.select(selector.MATERIA_4).first()?.html()?.let {
-                        add(selector.MATERIA_REGEX.find(it)!!.value)
-                    }
-
-                    document.select(selector.MATERIA_5).first()?.html()?.let {
-                        add(selector.MATERIA_REGEX.find(it)!!.value)
+                    }.let {
+                        document.select(selector.MATERIA_2).first()?.html()?.let {
+                            add(selector.MATERIA_REGEX.find(it)!!.value)
+                        }
+                    }.let {
+                        document.select(selector.MATERIA_3).first()?.html()?.let {
+                            add(selector.MATERIA_REGEX.find(it)!!.value)
+                        }
+                    }.let {
+                        document.select(selector.MATERIA_4).first()?.html()?.let {
+                            add(selector.MATERIA_REGEX.find(it)!!.value)
+                        }
+                    }.let {
+                        document.select(selector.MATERIA_5).first()?.html()?.let {
+                            add(selector.MATERIA_REGEX.find(it)!!.value)
+                        }
                     }
                 }
             }
