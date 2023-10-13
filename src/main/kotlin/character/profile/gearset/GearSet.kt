@@ -11,6 +11,7 @@ data class GearSet(
     val earrings: Item?,
     val necklace: Item?,
     val bracelets: Item?,
-    val rings: List<Item?>?,
+    val ring1: Item?,
+    val ring2: Item?,
     val soulCrystal: Item?,
 )
