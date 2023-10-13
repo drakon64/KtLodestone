@@ -161,7 +161,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
     val gearSet = async {
         val mainHand = async {
-            getGearSetItem(document, MainHandSelectors)!!
+            getGearSetItem(document, MainHandSelectors)!! // A character always has a main hand item
         }
 
         val offHand = async {
