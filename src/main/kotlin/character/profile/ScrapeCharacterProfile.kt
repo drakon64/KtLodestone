@@ -355,17 +355,19 @@ private suspend fun getGearSetItem(
 
         val glamour = async {
             document.select(selector.GLAMOUR).first()?.let {
-                val name = async {
-                    document.select(selector.GLAMOUR_NAME).text()
-                }
+                it.select(selector.GLAMOUR_NAME).let {
+                    val name = async {
+                        it.text()
+                    }
 
-                val dbLink = async {
-                    "https://eu.finalfantasyxiv.com" +
-                            document.select(selector.GLAMOUR_DB_LINK)
-                                .attr(selector.GLAMOUR_DB_LINK_ATTR)
-                }
+                    val dbLink = async {
+                        "https://eu.finalfantasyxiv.com" +
+                                it.select(selector.GLAMOUR_DB_LINK)
+                                    .attr(selector.GLAMOUR_DB_LINK_ATTR)
+                    }
 
-                Glamour(name.await(), dbLink.await())
+                    Glamour(name.await(), dbLink.await())
+                }
             }
         }
 
