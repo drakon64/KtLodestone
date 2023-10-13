@@ -14,11 +14,10 @@ KtLodestone is a parser for The Lodestone for the JVM platform (JDK 11+).
 - Supports scraping the following information from The Lodestone:
   - Character
     - Profile
-    - ~~Achievements~~
-    - ~~Attributes~~
     - ~~Class/job~~
     - ~~Minions~~
     - ~~Mounts~~
+    - ~~Achievements~~
   - Search
     - Character
 - Asynchronous
