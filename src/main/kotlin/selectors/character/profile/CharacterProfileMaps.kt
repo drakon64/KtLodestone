@@ -1,7 +1,7 @@
 package cloud.drakon.ktlodestone.selectors.character.profile
 
 import cloud.drakon.ktlodestone.character.ClassJob
-import cloud.drakon.ktlodestone.character.profile.Disciple
+import cloud.drakon.ktlodestone.character.profile.Discipline
 import cloud.drakon.ktlodestone.character.profile.Gender
 import cloud.drakon.ktlodestone.character.profile.Guardian
 import cloud.drakon.ktlodestone.character.profile.Race
@@ -59,53 +59,53 @@ internal object CharacterProfileMaps {
         "https://img.finalfantasyxiv.com/lds/h/x/B4Azydbn7Prubxt7OL9p1LZXZ0.png" to ClassJob.FISHER,
     )
 
-    val DISCIPLE_MAP = mapOf(
-        ClassJob.GLADIATOR to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.PALADIN to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.MARAUDER to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.WARRIOR to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.DARK_KNIGHT to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.GUNBREAKER to Disciple.DISCIPLE_OF_WAR,
+    val DISCIPLINE_MAP = mapOf(
+        ClassJob.GLADIATOR to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.PALADIN to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.MARAUDER to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.WARRIOR to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.DARK_KNIGHT to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.GUNBREAKER to Discipline.DISCIPLE_OF_WAR,
 
-        ClassJob.CONJURER to Disciple.DISCIPLE_OF_MAGIC,
-        ClassJob.WHITE_MAGE to Disciple.DISCIPLE_OF_MAGIC,
-        ClassJob.SCHOLAR to Disciple.DISCIPLE_OF_MAGIC,
-        ClassJob.ASTROLOGIAN to Disciple.DISCIPLE_OF_MAGIC,
-        ClassJob.SAGE to Disciple.DISCIPLE_OF_MAGIC,
+        ClassJob.CONJURER to Discipline.DISCIPLE_OF_MAGIC,
+        ClassJob.WHITE_MAGE to Discipline.DISCIPLE_OF_MAGIC,
+        ClassJob.SCHOLAR to Discipline.DISCIPLE_OF_MAGIC,
+        ClassJob.ASTROLOGIAN to Discipline.DISCIPLE_OF_MAGIC,
+        ClassJob.SAGE to Discipline.DISCIPLE_OF_MAGIC,
 
-        ClassJob.PUGILIST to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.MONK to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.LANCER to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.DRAGOON to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.ROGUE to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.NINJA to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.SAMURAI to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.REAPER to Disciple.DISCIPLE_OF_WAR,
+        ClassJob.PUGILIST to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.MONK to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.LANCER to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.DRAGOON to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.ROGUE to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.NINJA to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.SAMURAI to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.REAPER to Discipline.DISCIPLE_OF_WAR,
 
-        ClassJob.ARCHER to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.BARD to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.MACHINIST to Disciple.DISCIPLE_OF_WAR,
-        ClassJob.DANCER to Disciple.DISCIPLE_OF_WAR,
+        ClassJob.ARCHER to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.BARD to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.MACHINIST to Discipline.DISCIPLE_OF_WAR,
+        ClassJob.DANCER to Discipline.DISCIPLE_OF_WAR,
 
-        ClassJob.THAUMATURGE to Disciple.DISCIPLE_OF_MAGIC,
-        ClassJob.BLACK_MAGE to Disciple.DISCIPLE_OF_MAGIC,
-        ClassJob.ARCANIST to Disciple.DISCIPLE_OF_MAGIC,
-        ClassJob.SUMMONER to Disciple.DISCIPLE_OF_MAGIC,
-        ClassJob.RED_MAGE to Disciple.DISCIPLE_OF_MAGIC,
-        ClassJob.BLUE_MAGE to Disciple.DISCIPLE_OF_MAGIC,
+        ClassJob.THAUMATURGE to Discipline.DISCIPLE_OF_MAGIC,
+        ClassJob.BLACK_MAGE to Discipline.DISCIPLE_OF_MAGIC,
+        ClassJob.ARCANIST to Discipline.DISCIPLE_OF_MAGIC,
+        ClassJob.SUMMONER to Discipline.DISCIPLE_OF_MAGIC,
+        ClassJob.RED_MAGE to Discipline.DISCIPLE_OF_MAGIC,
+        ClassJob.BLUE_MAGE to Discipline.DISCIPLE_OF_MAGIC,
 
-        ClassJob.CARPENTER to Disciple.DISCIPLE_OF_THE_HAND,
-        ClassJob.BLACKSMITH to Disciple.DISCIPLE_OF_THE_HAND,
-        ClassJob.ARMORER to Disciple.DISCIPLE_OF_THE_HAND,
-        ClassJob.GOLDSMITH to Disciple.DISCIPLE_OF_THE_HAND,
-        ClassJob.LEATHERWORKER to Disciple.DISCIPLE_OF_THE_HAND,
-        ClassJob.WEAVER to Disciple.DISCIPLE_OF_THE_HAND,
-        ClassJob.ALCHEMIST to Disciple.DISCIPLE_OF_THE_HAND,
-        ClassJob.CULINARIAN to Disciple.DISCIPLE_OF_THE_HAND,
+        ClassJob.CARPENTER to Discipline.DISCIPLE_OF_THE_HAND,
+        ClassJob.BLACKSMITH to Discipline.DISCIPLE_OF_THE_HAND,
+        ClassJob.ARMORER to Discipline.DISCIPLE_OF_THE_HAND,
+        ClassJob.GOLDSMITH to Discipline.DISCIPLE_OF_THE_HAND,
+        ClassJob.LEATHERWORKER to Discipline.DISCIPLE_OF_THE_HAND,
+        ClassJob.WEAVER to Discipline.DISCIPLE_OF_THE_HAND,
+        ClassJob.ALCHEMIST to Discipline.DISCIPLE_OF_THE_HAND,
+        ClassJob.CULINARIAN to Discipline.DISCIPLE_OF_THE_HAND,
 
-        ClassJob.MINER to Disciple.DISCIPLE_OF_THE_LAND,
-        ClassJob.BOTANIST to Disciple.DISCIPLE_OF_THE_LAND,
-        ClassJob.FISHER to Disciple.DISCIPLE_OF_THE_LAND,
+        ClassJob.MINER to Discipline.DISCIPLE_OF_THE_LAND,
+        ClassJob.BOTANIST to Discipline.DISCIPLE_OF_THE_LAND,
+        ClassJob.FISHER to Discipline.DISCIPLE_OF_THE_LAND,
     )
 
     // For each entry in the [Guardian] enum, create a Map where the keys are the `.toString` values of the enum entries and the values are the enum entries themselves

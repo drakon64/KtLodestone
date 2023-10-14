@@ -39,8 +39,8 @@ data class Attributes(
     /** Affects MP regeneration. Regeneration rate is determined by piety. Only applicable when in battle and role is Healer. */
     val piety: Short,
     val hp: Int,
-    /** Never `null` if [ActiveClassJob.disciple] is [Disciple.DISCIPLE_OF_THE_HAND]. */
+    /** Never `null` if [ActiveClassJob.discipline] is [Discipline.DISCIPLE_OF_THE_HAND]. */
     val cp: Short?,
-    /** Never `null` if [ActiveClassJob.disciple] is [Disciple.DISCIPLE_OF_THE_LAND]. */
+    /** Never `null` if [ActiveClassJob.discipline] is [Discipline.DISCIPLE_OF_THE_LAND]. */
     val gp: Short?,
 )

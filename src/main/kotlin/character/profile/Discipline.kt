@@ -1,6 +1,6 @@
 package cloud.drakon.ktlodestone.character.profile
 
-enum class Disciple {
+enum class Discipline {
     /** Disciple of War */
     DISCIPLE_OF_WAR {
         override fun toString() = "Disciple of War"

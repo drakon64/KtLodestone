@@ -51,7 +51,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         val disciple = async {
-            CharacterProfileMaps.DISCIPLE_MAP.getValue(classJob.await())
+            CharacterProfileMaps.DISCIPLINE_MAP.getValue(classJob.await())
         }
 
         val activeClassJob = async {
@@ -430,13 +430,13 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
             }
 
             val cp = async {
-                if (disciple.await() == Disciple.DISCIPLE_OF_THE_HAND) {
+                if (disciple.await() == Discipline.DISCIPLE_OF_THE_HAND) {
                     it.select(AttributeSelectors.CP_GP).text().toShort()
                 } else null
             }
 
             val gp = async {
-                if (disciple.await() == Disciple.DISCIPLE_OF_THE_LAND) {
+                if (disciple.await() == Discipline.DISCIPLE_OF_THE_LAND) {
                     it.select(AttributeSelectors.CP_GP).text().toShort()
                 } else null
             }
