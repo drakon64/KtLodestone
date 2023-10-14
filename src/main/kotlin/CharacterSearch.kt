@@ -4,7 +4,7 @@
 
 package cloud.drakon.ktlodestone
 
-import cloud.drakon.ktlodestone.character.classjob.ClassJob
+import cloud.drakon.ktlodestone.character.ClassJob
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.profile.Clan
 import cloud.drakon.ktlodestone.character.profile.Race
