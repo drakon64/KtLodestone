@@ -1,5 +1,6 @@
-package cloud.drakon.ktlodestone.character.profile
+package cloud.drakon.ktlodestone.character
 
+/** A Character's active Discipline (DoW/DoM/DoH/DoL). */
 enum class Discipline {
     /** Disciple of War */
     DISCIPLE_OF_WAR {
