@@ -1,7 +1,7 @@
 package cloud.drakon.ktlodestone.selectors.character.profile
 
 import cloud.drakon.ktlodestone.character.ClassJob
-import cloud.drakon.ktlodestone.character.profile.Discipline
+import cloud.drakon.ktlodestone.character.Discipline
 import cloud.drakon.ktlodestone.character.profile.Gender
 import cloud.drakon.ktlodestone.character.profile.Guardian
 import cloud.drakon.ktlodestone.character.profile.Race

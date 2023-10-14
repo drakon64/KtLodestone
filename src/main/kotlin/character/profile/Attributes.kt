@@ -1,6 +1,7 @@
 package cloud.drakon.ktlodestone.character.profile
 
 import cloud.drakon.ktlodestone.character.ActiveClassJob
+import cloud.drakon.ktlodestone.character.Discipline
 
 /** A [CharacterProfile]'s Attributes. */
 data class Attributes(
