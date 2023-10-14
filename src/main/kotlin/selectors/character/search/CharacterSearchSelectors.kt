@@ -28,4 +28,7 @@ internal object CharacterSearchSelectors {
     const val ENTRY_FREE_COMPANY_NAME = "span"
 
     const val ENTRY_WORLD = ".entry__world"
+
+    const val LIST_NEXT_BUTTON = "ul.btn__pager > li:nth-child(4) > a:nth-child(1)"
+    const val LIST_NEXT_BUTTON_ATTR = "href"
 }

@@ -10,4 +10,11 @@ class SearchLodestoneCharacterTest {
             println(searchLodestoneCharacter("Kumokiri Yamitori"))
         }
     }
+
+    @Test
+    fun searchLodestoneCharacterMultiTest() = assertDoesNotThrow {
+        runBlocking {
+            println(searchLodestoneCharacter(pages = 2))
+        }
+    }
 }
