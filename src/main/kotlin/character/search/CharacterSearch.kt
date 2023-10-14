@@ -21,109 +21,113 @@ import kotlinx.coroutines.coroutineScope
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 
-private var nextPage = true
+// To ensure that `nextPage` isn't accessed statically, these functions get their own class
+internal class CharacterSearch {
+    private var nextPage = true
 
-internal suspend fun scrapeCharacterSearch(
-    name: String?,
-    world: World?,
-    dataCenter: DataCenter?,
-    classJob: ClassJob?,
-    race: Race?,
-    clan: Clan?,
-    grandCompanies: Set<GrandCompanyName?>?,
-    languages: Set<Language>?,
-    pages: Byte,
-) = coroutineScope {
-    var page: Byte = 1
+    internal suspend fun scrapeCharacterSearch(
+        name: String?,
+        world: World?,
+        dataCenter: DataCenter?,
+        classJob: ClassJob?,
+        race: Race?,
+        clan: Clan?,
+        grandCompanies: Set<GrandCompanyName?>?,
+        languages: Set<Language>?,
+        pages: Byte,
+    ) = coroutineScope {
+        var page: Byte = 1
 
-    buildList {
-        while (page <= pages && nextPage) {
-            add(
-                scrapeSearchResults(
-                    searchLodestoneCharacterPaginated(
-                        name,
-                        world,
-                        dataCenter,
-                        classJob,
-                        race,
-                        clan,
-                        grandCompanies,
-                        languages,
-                        page
+        buildList {
+            while (page <= pages && nextPage) {
+                add(
+                    scrapeSearchResults(
+                        searchLodestoneCharacterPaginated(
+                            name,
+                            world,
+                            dataCenter,
+                            classJob,
+                            race,
+                            clan,
+                            grandCompanies,
+                            languages,
+                            page
+                        )
                     )
                 )
-            )
 
-            page++
+                page++
+            }
+        }.flatten()
+    }
+
+    private suspend fun searchLodestoneCharacterPaginated(
+        name: String?,
+        world: World?,
+        dataCenter: DataCenter?,
+        classJob: ClassJob?,
+        race: Race?,
+        clan: Clan?,
+        grandCompanies: Set<GrandCompanyName?>?,
+        languages: Set<Language>?,
+        page: Byte,
+    ) = ktorClient.get("character/") {
+        url {
+            // We've already encoded this parameter
+            if (name != null) encodedParameters.append("q", name.replace(" ", "+"))
+
+            // If both [world] and [dataCenter] or just [world] are provided, use [world] as it's more specific, otherwise use [dataCenter]
+            if ((world != null && dataCenter != null) || world != null) {
+                parameters.append("worldname", world.name)
+            } else if (dataCenter != null) {
+                parameters.append("worldname", dataCenter.name)
+            }
+
+            if (classJob != null) parameters.append("classjob", classJob.name)
+
+            // If both [clan] and [race] or just [clan] are provided, use [clan] as it's more specific, otherwise use [race]
+            if ((clan != null && race != null) || clan != null) {
+                parameters.append("race_tribe", clan.name)
+            } else if (race != null) {
+                parameters.append("race_tribe", race.name)
+            }
+
+            grandCompanies?.forEach {
+                when (it) {
+                    GrandCompanyName.MAELSTROM -> parameters.append("gcid", "1")
+                    GrandCompanyName.ORDER_OF_THE_TWIN_ADDER -> parameters.append("gcid", "2")
+                    GrandCompanyName.IMMORTAL_FLAMES -> parameters.append("gcid", "3")
+                    null -> parameters.append("gcid", "0")
+                }
+            }
+
+            languages?.forEach {
+                when (it) {
+                    Language.JAPANESE -> parameters.append("blog_lang", "ja")
+                    Language.ENGLISH -> parameters.append("blog_lang", "en")
+                    Language.GERMAN -> parameters.append("blog_lang", "de")
+                    Language.FRENCH -> parameters.append("blog_lang", "fr")
+                }
+            }
+
+            parameters.append("page", "$page")
         }
-    }.flatten()
+    }.let {
+        when (it.status.value) {
+            200 -> Jsoup.parse(it.body() as String).let {
+                if (it.select(CharacterSearchSelectors.LIST_NEXT_BUTTON)
+                        .attr(CharacterSearchSelectors.LIST_NEXT_BUTTON_ATTR) == "javascript:void(0);"
+                ) nextPage = false
+
+                it.select(CharacterSearchSelectors.ROOT)
+            }
+
+            else -> throw LodestoneException()
+        }
+    }
 }
 
-private suspend fun searchLodestoneCharacterPaginated(
-    name: String?,
-    world: World?,
-    dataCenter: DataCenter?,
-    classJob: ClassJob?,
-    race: Race?,
-    clan: Clan?,
-    grandCompanies: Set<GrandCompanyName?>?,
-    languages: Set<Language>?,
-    page: Byte,
-) = ktorClient.get("character/") {
-    url {
-        // We've already encoded this parameter
-        if (name != null) encodedParameters.append("q", name.replace(" ", "+"))
-
-        // If both [world] and [dataCenter] or just [world] are provided, use [world] as it's more specific, otherwise use [dataCenter]
-        if ((world != null && dataCenter != null) || world != null) {
-            parameters.append("worldname", world.name)
-        } else if (dataCenter != null) {
-            parameters.append("worldname", dataCenter.name)
-        }
-
-        if (classJob != null) parameters.append("classjob", classJob.name)
-
-        // If both [clan] and [race] or just [clan] are provided, use [clan] as it's more specific, otherwise use [race]
-        if ((clan != null && race != null) || clan != null) {
-            parameters.append("race_tribe", clan.name)
-        } else if (race != null) {
-            parameters.append("race_tribe", race.name)
-        }
-
-        grandCompanies?.forEach {
-            when (it) {
-                GrandCompanyName.MAELSTROM -> parameters.append("gcid", "1")
-                GrandCompanyName.ORDER_OF_THE_TWIN_ADDER -> parameters.append("gcid", "2")
-                GrandCompanyName.IMMORTAL_FLAMES -> parameters.append("gcid", "3")
-                null -> parameters.append("gcid", "0")
-            }
-        }
-
-        languages?.forEach {
-            when (it) {
-                Language.JAPANESE -> parameters.append("blog_lang", "ja")
-                Language.ENGLISH -> parameters.append("blog_lang", "en")
-                Language.GERMAN -> parameters.append("blog_lang", "de")
-                Language.FRENCH -> parameters.append("blog_lang", "fr")
-            }
-        }
-
-        parameters.append("page", "$page")
-    }
-}.let {
-    when (it.status.value) {
-        200 -> Jsoup.parse(it.body() as String).let {
-            if (it.select(CharacterSearchSelectors.LIST_NEXT_BUTTON)
-                    .attr(CharacterSearchSelectors.LIST_NEXT_BUTTON_ATTR) == "javascript:void(0);"
-            ) nextPage = false
-
-            it.select(CharacterSearchSelectors.ROOT)
-        }
-
-        else -> throw LodestoneException()
-    }
-}
-
+// This function can be accessed statically
 private suspend fun scrapeSearchResults(elements: Elements) = coroutineScope {
     buildList {
         elements.select(CharacterSearchSelectors.ENTRIES_ROOT).forEach {
