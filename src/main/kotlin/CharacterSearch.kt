@@ -30,7 +30,7 @@ import java.security.InvalidParameterException
  * @param grandCompanies Search for characters that a member of one of these [GrandCompanyName]. If `null`, all [GrandCompanyName] entries are considered, as are "Non Affiliated" characters. If a [Set] with a `null` element is provided, `null` is treated as "Non Affiliated".
  * @param languages Search for characters with this [Set] of [Language] selected.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
- * @throws InvalidParameterException Thrown when [pages] is a value less than 1.
+ * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
  */
 suspend fun searchLodestoneCharacter(
@@ -43,7 +43,7 @@ suspend fun searchLodestoneCharacter(
     grandCompanies: Set<GrandCompanyName?>? = null,
     languages: Set<Language>? = null,
     pages: Byte = 1,
-) = if (pages >= 1) CharacterSearch().scrapeCharacterSearch(
+) = if (pages in 1..20) CharacterSearch().scrapeCharacterSearch(
     name,
     world,
     dataCenter,
@@ -53,7 +53,7 @@ suspend fun searchLodestoneCharacter(
     grandCompanies,
     languages,
     pages,
-) else throw InvalidParameterException("`pages` must be at least 1.")
+) else throw InvalidParameterException("`pages` must be at least 1 and less than or equal to 20.")
 
 /**
  * Searches for a character on *The Lodestone*.
