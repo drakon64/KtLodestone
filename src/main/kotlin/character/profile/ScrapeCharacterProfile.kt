@@ -36,460 +36,459 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
-    val document = Jsoup.parse(response)
+    Jsoup.parse(response).let {
+        val classJob = async {
+            CharacterProfileMaps.CLASS_JOB_MAP.getValue(
+                it.select(CharacterProfileSelectors.ACTIVE_CLASSJOB)
+                    .attr(CharacterProfileSelectors.ACTIVE_CLASSJOB_ATTR)
+            )
+        }
 
-    val classJob = async {
-        CharacterProfileMaps.CLASS_JOB_MAP.getValue(
-            document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB)
-                .attr(CharacterProfileSelectors.ACTIVE_CLASSJOB_ATTR)
-        )
-    }
+        val level = async {
+            CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX.find(
+                it.select(CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL).text()
+            )!!.value.toByte()
+        }
 
-    val level = async {
-        CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX.find(
-            document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL).text()
-        )!!.value.toByte()
-    }
+        val disciple = async {
+            CharacterProfileMaps.DISCIPLE_MAP.getValue(classJob.await())
+        }
 
-    val disciple = async {
-        CharacterProfileMaps.DISCIPLE_MAP.getValue(classJob.await())
-    }
+        val activeClassJob = async {
+            ActiveClassJob(
+                classJob.await(),
+                level.await(),
+                disciple.await()
+            )
+        }
 
-    val activeClassJob = async {
-        ActiveClassJob(
-            classJob.await(),
-            level.await(),
-            disciple.await()
-        )
-    }
+        val classJobMap = async {
+            with(mutableMapOf<ClassJob, Byte>()) {
+                it.select(CharacterProfileSelectors.CLASSJOB_CLEARFIX).forEach {
+                    it.select(CharacterProfileSelectors.CLASSJOB_ENTRIES).forEach {
+                        it.select(CharacterProfileSelectors.CLASSJOB).forEach {
+                            val classJob = async {
+                                CharacterProfileMaps.CLASS_JOB_MAP.getValue(
+                                    it.select(CharacterProfileSelectors.CLASSJOB_ICON)
+                                        .attr(CharacterProfileSelectors.CLASSJOB_ICON_ATTR)
+                                )
+                            }
 
-    val classJobMap = async {
-        with(mutableMapOf<ClassJob, Byte>()) {
-            document.select(CharacterProfileSelectors.CLASSJOB_CLEARFIX).forEach {
-                it.select(CharacterProfileSelectors.CLASSJOB_ENTRIES).forEach {
-                    it.select(CharacterProfileSelectors.CLASSJOB).forEach {
-                        val classJob = async {
-                            CharacterProfileMaps.CLASS_JOB_MAP.getValue(
-                                it.select(CharacterProfileSelectors.CLASSJOB_ICON)
-                                    .attr(CharacterProfileSelectors.CLASSJOB_ICON_ATTR)
-                            )
+                            val level = async {
+                                it.text().toByte()
+                            }
+
+                            this[classJob.await()] = level.await()
                         }
-
-                        val level = async {
-                            it.text().toByte()
-                        }
-
-                        this[classJob.await()] = level.await()
                     }
                 }
-            }
 
-            this.toMap()
+                this.toMap()
+            }
         }
-    }
 
-    val avatar = async {
-        document.select(CharacterProfileSelectors.AVATAR)
-            .attr(CharacterProfileSelectors.AVATAR_ATTR)
-    }
+        val avatar = async {
+            it.select(CharacterProfileSelectors.AVATAR)
+                .attr(CharacterProfileSelectors.AVATAR_ATTR)
+        }
 
-    val bio = async {
-        document.select(CharacterProfileSelectors.BIO).text()
-    }
+        val bio = async {
+            it.select(CharacterProfileSelectors.BIO).text()
+        }
 
-    val freeCompany = async {
-        document.select(CharacterProfileSelectors.FREE_COMPANY).first()?.let {
-            val freeCompanyName = async {
-                it.text()
-            }
-
-            val freeCompanyId = async {
-                it.attr(CharacterProfileSelectors.FREE_COMPANY_ID_ATTR)
-                    .split("/")[3]
-            }
-
-            val freeCompanyIconLayers = async {
-                val bottom = async {
-                    document.select(CharacterProfileSelectors.FREE_COMPANY_BOTTOM_ICON_LAYER)
-                        .attr(CharacterProfileSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+        val freeCompany = async {
+            it.select(CharacterProfileSelectors.FREE_COMPANY).first()?.let {
+                val freeCompanyName = async {
+                    it.text()
                 }
 
-                val middle = async {
-                    document.select(CharacterProfileSelectors.FREE_COMPANY_MIDDLE_ICON_LAYER)
-                        .attr(CharacterProfileSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                val freeCompanyId = async {
+                    it.attr(CharacterProfileSelectors.FREE_COMPANY_ID_ATTR)
+                        .split("/")[3]
                 }
 
-                val top = async {
-                    document.select(CharacterProfileSelectors.FREE_COMPANY_TOP_ICON_LAYER)
-                        .attr(CharacterProfileSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                val freeCompanyIconLayers = async {
+                    val bottom = async {
+                        it.select(CharacterProfileSelectors.FREE_COMPANY_BOTTOM_ICON_LAYER)
+                            .attr(CharacterProfileSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                    }
+
+                    val middle = async {
+                        it.select(CharacterProfileSelectors.FREE_COMPANY_MIDDLE_ICON_LAYER)
+                            .attr(CharacterProfileSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                    }
+
+                    val top = async {
+                        it.select(CharacterProfileSelectors.FREE_COMPANY_TOP_ICON_LAYER)
+                            .attr(CharacterProfileSelectors.FREE_COMPANY_ICON_LAYER_ATTR)
+                    }
+
+                    IconLayers(bottom.await(), middle.await(), top.await())
                 }
 
-                IconLayers(bottom.await(), middle.await(), top.await())
+                Guild(
+                    freeCompanyName.await(),
+                    freeCompanyId.await(),
+                    freeCompanyIconLayers.await()
+                )
+            }
+        }
+
+        val grandCompany = async {
+            val grandCompanyName = async {
+                GrandCompanyName.valueOf(
+                    it.select(CharacterProfileSelectors.GRAND_COMPANY)
+                        .text()
+                        .split("/")[0]
+                        .trim()
+                        .replace(" ", "_")
+                        .uppercase()
+                )
             }
 
-            Guild(
-                freeCompanyName.await(),
-                freeCompanyId.await(),
-                freeCompanyIconLayers.await()
+            val grandCompanyRank = async {
+                GrandCompanyRank.valueOf(
+                    it.select(CharacterProfileSelectors.GRAND_COMPANY)
+                        .text()
+                        .split("/")[1]
+                        .trim()
+                        .replace(" ", "_")
+                        .uppercase()
+                )
+            }
+
+            GrandCompany(grandCompanyName.await(), grandCompanyRank.await())
+        }
+
+        val guardian = async {
+            CharacterProfileMaps.GUARDIAN_MAP.getValue(
+                it.select(CharacterProfileSelectors.GUARDIAN_NAME).text()
             )
         }
-    }
 
-    val grandCompany = async {
-        val grandCompanyName = async {
-            GrandCompanyName.valueOf(
-                document.select(CharacterProfileSelectors.GRAND_COMPANY)
-                    .text()
-                    .split("/")[0]
-                    .trim()
+        val name = async {
+            it.select(CharacterProfileSelectors.NAME).text()
+        }
+
+        val nameday = async {
+            it.select(CharacterProfileSelectors.NAMEDAY).text()
+        }
+
+        val gearSet = async {
+            val mainHand = async {
+                getGearSetItem(
+                    it, MainHandSelectors
+                )!! // A character always has a main hand item
+            }
+
+            val offHand = async {
+                getGearSetItem(it, OffHandSelectors)
+            }
+
+            val head = async {
+                getGearSetItem(it, HeadSelectors)
+            }
+
+            val body = async {
+                getGearSetItem(it, BodySelectors)
+            }
+
+            val hands = async {
+                getGearSetItem(it, HandsSelectors)
+            }
+
+            val legs = async {
+                getGearSetItem(it, LegsSelectors)
+            }
+
+            val feet = async {
+                getGearSetItem(it, FeetSelectors)
+            }
+
+            val earrings = async {
+                getGearSetItem(it, EarringsSelectors)
+            }
+
+            val necklace = async {
+                getGearSetItem(it, NecklaceSelectors)
+            }
+
+            val bracelets = async {
+                getGearSetItem(it, BraceletsSelectors)
+            }
+
+            val ring1 = async {
+                getGearSetItem(it, Ring1Selectors)
+            }
+
+            val ring2 = async {
+                getGearSetItem(it, Ring2Selectors)
+            }
+
+            val soulCrystal = async {
+                getGearSetItem(it, SoulCrystalSelectors, true)
+            }
+
+            GearSet(
+                mainHand.await(),
+                offHand.await(),
+                head.await(),
+                body.await(),
+                hands.await(),
+                legs.await(),
+                feet.await(),
+                earrings.await(),
+                necklace.await(),
+                bracelets.await(),
+                ring1.await(),
+                ring2.await(),
+                soulCrystal.await(),
+            )
+        }
+
+        val portrait = async {
+            it.select(CharacterProfileSelectors.PORTRAIT)
+                .attr(CharacterProfileSelectors.PORTRAIT_ATTR)
+        }
+
+        val pvpTeam = async {
+            it.select(CharacterProfileSelectors.PVP_TEAM).first()?.let {
+                val pvpTeamName = async {
+                    it.text()
+                }
+
+                val pvpTeamId = async {
+                    it.attr(CharacterProfileSelectors.PVP_TEAM_ID_ATTR)
+                        .split("/")[3]
+                }
+
+                val pvpTeamIconLayers = async {
+                    val bottom = async {
+                        it.select(CharacterProfileSelectors.PVP_TEAM_BOTTOM_ICON_LAYER)
+                            .attr(CharacterProfileSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+                    }
+
+                    val middle = async {
+                        it.select(CharacterProfileSelectors.PVP_TEAM_MIDDLE_ICON_LAYER)
+                            .attr(CharacterProfileSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+                    }
+
+                    val top = async {
+                        it.select(CharacterProfileSelectors.PVP_TEAM_TOP_ICON_LAYER)
+                            .attr(CharacterProfileSelectors.PVP_TEAM_ICON_LAYER_ATTR)
+                    }
+
+                    IconLayers(bottom.await(), middle.await(), top.await())
+                }
+
+                Guild(
+                    pvpTeamName.await(),
+                    pvpTeamId.await(),
+                    pvpTeamIconLayers.await()
+                )
+            }
+        }
+
+        val raceClanGender = async {
+            it.select(CharacterProfileSelectors.RACE_CLAN_GENDER).html()
+        }
+
+        val race = async {
+            CharacterProfileMaps.RACE_MAP.getValue(
+                CharacterProfileSelectors.RACE_REGEX.find(
+                    raceClanGender.await()
+                )
+                !!.value
+            )
+        }
+
+        val clan = async {
+            Clan.valueOf(
+                CharacterProfileSelectors.CLAN_REGEX.find(
+                    raceClanGender.await()
+                )!!.value
                     .replace(" ", "_")
                     .uppercase()
             )
         }
 
-        val grandCompanyRank = async {
-            GrandCompanyRank.valueOf(
-                document.select(CharacterProfileSelectors.GRAND_COMPANY)
+        val gender = async {
+            CharacterProfileMaps.GENDER_MAP.getValue(
+                CharacterProfileSelectors.GENDER_REGEX.find(
+                    raceClanGender.await()
+                )
+                !!.value[0]
+            )
+        }
+
+        val world = async {
+            World.valueOf(
+                it.select(CharacterProfileSelectors.WORLD)
                     .text()
-                    .split("/")[1]
+                    .split("[")[0]
                     .trim()
+            )
+        }
+
+        val dataCenter = async {
+            DataCenter.valueOf(
+                it.select(CharacterProfileSelectors.WORLD)
+                    .text()
+                    .split("[")[1]
+                    .replace("]", "")
+            )
+        }
+
+        val region = async {
+            CharacterProfileMaps.REGION_MAP.getValue(dataCenter.await())
+        }
+
+        val title = async {
+            it.select(CharacterProfileSelectors.TITLE).text()
+        }
+
+        val town = async {
+            Town.valueOf(
+                it.select(CharacterProfileSelectors.TOWN)
+                    .text()
                     .replace(" ", "_")
                     .uppercase()
             )
         }
 
-        GrandCompany(grandCompanyName.await(), grandCompanyRank.await())
-    }
-
-    val guardian = async {
-        CharacterProfileMaps.GUARDIAN_MAP.getValue(
-            document.select(CharacterProfileSelectors.GUARDIAN_NAME).text()
-        )
-    }
-
-    val name = async {
-        document.select(CharacterProfileSelectors.NAME).text()
-    }
-
-    val nameday = async {
-        document.select(CharacterProfileSelectors.NAMEDAY).text()
-    }
-
-    val gearSet = async {
-        val mainHand = async {
-            getGearSetItem(
-                document,
-                MainHandSelectors
-            )!! // A character always has a main hand item
-        }
-
-        val offHand = async {
-            getGearSetItem(document, OffHandSelectors)
-        }
-
-        val head = async {
-            getGearSetItem(document, HeadSelectors)
-        }
-
-        val body = async {
-            getGearSetItem(document, BodySelectors)
-        }
-
-        val hands = async {
-            getGearSetItem(document, HandsSelectors)
-        }
-
-        val legs = async {
-            getGearSetItem(document, LegsSelectors)
-        }
-
-        val feet = async {
-            getGearSetItem(document, FeetSelectors)
-        }
-
-        val earrings = async {
-            getGearSetItem(document, EarringsSelectors)
-        }
-
-        val necklace = async {
-            getGearSetItem(document, NecklaceSelectors)
-        }
-
-        val bracelets = async {
-            getGearSetItem(document, BraceletsSelectors)
-        }
-
-        val ring1 = async {
-            getGearSetItem(document, Ring1Selectors)
-        }
-
-        val ring2 = async {
-            getGearSetItem(document, Ring2Selectors)
-        }
-
-        val soulCrystal = async {
-            getGearSetItem(document, SoulCrystalSelectors, true)
-        }
-
-        GearSet(
-            mainHand.await(),
-            offHand.await(),
-            head.await(),
-            body.await(),
-            hands.await(),
-            legs.await(),
-            feet.await(),
-            earrings.await(),
-            necklace.await(),
-            bracelets.await(),
-            ring1.await(),
-            ring2.await(),
-            soulCrystal.await(),
-        )
-    }
-
-    val portrait = async {
-        document.select(CharacterProfileSelectors.PORTRAIT)
-            .attr(CharacterProfileSelectors.PORTRAIT_ATTR)
-    }
-
-    val pvpTeam = async {
-        document.select(CharacterProfileSelectors.PVP_TEAM).first()?.let {
-            val pvpTeamName = async {
-                it.text()
+        val attributes = async {
+            val strength = async {
+                it.select(AttributeSelectors.STRENGTH).text().toShort()
             }
 
-            val pvpTeamId = async {
-                it.attr(CharacterProfileSelectors.PVP_TEAM_ID_ATTR)
-                    .split("/")[3]
+            val dexterity = async {
+                it.select(AttributeSelectors.DEXTERITY).text().toShort()
             }
 
-            val pvpTeamIconLayers = async {
-                val bottom = async {
-                    document.select(CharacterProfileSelectors.PVP_TEAM_BOTTOM_ICON_LAYER)
-                        .attr(CharacterProfileSelectors.PVP_TEAM_ICON_LAYER_ATTR)
-                }
-
-                val middle = async {
-                    document.select(CharacterProfileSelectors.PVP_TEAM_MIDDLE_ICON_LAYER)
-                        .attr(CharacterProfileSelectors.PVP_TEAM_ICON_LAYER_ATTR)
-                }
-
-                val top = async {
-                    document.select(CharacterProfileSelectors.PVP_TEAM_TOP_ICON_LAYER)
-                        .attr(CharacterProfileSelectors.PVP_TEAM_ICON_LAYER_ATTR)
-                }
-
-                IconLayers(bottom.await(), middle.await(), top.await())
+            val vitality = async {
+                it.select(AttributeSelectors.VITALITY).text().toShort()
             }
 
-            Guild(
-                pvpTeamName.await(),
-                pvpTeamId.await(),
-                pvpTeamIconLayers.await()
+            val intelligence = async {
+                it.select(AttributeSelectors.INTELLIGENCE).text().toShort()
+            }
+
+            val mind = async {
+                it.select(AttributeSelectors.MIND).text().toShort()
+            }
+
+            val criticalHitRate = async {
+                it.select(AttributeSelectors.CRITICAL_HIT_RATE).text().toShort()
+            }
+
+            val determination = async {
+                it.select(AttributeSelectors.DETERMINATION).text().toShort()
+            }
+
+            val directHitRate = async {
+                it.select(AttributeSelectors.DIRECT_HIT_RATE).text().toShort()
+            }
+
+            val defense = async {
+                it.select(AttributeSelectors.DEFENSE).text().toShort()
+            }
+
+            val magicDefense = async {
+                it.select(AttributeSelectors.MAGIC_DEFENSE).text().toShort()
+            }
+
+            val attackPower = async {
+                it.select(AttributeSelectors.ATTACK_POWER).text().toShort()
+            }
+
+            val skillSpeed = async {
+                it.select(AttributeSelectors.SKILL_SPEED).text().toShort()
+            }
+
+            val attackMagicPotency = async {
+                it.select(AttributeSelectors.ATTACK_MAGIC_POTENCY).text().toShort()
+            }
+
+            val healingMagicPotency = async {
+                it.select(AttributeSelectors.HEALING_MAGIC_POTENCY).text().toShort()
+            }
+
+            val spellSpeed = async {
+                it.select(AttributeSelectors.SPELL_SPEED).text().toShort()
+            }
+
+            val tenacity = async {
+                it.select(AttributeSelectors.TENACITY).text().toShort()
+            }
+
+            val piety = async {
+                it.select(AttributeSelectors.PIETY).text().toShort()
+            }
+
+            val hp = async {
+                it.select(AttributeSelectors.HP).text().toInt()
+            }
+
+            val cp = async {
+                if (disciple.await() == Disciple.DISCIPLE_OF_THE_HAND) {
+                    it.select(AttributeSelectors.CP_GP).text().toShort()
+                } else null
+            }
+
+            val gp = async {
+                if (disciple.await() == Disciple.DISCIPLE_OF_THE_LAND) {
+                    it.select(AttributeSelectors.CP_GP).text().toShort()
+                } else null
+            }
+
+            Attributes(
+                strength.await(),
+                dexterity.await(),
+                vitality.await(),
+                intelligence.await(),
+                mind.await(),
+                criticalHitRate.await(),
+                determination.await(),
+                directHitRate.await(),
+                defense.await(),
+                magicDefense.await(),
+                attackPower.await(),
+                skillSpeed.await(),
+                attackMagicPotency.await(),
+                healingMagicPotency.await(),
+                spellSpeed.await(),
+                tenacity.await(),
+                piety.await(),
+                hp.await(),
+                cp.await(),
+                gp.await(),
             )
         }
-    }
 
-    val raceClanGender = async {
-        document.select(CharacterProfileSelectors.RACE_CLAN_GENDER).html()
-    }
-
-    val race = async {
-        CharacterProfileMaps.RACE_MAP.getValue(
-            CharacterProfileSelectors.RACE_REGEX.find(
-                raceClanGender.await()
-            )
-            !!.value
+        CharacterProfile(
+            activeClassJob.await(),
+            classJobMap.await(),
+            avatar.await(),
+            bio.await(),
+            freeCompany.await(),
+            grandCompany.await(),
+            guardian.await(),
+            name.await(),
+            nameday.await(),
+            gearSet.await(),
+            portrait.await(),
+            pvpTeam.await(),
+            race.await(),
+            clan.await(),
+            gender.await(),
+            world.await(),
+            dataCenter.await(),
+            region.await(),
+            title.await(),
+            town.await(),
+            attributes.await()
         )
     }
-
-    val clan = async {
-        Clan.valueOf(
-            CharacterProfileSelectors.CLAN_REGEX.find(
-                raceClanGender.await()
-            )!!.value
-                .replace(" ", "_")
-                .uppercase()
-        )
-    }
-
-    val gender = async {
-        CharacterProfileMaps.GENDER_MAP.getValue(
-            CharacterProfileSelectors.GENDER_REGEX.find(
-                raceClanGender.await()
-            )
-            !!.value[0]
-        )
-    }
-
-    val world = async {
-        World.valueOf(
-            document.select(CharacterProfileSelectors.WORLD)
-                .text()
-                .split("[")[0]
-                .trim()
-        )
-    }
-
-    val dataCenter = async {
-        DataCenter.valueOf(
-            document.select(CharacterProfileSelectors.WORLD)
-                .text()
-                .split("[")[1]
-                .replace("]", "")
-        )
-    }
-
-    val region = async {
-        CharacterProfileMaps.REGION_MAP.getValue(dataCenter.await())
-    }
-
-    val title = async {
-        document.select(CharacterProfileSelectors.TITLE).text()
-    }
-
-    val town = async {
-        Town.valueOf(
-            document.select(CharacterProfileSelectors.TOWN)
-                .text()
-                .replace(" ", "_")
-                .uppercase()
-        )
-    }
-
-    val attributes = async {
-        val strength = async {
-            document.select(AttributeSelectors.STRENGTH).text().toShort()
-        }
-
-        val dexterity = async {
-            document.select(AttributeSelectors.DEXTERITY).text().toShort()
-        }
-
-        val vitality = async {
-            document.select(AttributeSelectors.VITALITY).text().toShort()
-        }
-
-        val intelligence = async {
-            document.select(AttributeSelectors.INTELLIGENCE).text().toShort()
-        }
-
-        val mind = async {
-            document.select(AttributeSelectors.MIND).text().toShort()
-        }
-
-        val criticalHitRate = async {
-            document.select(AttributeSelectors.CRITICAL_HIT_RATE).text().toShort()
-        }
-
-        val determination = async {
-            document.select(AttributeSelectors.DETERMINATION).text().toShort()
-        }
-
-        val directHitRate = async {
-            document.select(AttributeSelectors.DIRECT_HIT_RATE).text().toShort()
-        }
-
-        val defense = async {
-            document.select(AttributeSelectors.DEFENSE).text().toShort()
-        }
-
-        val magicDefense = async {
-            document.select(AttributeSelectors.MAGIC_DEFENSE).text().toShort()
-        }
-
-        val attackPower = async {
-            document.select(AttributeSelectors.ATTACK_POWER).text().toShort()
-        }
-
-        val skillSpeed = async {
-            document.select(AttributeSelectors.SKILL_SPEED).text().toShort()
-        }
-
-        val attackMagicPotency = async {
-            document.select(AttributeSelectors.ATTACK_MAGIC_POTENCY).text().toShort()
-        }
-
-        val healingMagicPotency = async {
-            document.select(AttributeSelectors.HEALING_MAGIC_POTENCY).text().toShort()
-        }
-
-        val spellSpeed = async {
-            document.select(AttributeSelectors.SPELL_SPEED).text().toShort()
-        }
-
-        val tenacity = async {
-            document.select(AttributeSelectors.TENACITY).text().toShort()
-        }
-
-        val piety = async {
-            document.select(AttributeSelectors.PIETY).text().toShort()
-        }
-
-        val hp = async {
-            document.select(AttributeSelectors.HP).text().toInt()
-        }
-
-        val cp = async {
-            if (disciple.await() == Disciple.DISCIPLE_OF_THE_HAND) {
-                document.select(AttributeSelectors.CP_GP).text().toShort()
-            } else null
-        }
-
-        val gp = async {
-            if (disciple.await() == Disciple.DISCIPLE_OF_THE_LAND) {
-                document.select(AttributeSelectors.CP_GP).text().toShort()
-            } else null
-        }
-
-        Attributes(
-            strength.await(),
-            dexterity.await(),
-            vitality.await(),
-            intelligence.await(),
-            mind.await(),
-            criticalHitRate.await(),
-            determination.await(),
-            directHitRate.await(),
-            defense.await(),
-            magicDefense.await(),
-            attackPower.await(),
-            skillSpeed.await(),
-            attackMagicPotency.await(),
-            healingMagicPotency.await(),
-            spellSpeed.await(),
-            tenacity.await(),
-            piety.await(),
-            hp.await(),
-            cp.await(),
-            gp.await(),
-        )
-    }
-
-    CharacterProfile(
-        activeClassJob.await(),
-        classJobMap.await(),
-        avatar.await(),
-        bio.await(),
-        freeCompany.await(),
-        grandCompany.await(),
-        guardian.await(),
-        name.await(),
-        nameday.await(),
-        gearSet.await(),
-        portrait.await(),
-        pvpTeam.await(),
-        race.await(),
-        clan.await(),
-        gender.await(),
-        world.await(),
-        dataCenter.await(),
-        region.await(),
-        title.await(),
-        town.await(),
-        attributes.await()
-    )
 }
 
 private suspend fun getGearSetItem(
