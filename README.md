@@ -17,7 +17,7 @@ KtLodestone is a parser for The Lodestone for the JVM platform (JDK 11+).
     - ~~Class/job~~
     - Minions
     - Mounts
-    - ~~Achievements~~
+    - Achievements
   - Search
     - Character
 - Asynchronous
