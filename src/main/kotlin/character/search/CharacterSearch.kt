@@ -156,7 +156,7 @@ internal class CharacterSearch {
                             }
 
                             val disciple = async {
-                                CharacterProfileMaps.DISCIPLE_MAP.getValue(classJob.await())
+                                CharacterProfileMaps.DISCIPLINE_MAP.getValue(classJob.await())
                             }
 
                             ActiveClassJob(
