@@ -35,7 +35,8 @@ suspend fun getLodestoneCharacterAchievements(
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
  */
 @JvmName("getLodestoneCharacterAchievements")
+@JvmOverloads
 @Throws(LodestoneNotFoundException::class, InvalidParameterException::class, LodestoneException::class)
-fun getLodestoneCharacterAchievementsAsync(id: Int, pages: Byte) = GlobalScope.future {
+fun getLodestoneCharacterAchievementsAsync(id: Int, pages: Byte = 1) = GlobalScope.future {
     getLodestoneCharacterAchievements(id, pages)
 }
