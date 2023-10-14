@@ -35,29 +35,28 @@ internal suspend fun scrapeCharacterSearch(
     pages: Byte,
 ) = coroutineScope {
     var page: Byte = 1
-    val results = mutableListOf<List<CharacterSearchResult>>()
 
-    while (page <= pages && nextPage) {
-        results.add(
-            scrapeSearchResults(
-                searchLodestoneCharacterPaginated(
-                    name,
-                    world,
-                    dataCenter,
-                    classJob,
-                    race,
-                    clan,
-                    grandCompanies,
-                    languages,
-                    page
+    buildList {
+        while (page <= pages && nextPage) {
+            add(
+                scrapeSearchResults(
+                    searchLodestoneCharacterPaginated(
+                        name,
+                        world,
+                        dataCenter,
+                        classJob,
+                        race,
+                        clan,
+                        grandCompanies,
+                        languages,
+                        page
+                    )
                 )
             )
-        )
 
-        page++
-    }
-
-    results.flatten()
+            page++
+        }
+    }.flatten()
 }
 
 private suspend fun searchLodestoneCharacterPaginated(
