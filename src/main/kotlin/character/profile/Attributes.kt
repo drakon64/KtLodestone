@@ -1,5 +1,7 @@
 package cloud.drakon.ktlodestone.character.profile
 
+import cloud.drakon.ktlodestone.character.ActiveClassJob
+
 /** A [CharacterProfile]'s Attributes. */
 data class Attributes(
     /** Affects physical damage dealt by gladiator's arms, marauder's arms, pugilist's arms, lancer's arms, conjurer's arms, thaumaturge's arms, arcanist's arms, dark knight's arms, samurai's arms, reaper's arms, gunbreaker's arms, red mage's arms, astrologian's arms, sage's arms, and blue mage's arms. */
@@ -37,5 +39,8 @@ data class Attributes(
     /** Affects MP regeneration. Regeneration rate is determined by piety. Only applicable when in battle and role is Healer. */
     val piety: Short,
     val hp: Int,
-    val mpCpGp: Short,
+    /** Never `null` if [ActiveClassJob.disciple] is [Disciple.DISCIPLE_OF_THE_HAND]. */
+    val cp: Short?,
+    /** Never `null` if [ActiveClassJob.disciple] is [Disciple.DISCIPLE_OF_THE_LAND]. */
+    val gp: Short?,
 )

@@ -26,5 +26,5 @@ internal object AttributeSelectors {
 
     const val HP = ".character__param > ul:nth-child(1) > li:nth-child(1) > div:nth-child(1) > span:nth-child(2)"
 
-    const val MP_CP_GP = ".character__param > ul:nth-child(1) > li:nth-child(2) > div:nth-child(1) > span:nth-child(2)"
+    const val CP_GP = ".character__param > ul:nth-child(1) > li:nth-child(2) > div:nth-child(1) > span:nth-child(2)"
 }

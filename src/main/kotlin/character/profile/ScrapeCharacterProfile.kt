@@ -38,24 +38,32 @@ import org.jsoup.nodes.Document
 internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
     val document = Jsoup.parse(response)
 
-    val activeClassJob = async {
-        val classJob = async {
-            CharacterProfileMaps.CLASS_JOB_MAP.getValue(
-                document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB)
-                    .attr(CharacterProfileSelectors.ACTIVE_CLASSJOB_ATTR)
-            )
-        }
-
-        val level = async {
-            CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX.find(
-                document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL).text()
-            )!!.value.toByte()
-        }
-
-        ActiveClassJob(classJob.await(), level.await())
+    val classJob = async {
+        CharacterProfileMaps.CLASS_JOB_MAP.getValue(
+            document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB)
+                .attr(CharacterProfileSelectors.ACTIVE_CLASSJOB_ATTR)
+        )
     }
 
-    val classJob = async {
+    val level = async {
+        CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX.find(
+            document.select(CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL).text()
+        )!!.value.toByte()
+    }
+
+    val disciple = async {
+        CharacterProfileMaps.DISCIPLE_MAP.getValue(classJob.await())
+    }
+
+    val activeClassJob = async {
+        ActiveClassJob(
+            classJob.await(),
+            level.await(),
+            disciple.await()
+        )
+    }
+
+    val classJobMap = async {
         with(mutableMapOf<ClassJob, Byte>()) {
             document.select(CharacterProfileSelectors.CLASSJOB_CLEARFIX).forEach {
                 it.select(CharacterProfileSelectors.CLASSJOB_ENTRIES).forEach {
@@ -423,8 +431,16 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
             document.select(AttributeSelectors.HP).text().toInt()
         }
 
-        val mpCpGp = async {
-            document.select(AttributeSelectors.MP_CP_GP).text().toShort()
+        val cp = async {
+            if (disciple.await() == Disciple.DISCIPLE_OF_THE_HAND) {
+                document.select(AttributeSelectors.CP_GP).text().toShort()
+            } else null
+        }
+
+        val gp = async {
+            if (disciple.await() == Disciple.DISCIPLE_OF_THE_LAND) {
+                document.select(AttributeSelectors.CP_GP).text().toShort()
+            } else null
         }
 
         Attributes(
@@ -446,13 +462,14 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
             tenacity.await(),
             piety.await(),
             hp.await(),
-            mpCpGp.await()
+            cp.await(),
+            gp.await(),
         )
     }
 
     CharacterProfile(
         activeClassJob.await(),
-        classJob.await(),
+        classJobMap.await(),
         avatar.await(),
         bio.await(),
         freeCompany.await(),

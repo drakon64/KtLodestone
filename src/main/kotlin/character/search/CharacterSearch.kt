@@ -110,7 +110,11 @@ internal class CharacterSearch {
                                         .split("/")[3]
                                 }
 
-                                Guild(freeCompanyName.await(), freeCompanyId.await(), null)
+                                Guild(
+                                    freeCompanyName.await(),
+                                    freeCompanyId.await(),
+                                    null
+                                )
                             }
                     }
 
@@ -151,7 +155,15 @@ internal class CharacterSearch {
                                     .toByte()
                             }
 
-                            ActiveClassJob(classJob.await(), level.await())
+                            val disciple = async {
+                                CharacterProfileMaps.DISCIPLE_MAP.getValue(classJob.await())
+                            }
+
+                            ActiveClassJob(
+                                classJob.await(),
+                                level.await(),
+                                disciple.await()
+                            )
                         }
                     }
 
