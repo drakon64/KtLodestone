@@ -9,7 +9,7 @@ import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.profile.Clan
 import cloud.drakon.ktlodestone.character.profile.Race
 import cloud.drakon.ktlodestone.character.search.Language
-import cloud.drakon.ktlodestone.character.search.scrapeCharacterSearch
+import cloud.drakon.ktlodestone.character.search.CharacterSearch
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
@@ -43,7 +43,7 @@ suspend fun searchLodestoneCharacter(
     grandCompanies: Set<GrandCompanyName?>? = null,
     languages: Set<Language>? = null,
     pages: Byte = 1,
-) = if (pages >= 1) scrapeCharacterSearch(
+) = if (pages >= 1) CharacterSearch().scrapeCharacterSearch(
     name,
     world,
     dataCenter,
