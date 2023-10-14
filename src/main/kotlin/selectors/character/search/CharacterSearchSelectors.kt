@@ -1,5 +1,6 @@
 package cloud.drakon.ktlodestone.selectors.character.search
 
+// https://github.com/xivapi/lodestone-css-selectors/blob/main/search/character.json
 internal object CharacterSearchSelectors {
     const val ROOT = ".ldst__window"
 
