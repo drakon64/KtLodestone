@@ -36,7 +36,11 @@ suspend fun getLodestoneCharacterAchievements(
  */
 @JvmName("getLodestoneCharacterAchievements")
 @JvmOverloads
-@Throws(LodestoneNotFoundException::class, InvalidParameterException::class, LodestoneException::class)
+@Throws(
+    LodestoneNotFoundException::class,
+    InvalidParameterException::class,
+    LodestoneException::class
+)
 fun getLodestoneCharacterAchievementsAsync(id: Int, pages: Byte = 1) = GlobalScope.future {
     getLodestoneCharacterAchievements(id, pages)
 }
