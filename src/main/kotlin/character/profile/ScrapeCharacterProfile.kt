@@ -1,7 +1,6 @@
 package cloud.drakon.ktlodestone.character.profile
 
 import cloud.drakon.ktlodestone.character.ActiveClassJob
-import cloud.drakon.ktlodestone.character.ClassJob
 import cloud.drakon.ktlodestone.character.Discipline
 import cloud.drakon.ktlodestone.character.Guild
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
@@ -64,28 +63,21 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         val classJobMap = async {
-            with(mutableMapOf<ClassJob, Byte>()) {
-                it.select(CharacterProfileSelectors.CLASSJOB_CLEARFIX).forEach {
-                    it.select(CharacterProfileSelectors.CLASSJOB_ENTRIES).forEach {
-                        it.select(CharacterProfileSelectors.CLASSJOB).forEach {
-                            val classJob = async {
-                                CharacterProfileMaps.CLASS_JOB_MAP.getValue(
-                                    it.select(CharacterProfileSelectors.CLASSJOB_ICON)
-                                        .attr(CharacterProfileSelectors.CLASSJOB_ICON_ATTR)
-                                )
-                            }
+            it.select(CharacterProfileSelectors.CLASSJOB_CLEARFIX)
+                .flatMap {
+                    it.select(CharacterProfileSelectors.CLASSJOB_ENTRIES)
+                }.flatMap {
+                    it.select(CharacterProfileSelectors.CLASSJOB)
+                }.associate {
+                    val classJob = CharacterProfileMaps.CLASS_JOB_MAP.getValue(
+                        it.select(CharacterProfileSelectors.CLASSJOB_ICON)
+                            .attr(CharacterProfileSelectors.CLASSJOB_ICON_ATTR)
+                    )
 
-                            val level = async {
-                                it.text().toByte()
-                            }
+                    val level = it.text().toByte()
 
-                            this[classJob.await()] = level.await()
-                        }
-                    }
+                    classJob to level
                 }
-
-                this.toMap()
-            }
         }
 
         val avatar = async {
@@ -227,7 +219,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
             }
 
             val soulCrystal = async {
-                getGearSetItem(it, SoulCrystalSelectors, true)
+                getGearSetItem(it, SoulCrystalSelectors)
             }
 
             GearSet(
@@ -495,7 +487,6 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 private suspend fun getGearSetItem(
     document: Document,
     selector: GearSetSelectors,
-    soulCrystal: Boolean = false,
 ) = coroutineScope {
     document.select(selector.ITEM).first()?.let {
         val name = async {
@@ -514,7 +505,7 @@ private suspend fun getGearSetItem(
         val creatorName: Deferred<String?>
         val hq: Deferred<Boolean>
 
-        if (!soulCrystal) {
+        if (selector != SoulCrystalSelectors) {
             glamour = async {
                 it.select(selector.GLAMOUR).first()?.let {
                     it.select(selector.GLAMOUR_NAME).let {
