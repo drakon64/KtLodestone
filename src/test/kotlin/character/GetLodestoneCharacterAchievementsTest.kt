@@ -1,3 +1,5 @@
+package character
+
 import cloud.drakon.ktlodestone.getLodestoneCharacterAchievements
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
