@@ -1,5 +1,6 @@
 package cloud.drakon.ktlodestone.character.profile.gearset
 
+/** Items currently equipped by a character. */
 data class GearSet(
     val mainHand: Item,
     val offHand: Item?,
