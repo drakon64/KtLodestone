@@ -1,3 +1,5 @@
+package character
+
 import cloud.drakon.ktlodestone.searchLodestoneCharacter
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test

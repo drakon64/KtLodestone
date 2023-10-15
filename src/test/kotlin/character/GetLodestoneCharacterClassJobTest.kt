@@ -1,23 +1,25 @@
+package character
+
 import cloud.drakon.ktlodestone.exception.LodestoneNotFoundException
-import cloud.drakon.ktlodestone.getLodestoneCharacterMounts
+import cloud.drakon.ktlodestone.getLodestoneCharacterClassJob
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
-class GetLodestoneCharacterMountsTest {
+class GetLodestoneCharacterClassJobTest {
     @Test
-    fun getLodestoneCharacterMountsTest() = assertDoesNotThrow {
+    fun getLodestoneCharacterClassJobTest() = assertDoesNotThrow {
         runBlocking {
-            println(getLodestoneCharacterMounts(27545492))
+            println(getLodestoneCharacterClassJob(27545492))
         }
     }
 
     @Test
-    fun getInvalidLodestoneCharacterMountsTest() {
+    fun getInvalidLodestoneCharacterClassJobTest() {
         assertThrows<LodestoneNotFoundException> {
             runBlocking {
-                getLodestoneCharacterMounts(-1)
+                getLodestoneCharacterClassJob(-1)
             }
         }
     }
