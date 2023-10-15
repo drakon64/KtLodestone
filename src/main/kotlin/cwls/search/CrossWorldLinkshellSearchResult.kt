@@ -7,7 +7,7 @@ import cloud.drakon.ktlodestone.world.Region
 data class CrossWorldLinkshellSearchResult(
     /** The Cross-world Linkshell's name. */
     val name: String,
-    /** The Cross-world Linkshell's name. */
+    /** The Cross-world Linkshell's ID. */
     val id: String,
     /** The Cross-world Linkshell's data center. */
     val dataCenter: DataCenter,
