@@ -11,7 +11,7 @@ import cloud.drakon.ktlodestone.character.profile.gearset.GearSet
 import cloud.drakon.ktlodestone.character.profile.gearset.Glamour
 import cloud.drakon.ktlodestone.character.profile.gearset.Item
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
-import cloud.drakon.ktlodestone.selectors.character.profile.AttributeSelectors
+import cloud.drakon.ktlodestone.selectors.character.profile.AttributesSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.gearset.BodySelectors
@@ -359,86 +359,86 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
         val attributes = async {
             val strength = async {
-                it.select(AttributeSelectors.STRENGTH).text().toShort()
+                it.select(AttributesSelectors.STRENGTH).text().toShort()
             }
 
             val dexterity = async {
-                it.select(AttributeSelectors.DEXTERITY).text().toShort()
+                it.select(AttributesSelectors.DEXTERITY).text().toShort()
             }
 
             val vitality = async {
-                it.select(AttributeSelectors.VITALITY).text().toShort()
+                it.select(AttributesSelectors.VITALITY).text().toShort()
             }
 
             val intelligence = async {
-                it.select(AttributeSelectors.INTELLIGENCE).text().toShort()
+                it.select(AttributesSelectors.INTELLIGENCE).text().toShort()
             }
 
             val mind = async {
-                it.select(AttributeSelectors.MIND).text().toShort()
+                it.select(AttributesSelectors.MIND).text().toShort()
             }
 
             val criticalHitRate = async {
-                it.select(AttributeSelectors.CRITICAL_HIT_RATE).text().toShort()
+                it.select(AttributesSelectors.CRITICAL_HIT_RATE).text().toShort()
             }
 
             val determination = async {
-                it.select(AttributeSelectors.DETERMINATION).text().toShort()
+                it.select(AttributesSelectors.DETERMINATION).text().toShort()
             }
 
             val directHitRate = async {
-                it.select(AttributeSelectors.DIRECT_HIT_RATE).text().toShort()
+                it.select(AttributesSelectors.DIRECT_HIT_RATE).text().toShort()
             }
 
             val defense = async {
-                it.select(AttributeSelectors.DEFENSE).text().toShort()
+                it.select(AttributesSelectors.DEFENSE).text().toShort()
             }
 
             val magicDefense = async {
-                it.select(AttributeSelectors.MAGIC_DEFENSE).text().toShort()
+                it.select(AttributesSelectors.MAGIC_DEFENSE).text().toShort()
             }
 
             val attackPower = async {
-                it.select(AttributeSelectors.ATTACK_POWER).text().toShort()
+                it.select(AttributesSelectors.ATTACK_POWER).text().toShort()
             }
 
             val skillSpeed = async {
-                it.select(AttributeSelectors.SKILL_SPEED).text().toShort()
+                it.select(AttributesSelectors.SKILL_SPEED).text().toShort()
             }
 
             val attackMagicPotency = async {
-                it.select(AttributeSelectors.ATTACK_MAGIC_POTENCY).text().toShort()
+                it.select(AttributesSelectors.ATTACK_MAGIC_POTENCY).text().toShort()
             }
 
             val healingMagicPotency = async {
-                it.select(AttributeSelectors.HEALING_MAGIC_POTENCY).text().toShort()
+                it.select(AttributesSelectors.HEALING_MAGIC_POTENCY).text().toShort()
             }
 
             val spellSpeed = async {
-                it.select(AttributeSelectors.SPELL_SPEED).text().toShort()
+                it.select(AttributesSelectors.SPELL_SPEED).text().toShort()
             }
 
             val tenacity = async {
-                it.select(AttributeSelectors.TENACITY).text().toShort()
+                it.select(AttributesSelectors.TENACITY).text().toShort()
             }
 
             val piety = async {
-                it.select(AttributeSelectors.PIETY).text().toShort()
+                it.select(AttributesSelectors.PIETY).text().toShort()
             }
 
             val hp = async {
-                it.select(AttributeSelectors.HP).text().toInt()
+                it.select(AttributesSelectors.HP).text().toInt()
             }
 
             val cp = async {
                 if (disciple.await() == Discipline.DISCIPLE_OF_THE_HAND) {
-                    it.select(AttributeSelectors.CP_GP).text().toShort()
+                    it.select(AttributesSelectors.CP_GP).text().toShort()
                 } else null
             }
 
             val gp = async {
                 if (disciple.await() == Discipline.DISCIPLE_OF_THE_LAND) {
-                    it.select(AttributeSelectors.CP_GP).text().toShort()
+                    it.select(AttributesSelectors.CP_GP).text().toShort()
                 } else null
             }
 

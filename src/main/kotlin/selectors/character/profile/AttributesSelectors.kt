@@ -1,7 +1,7 @@
 package cloud.drakon.ktlodestone.selectors.character.profile
 
 // https://github.com/xivapi/lodestone-css-selectors/blob/main/profile/attributes.json
-internal object AttributeSelectors {
+internal object AttributesSelectors {
     const val STRENGTH = "table.character__param__list:nth-child(2) tr:nth-child(1) > td:nth-child(2)"
     const val DEXTERITY = "table.character__param__list:nth-child(2) tr:nth-child(2) > td:nth-child(2)"
     const val VITALITY = "table.character__param__list:nth-child(2) tr:nth-child(3) > td:nth-child(2)"
