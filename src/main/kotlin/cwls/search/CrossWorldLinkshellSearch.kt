@@ -2,6 +2,7 @@ package cloud.drakon.ktlodestone.cwls.search
 
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.ktorClient
+import cloud.drakon.ktlodestone.search.ActiveMembers
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.cwls.search.CrossWorldLinkshellSearchSelectors
 import cloud.drakon.ktlodestone.world.DataCenter
@@ -19,7 +20,7 @@ internal class CrossWorldLinkshellSearch {
         name: String?,
         communityFinder: Boolean,
         dataCenter: DataCenter?,
-        characterCount: CharacterCount?,
+        characterCount: ActiveMembers?,
         pages: Byte,
     ) = coroutineScope {
         var page: Byte = 1
@@ -45,7 +46,7 @@ internal class CrossWorldLinkshellSearch {
         name: String?,
         communityFinder: Boolean,
         dataCenter: DataCenter?,
-        characterCount: CharacterCount?,
+        characterCount: ActiveMembers?,
         page: Byte,
     ): List<CrossWorldLinkshellSearchResult> = coroutineScope {
         ktorClient.get("crossworld_linkshell/") {
