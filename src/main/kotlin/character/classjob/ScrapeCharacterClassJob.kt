@@ -140,7 +140,8 @@ internal suspend fun scrapeCharacterClassJob(response: String) = coroutineScope 
                 monk, dragoon, ninja, samurai, reaper,
                 bard, machinist, dancer,
                 blackMage, summoner, redMage, blueMage,
-                carpenter, blacksmith, armorer, goldsmith, leatherworker, weaver, alchemist, culinarian,
+                carpenter, blacksmith, armorer, goldsmith, leatherworker, weaver,
+                alchemist, culinarian,
                 miner, botanist, fisher
             ).forEach {
                 it.await()?.let {
