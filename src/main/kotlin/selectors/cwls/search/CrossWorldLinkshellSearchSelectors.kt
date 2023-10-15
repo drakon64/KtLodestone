@@ -1,5 +1,6 @@
 package cloud.drakon.ktlodestone.selectors.cwls.search
 
+// https://github.com/xivapi/lodestone-css-selectors/blob/main/search/cwls.json
 internal object CrossWorldLinkshellSearchSelectors {
     const val ROOT = ".ldst__window"
 
