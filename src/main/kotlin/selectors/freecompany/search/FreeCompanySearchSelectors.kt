@@ -33,6 +33,11 @@ internal object FreeCompanySearchSelectors {
     const val ENTRY_FOCUS = "img"
     const val ENTRY_FOCUS_ATTR = "src"
 
+    const val ENTRY_SEEKING_LIST = ".entry__freecompany__role > li"
+    const val ENTRY_SEEKING_OFF = ".entry__freecompany--off"
+    const val ENTRY_SEEKING = "img"
+    const val ENTRY_SEEKING_ATTR = "src"
+
     const val LIST_NEXT_BUTTON = "ul.btn__pager > li:nth-child(4) > a:nth-child(1)"
     const val LIST_NEXT_BUTTON_ATTR = "href"
 }

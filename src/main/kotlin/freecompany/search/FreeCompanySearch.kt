@@ -256,6 +256,21 @@ internal class FreeCompanySearch {
                                     }
                                 }
 
+                                val seeking = async {
+                                    buildList {
+                                        it.select(FreeCompanySearchSelectors.ENTRY_SEEKING_LIST)
+                                            .not(FreeCompanySearchSelectors.ENTRY_SEEKING_OFF)
+                                            .forEach {
+                                                add(
+                                                    FreeCompanySearchMaps.SEEKING_MAP.getValue(
+                                                        it.select(FreeCompanySearchSelectors.ENTRY_SEEKING)
+                                                            .attr(FreeCompanySearchSelectors.ENTRY_SEEKING_ATTR)
+                                                    )
+                                                )
+                                            }
+                                    }
+                                }
+
                                 add(
                                     FreeCompanySearchResult(
                                         name.await(),
@@ -269,6 +284,7 @@ internal class FreeCompanySearch {
                                         active.await(),
                                         recruitment.await(),
                                         focus.await(),
+                                        seeking.await()
                                     )
                                 )
                             }

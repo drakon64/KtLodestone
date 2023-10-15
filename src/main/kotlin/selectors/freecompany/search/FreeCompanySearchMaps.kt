@@ -1,6 +1,7 @@
 package cloud.drakon.ktlodestone.selectors.freecompany.search
 
 import cloud.drakon.ktlodestone.freecompany.search.Focus
+import cloud.drakon.ktlodestone.freecompany.search.Seeking
 
 internal object FreeCompanySearchMaps {
     val FOCUS_MAP = mapOf(
@@ -13,5 +14,13 @@ internal object FreeCompanySearchMaps {
         "https://img.finalfantasyxiv.com/lds/h/P/ydn7ovgdfDc3MocTJV0vP48l4E.png" to Focus.TRIALS,
         "https://img.finalfantasyxiv.com/lds/h/R/R7mn0-cTBIhT8CcxbtDB-YuPUI.png" to Focus.RAIDS,
         "https://img.finalfantasyxiv.com/lds/h/D/hXSGh69WuUbiC5NmlZhDyaO2g8.png" to Focus.PVP,
+    )
+
+    val SEEKING_MAP = mapOf(
+        "https://img.finalfantasyxiv.com/lds/h/x/VUfyJ-2iArKs72p4putqJewSgU.png" to Seeking.TANK,
+        "https://img.finalfantasyxiv.com/lds/h/A/a8JOc9-8I-ATxTnT3BAkI0MTsA.png" to Seeking.HEALER,
+        "https://img.finalfantasyxiv.com/lds/h/d/qXomRVXuqEzMLXk2ncLeoFTFYs.png" to Seeking.DPS,
+        "https://img.finalfantasyxiv.com/lds/h/w/h-PrIjVyD8Uy9ndk49alidJYSM.png" to Seeking.CRAFTER,
+        "https://img.finalfantasyxiv.com/lds/h/1/7Fd00rEgUDpmWFVulcouYytj54.png" to Seeking.GATHERER,
     )
 }

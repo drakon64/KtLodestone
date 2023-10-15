@@ -28,4 +28,6 @@ data class FreeCompanySearchResult(
     val recruitment: Recruitment,
     /** The Free Company's focus. */
     val focus: List<Focus>?,
+    /** Roles that the Free Company is seeking. */
+    val seeking: List<Seeking>?,
 )
