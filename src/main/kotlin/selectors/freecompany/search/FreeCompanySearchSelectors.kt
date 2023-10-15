@@ -28,6 +28,11 @@ internal object FreeCompanySearchSelectors {
     const val ENTRY_FORMED = ".entry__freecompany__fc-day > script"
     val ENTRY_FORMED_REGEX = """(?<=ldst_strftime\()\d+""".toRegex()
 
+    const val ENTRY_FOCUSES = ".entry__freecompany__fcprofile > li"
+    const val ENTRY_FOCUS_OFF = ".entry__freecompany--off"
+    const val ENTRY_FOCUS = "img"
+    const val ENTRY_FOCUS_ATTR = "src"
+
     const val LIST_NEXT_BUTTON = "ul.btn__pager > li:nth-child(4) > a:nth-child(1)"
     const val LIST_NEXT_BUTTON_ATTR = "href"
 }
