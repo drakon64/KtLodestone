@@ -377,28 +377,26 @@ private suspend fun scrapeClassJob(document: Document, job: ClassJob) = coroutin
             )
         }
 
-        document.select(expSelector).text().let {
-            if (it == "-- / --") null else it.split('/')
-        }?.let {
-            val currentExp = async {
-                it[0].trim().replace(",", "").toInt()
-            }
+        val experience = async {
+            document.select(expSelector).text().let {
+                if (it == "-- / --") null else it.split('/')
+            }?.let {
+                val currentExp = async {
+                    it[0].trim().replace(",", "").toInt()
+                }
 
-            val expToNextLevel = async {
-                it[1].trim().replace(",", "").toInt()
-            }
+                val expToNextLevel = async {
+                    it[1].trim().replace(",", "").toInt()
+                }
 
-            ClassJobLevel(
-                unlockState.await(),
-                level,
-                currentExp.await(),
-                expToNextLevel.await(),
-            )
-        } ?: ClassJobLevel(
+                Experience(currentExp.await(), expToNextLevel.await())
+            }
+        }
+
+        ClassJobLevel(
             unlockState.await(),
             level,
-            null,
-            null,
+            experience.await(),
         )
     } else null
 }
