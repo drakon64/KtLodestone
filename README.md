@@ -14,18 +14,17 @@ KtLodestone is a parser for The Lodestone for the JVM platform (JDK 11+).
 - Supports scraping the following information from The Lodestone:
   - Character
     - Profile
-    - Achievements
-    - Attributes
     - Class/job
-    - Equipped gear
     - Minions
     - Mounts
+    - Achievements
   - Search
     - Character
+    - CWLS
 - Asynchronous
 - Compatible with Kotlin and Java
   - Kotlin functions are suspendable
-  - Java-compatible functions are affixed with `Async` and return a `CompletableFuture`
+  - Java-compatible functions return a `CompletableFuture`
 
 # Installation
 
@@ -53,16 +52,18 @@ Javadocs: [![javadoc](https://javadoc.io/badge2/cloud.drakon/ktlodestone/javadoc
 
 Kotlin:
 ```kotlin
-val character: ProfileCharacter = KtLodestone.getCharacter(27545492) // Must be called from a coroutine or a suspendable function
-val activeClassJobName: String = character.activeClassJob.name // returns "Red Mage"
+val character: CharacterProfile = getLodestoneCharacter(27545492) // Must be called from a coroutine or a suspendable function
+val activeClassJob: ClassJob = character.activeClassJob.name // returns `ClassJob.RED_MAGE`
+val activeClassJob: String = character.activeClassJob.name.toString() // returns "Red Mage"
 val activeClassJobLevel: Byte = character.activeClassJob.level // returns `90`
 val title: String = character.title // returns "Hope's Legacy"
 ```
 
 Java:
 ```java
-ProfileCharacter character = KtLodestone.getCharacterAsync(27545492).get(); // Async functions return a `CompletableFuture`
-String activeClassJobName = character.getActiveClassJob().getName(); // returns "Red Mage"
+CharacterProfile character = KtLodestone.getCharacter(27545492).get(); // Async functions return a `CompletableFuture`
+ClassJob activeClassJob = character.getActiveClassJob().getName(); // returns `ClassJob.RED_MAGE`
+String activeClassJobName = character.getActiveClassJob().getName().toString(); // returns "Red Mage"
 Byte activeClassJobLevel = character.getActiveClassJob().getLevel(); // returns `90`
 String title = character.getTitle(); // returns "Hope's Legacy"
 ```

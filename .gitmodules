@@ -1,4 +1,0 @@
-[submodule "src/main/resources/lodestone-css-selectors"]
-	path = src/main/resources/lodestone-css-selectors
-	url = https://github.com/xivapi/lodestone-css-selectors.git
-	commit = ead5f09a48d0cb4e912718219da47a9f2e63fd3a

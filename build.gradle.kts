@@ -1,19 +1,14 @@
-import org.jetbrains.dokka.gradle.DokkaTask
-
 plugins {
-    val kotlinVersion = "1.9.10"
+    kotlin("jvm") version "1.9.10"
 
-    kotlin("jvm") version kotlinVersion
-    kotlin("plugin.serialization") version kotlinVersion
-
-    id("org.jetbrains.dokka") version "1.8.20"
+    id("org.jetbrains.dokka") version "1.9.0"
 
     id("maven-publish")
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     signing
 
-    id("org.jetbrains.kotlinx.kover") version "0.7.3"
-    id("org.sonarqube") version "4.3.0.3225"
+    id("org.jetbrains.kotlinx.kover") version "0.7.4"
+    id("org.sonarqube") version "4.4.1.3373"
 }
 
 group = "cloud.drakon"
@@ -24,13 +19,11 @@ repositories {
 }
 
 dependencies {
-    val ktorVersion = "2.3.3"
+    val ktorVersion = "2.3.5"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-java:$ktorVersion")
 
     implementation("org.jsoup:jsoup:1.16.1")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     testImplementation(kotlin("test"))
 }
@@ -39,46 +32,48 @@ tasks.test {
     useJUnitPlatform()
 }
 
-val jvmToolchain = 11
+val jdkVersion = 11
 
 kotlin {
-    jvmToolchain(jvmToolchain)
+    jvmToolchain(jdkVersion)
 }
 
-tasks.withType<DokkaTask>().configureEach {
-    dokkaSourceSets {
-        configureEach {
-            jdkVersion.set(jvmToolchain)
-            languageVersion.set("1.9")
-        }
+//tasks.withType<DokkaTask>().configureEach {
+//    dokkaSourceSets.configureEach {
+//        jdkVersion.set(jdkVersion)
+//    }
+//}
+
+kover {
+    useJacoco()
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "KtLodestone")
+        property("sonar.organization", "drakon64")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml"
+        )
     }
 }
 
-val dokkaHtml by tasks.getting(DokkaTask::class)
-val htmlJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+tasks.register<Jar>("dokkaHtmlJar") {
     dependsOn(tasks.dokkaHtml)
-    archiveClassifier.set("html-docs")
     from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+    archiveClassifier.set("html-docs")
 }
 
-val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+tasks.register<Jar>("dokkaJavadocJar") {
     dependsOn(tasks.dokkaJavadoc)
-    archiveClassifier.set("javadoc")
     from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-}
-
-val sourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
+    archiveClassifier.set("javadoc")
 }
 
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            artifact(javadocJar.get())
-            artifact(htmlJar.get())
-            artifact(sourcesJar.get())
-
             from(components["java"])
 
             pom {
@@ -102,6 +97,8 @@ publishing {
                 }
 
                 scm {
+                    connection.set("https://github.com/drakon64/KtLodestone.git")
+                    developerConnection.set("git@github.com:drakon64/KtLodestone.git")
                     url.set("https://github.com/drakon64/KtLodestone")
                 }
             }
@@ -136,20 +133,10 @@ signing {
     val signingKey: String? by project
     val signingPassword: String? by project
     useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications)
+    sign(publishing.publications["mavenJava"])
 }
 
-kover {
-    useJacoco()
-}
-
-sonarqube {
-    properties {
-        property("sonar.projectKey", "KtLodestone")
-        property("sonar.organization", "drakon64")
-        property("sonar.host.url", "https://sonarcloud.io")
-        property(
-            "sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml"
-        )
-    }
+tasks.withType<AbstractArchiveTask>().configureEach {
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
 }
