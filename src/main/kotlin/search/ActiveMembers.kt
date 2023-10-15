@@ -1,6 +1,6 @@
-package cloud.drakon.ktlodestone.cwls.search
+package cloud.drakon.ktlodestone.search
 
-enum class CharacterCount {
+enum class ActiveMembers {
     /** 1-10 */
     ONE_TO_TEN {
         override fun toString() = "1-10"
