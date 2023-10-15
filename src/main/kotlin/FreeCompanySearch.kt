@@ -23,8 +23,17 @@ import kotlinx.coroutines.future.future
 /**
  * Searches for a Cross-world Linkshell on *The Lodestone*.
  *
- * @param name The name of the Cross-world Linkshell to search for.
- * @param communityFinder Search for Cross-world Linkshells that are recruiting via the Community Finder.
+ * @param name The name of the Free Company to search for.
+ * @param communityFinder Search for Free Company that are recruiting via the Community Finder.
+ * @param world Search this [World] for Free Companies. Takes priority over [dataCenter].
+ * @param dataCenter Search this [DataCenter] for Free Companies.
+ * @param activeMembers Search for Free Companies with this many members.
+ * @param focus Search for Free Companies with this focus. If `null`, all focuses are considered, including "Not specified". If a [Set] with a `null` element is provided, `null` is treated as "Not specified".
+ * @param seeking Search for Free Companies who are seeking this role. If `null`, all roles are considered, including "Not specified". If a [Set] with a `null` element is provided, `null` is treated as "Not specified".
+ * @param active Search for Free Companies that are active during this time.
+ * @param recruitment Search for Free Companies with this recruitment state.
+ * @param housing Search for Free Companies with this housing state.
+ * @param grandCompany Search for Free Companies associated with this Grand Company.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
  */
@@ -59,8 +68,17 @@ suspend fun searchLodestoneFreeCompany(
 /**
  * Searches for a Cross-world Linkshell on *The Lodestone*.
  *
- * @param name The name of the Cross-world Linkshell to search for.
- * @param communityFinder Search for Cross-world Linkshells that are recruiting via the Community Finder.
+ * @param name The name of the Free Company to search for.
+ * @param communityFinder Search for Free Company that are recruiting via the Community Finder.
+ * @param world Search this [World] for Free Companies. Takes priority over [dataCenter].
+ * @param dataCenter Search this [DataCenter] for Free Companies.
+ * @param activeMembers Search for Free Companies with this many members.
+ * @param focus Search for Free Companies with this focus. If `null`, all focuses are considered, including "Not specified". If a [Set] with a `null` element is provided, `null` is treated as "Not specified".
+ * @param seeking Search for Free Companies who are seeking this role. If `null`, all roles are considered, including "Not specified". If a [Set] with a `null` element is provided, `null` is treated as "Not specified".
+ * @param active Search for Free Companies that are active during this time.
+ * @param recruitment Search for Free Companies with this recruitment state.
+ * @param housing Search for Free Companies with this housing state.
+ * @param grandCompany Search for Free Companies associated with this Grand Company.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
  */
