@@ -148,7 +148,7 @@ internal suspend fun scrapeCharacterClassJob(response: String) = coroutineScope 
                 }
             }
 
-            return@with this.toMap()
+            this.toMap()
         }
     }
 }
