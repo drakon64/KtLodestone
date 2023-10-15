@@ -133,48 +133,23 @@ internal suspend fun scrapeCharacterClassJob(response: String) = coroutineScope 
             scrapeClassJob(it, ClassJob.FISHER)
         }
 
-        mapOf(
-            ClassJob.GLADIATOR to paladin.await(),
-            ClassJob.PALADIN to paladin.await(),
-            ClassJob.MARAUDER to warrior.await(),
-            ClassJob.WARRIOR to warrior.await(),
-            ClassJob.DARK_KNIGHT to darkKnight.await(),
-            ClassJob.GUNBREAKER to gunbreaker.await(),
-            ClassJob.CONJURER to whiteMage.await(),
-            ClassJob.WHITE_MAGE to whiteMage.await(),
-            ClassJob.SCHOLAR to scholar.await(),
-            ClassJob.ASTROLOGIAN to astrologian.await(),
-            ClassJob.SAGE to sage.await(),
-            ClassJob.PUGILIST to monk.await(),
-            ClassJob.MONK to monk.await(),
-            ClassJob.LANCER to dragoon.await(),
-            ClassJob.DRAGOON to dragoon.await(),
-            ClassJob.ROGUE to ninja.await(),
-            ClassJob.NINJA to ninja.await(),
-            ClassJob.SAMURAI to samurai.await(),
-            ClassJob.REAPER to reaper.await(),
-            ClassJob.ARCHER to bard.await(),
-            ClassJob.BARD to bard.await(),
-            ClassJob.MACHINIST to machinist.await(),
-            ClassJob.DANCER to dancer.await(),
-            ClassJob.THAUMATURGE to blackMage.await(),
-            ClassJob.BLACK_MAGE to blackMage.await(),
-            ClassJob.ARCANIST to summoner.await(),
-            ClassJob.SUMMONER to summoner.await(),
-            ClassJob.RED_MAGE to redMage.await(),
-            ClassJob.BLUE_MAGE to blueMage.await(),
-            ClassJob.CARPENTER to carpenter.await(),
-            ClassJob.BLACKSMITH to blacksmith.await(),
-            ClassJob.ARMORER to armorer.await(),
-            ClassJob.GOLDSMITH to goldsmith.await(),
-            ClassJob.LEATHERWORKER to leatherworker.await(),
-            ClassJob.WEAVER to weaver.await(),
-            ClassJob.ALCHEMIST to alchemist.await(),
-            ClassJob.CULINARIAN to culinarian.await(),
-            ClassJob.MINER to miner.await(),
-            ClassJob.BOTANIST to botanist.await(),
-            ClassJob.FISHER to fisher.await(),
-        )
+        with(mutableMapOf<ClassJob, ClassJobLevel?>()) {
+            arrayOf(
+                paladin, warrior, darkKnight, gunbreaker,
+                whiteMage, scholar, astrologian, sage,
+                monk, dragoon, ninja, samurai, reaper,
+                bard, machinist, dancer,
+                blackMage, summoner, redMage, blueMage,
+                carpenter, blacksmith, armorer, goldsmith, leatherworker, weaver, alchemist, culinarian,
+                miner, botanist, fisher
+            ).forEach {
+                it.await()?.let {
+                    this[it.unlockState] = ClassJobLevel(it.level, it.experience)
+                }
+            }
+
+            return@with this.toMap()
+        }
     }
 }
 
@@ -401,10 +376,16 @@ private suspend fun scrapeClassJob(document: Document, job: ClassJob) = coroutin
             }
         }
 
-        ClassJobLevel(
+        ClassLevel(
             unlockState.await(),
             level,
             experience.await(),
         )
     } else null
 }
+
+private class ClassLevel(
+    val unlockState: ClassJob,
+    val level: Byte,
+    val experience: Experience?,
+)
