@@ -20,7 +20,7 @@ internal class CrossWorldLinkshellSearch {
         name: String?,
         communityFinder: Boolean,
         dataCenter: DataCenter?,
-        characterCount: ActiveMembers?,
+        activeMembers: ActiveMembers?,
         pages: Byte,
     ) = coroutineScope {
         var page: Byte = 1
@@ -32,7 +32,7 @@ internal class CrossWorldLinkshellSearch {
                         name,
                         communityFinder,
                         dataCenter,
-                        characterCount,
+                        activeMembers,
                         page
                     )
                 )
@@ -46,7 +46,7 @@ internal class CrossWorldLinkshellSearch {
         name: String?,
         communityFinder: Boolean,
         dataCenter: DataCenter?,
-        characterCount: ActiveMembers?,
+        activeMembers: ActiveMembers?,
         page: Byte,
     ): List<CrossWorldLinkshellSearchResult> = coroutineScope {
         ktorClient.get("crossworld_linkshell/") {
@@ -58,7 +58,7 @@ internal class CrossWorldLinkshellSearch {
 
                 if (dataCenter != null) parameters.append("dcname", "$dataCenter")
 
-                if (characterCount != null) parameters.append("character_count", "$characterCount")
+                if (activeMembers != null) parameters.append("character_count", "$activeMembers")
 
                 parameters.append("page", "$page")
             }

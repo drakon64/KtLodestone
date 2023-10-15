@@ -19,7 +19,7 @@ import kotlinx.coroutines.future.future
  * @param name The name of the Cross-world Linkshell to search for.
  * @param communityFinder Search for Cross-world Linkshells that are recruiting via the Community Finder.
  * @param dataCenter Search this [DataCenter] for Cross-world Linkshells.
- * @param characterCount Search for Cross-world Linkshells with this many members.
+ * @param activeMembers Search for Cross-world Linkshells with this many members.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
@@ -28,13 +28,13 @@ suspend fun searchLodestoneCrossWorldLinkshell(
     name: String? = null,
     communityFinder: Boolean = false,
     dataCenter: DataCenter? = null,
-    characterCount: ActiveMembers? = null,
+    activeMembers: ActiveMembers? = null,
     pages: Byte = 1,
 ) = if (pages in 1..20) CrossWorldLinkshellSearch().scrapeCrossWorldLinkshellSearch(
     name,
     communityFinder,
     dataCenter,
-    characterCount,
+    activeMembers,
     pages,
 ) else throw InvalidParameterException("`pages` must be at least 1 and less than or equal to 20.")
 
@@ -44,7 +44,7 @@ suspend fun searchLodestoneCrossWorldLinkshell(
  * @param name The name of the Cross-world Linkshell to search for.
  * @param communityFinder Search for Cross-world Linkshells that are recruiting via the Community Finder.
  * @param dataCenter Search this [DataCenter] for Cross-world Linkshells.
- * @param characterCount Search for Cross-world Linkshells with this many members.
+ * @param activeMembers Search for Cross-world Linkshells with this many members.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
  * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
@@ -56,14 +56,14 @@ fun searchLodestoneCrossWorldLinkshellAsync(
     name: String? = null,
     communityFinder: Boolean = false,
     dataCenter: DataCenter? = null,
-    characterCount: ActiveMembers? = null,
+    activeMembers: ActiveMembers? = null,
     pages: Byte = 1,
 ) = GlobalScope.future {
     searchLodestoneCrossWorldLinkshell(
         name,
         communityFinder,
         dataCenter,
-        characterCount,
+        activeMembers,
         pages,
     )
 }
