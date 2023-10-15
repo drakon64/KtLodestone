@@ -32,9 +32,17 @@ tasks.test {
     useJUnitPlatform()
 }
 
+val jdkVersion = 11
+
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(jdkVersion)
 }
+
+//tasks.withType<DokkaTask>().configureEach {
+//    dokkaSourceSets.configureEach {
+//        jdkVersion.set(jdkVersion)
+//    }
+//}
 
 kover {
     useJacoco()
