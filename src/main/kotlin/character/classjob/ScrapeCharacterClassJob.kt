@@ -26,7 +26,7 @@ internal suspend fun scrapeCharacterClassJob(response: String) = coroutineScope 
         }
 
         val whiteMage = async {
-            scrapeClassJob(it, ClassJob.GUNBREAKER)
+            scrapeClassJob(it, ClassJob.WHITE_MAGE)
         }
 
         val scholar = async {
