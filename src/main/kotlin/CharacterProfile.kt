@@ -4,7 +4,6 @@
 
 package cloud.drakon.ktlodestone
 
-import cloud.drakon.ktlodestone.character.profile.CharacterProfile
 import cloud.drakon.ktlodestone.character.profile.scrapeCharacterProfile
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.exception.LodestoneNotFoundException
