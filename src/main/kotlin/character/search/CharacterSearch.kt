@@ -74,8 +74,8 @@ internal class CharacterSearch {
                 // We've already encoded this parameter
                 if (name != null) encodedParameters.append("q", name.replace(" ", "+"))
 
-                // If both [world] and [dataCenter] or just [world] are provided, use [world] as it's more specific, otherwise use [dataCenter]
-                if ((world != null && dataCenter != null) || world != null) {
+                // If [world] is provided, use it as it's more specific, otherwise use [dataCenter]
+                if (world != null) {
                     parameters.append("worldname", world.name)
                 } else if (dataCenter != null) {
                     parameters.append("worldname", dataCenter.name)
