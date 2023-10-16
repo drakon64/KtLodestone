@@ -1,7 +1,9 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     kotlin("jvm") version "1.9.10"
 
-    id("org.jetbrains.dokka") version "1.9.0"
+    id("org.jetbrains.dokka") version "1.9.10"
 
     id("maven-publish")
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
@@ -32,17 +34,17 @@ tasks.test {
     useJUnitPlatform()
 }
 
-val jdkVersion = 11
+val jvmVersion = 11
 
 kotlin {
-    jvmToolchain(jdkVersion)
+    jvmToolchain(jvmVersion)
 }
 
-//tasks.withType<DokkaTask>().configureEach {
-//    dokkaSourceSets.configureEach {
-//        jdkVersion.set(jdkVersion)
-//    }
-//}
+tasks.withType<DokkaTask>().configureEach {
+    dokkaSourceSets.configureEach {
+        jdkVersion = jvmVersion
+    }
+}
 
 kover {
     useJacoco()
