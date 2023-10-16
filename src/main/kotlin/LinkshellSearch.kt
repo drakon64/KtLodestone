@@ -25,6 +25,7 @@ import kotlinx.coroutines.future.future
  * @param crossWorld Search for Cross-world Linkshells.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
+ * @throws InvalidParameterException Thrown when [world] is not `null` and [crossWorld] is `true`.
  * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 suspend fun searchLodestoneLinkshell(
@@ -56,6 +57,7 @@ suspend fun searchLodestoneLinkshell(
  * @param crossWorld Search for Cross-world Linkshells.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
+ * @throws InvalidParameterException Thrown when [world] is not `null` and [crossWorld] is `true`.
  * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 @JvmName("searchLodestoneLinkshell")

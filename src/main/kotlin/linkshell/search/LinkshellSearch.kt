@@ -1,5 +1,6 @@
 package cloud.drakon.ktlodestone.linkshell.search
 
+import cloud.drakon.ktlodestone.exception.InvalidParameterException
 import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.ktorClient
 import cloud.drakon.ktlodestone.search.ActiveMembers
@@ -66,6 +67,8 @@ internal class LinkshellSearch {
 
                 // If [world] is provided, use it as it's more specific, otherwise use [dataCenter]
                 if (world != null) {
+                    if (crossWorld) throw InvalidParameterException("Parameter `world` must be `null` when `crossWorld` is `true`.")
+
                     parameters.append("worldname", world.name)
                 } else if (dataCenter != null) {
                     parameters.append("worldname", "_dc_${dataCenter.name}")
