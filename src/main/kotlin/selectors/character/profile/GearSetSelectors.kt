@@ -1,6 +1,6 @@
 package cloud.drakon.ktlodestone.selectors.character.profile
 
-internal class GearSetSelectors(val icon: Byte) {
+internal class GearSetSelectors(val slot: Byte) {
     companion object {
         const val NAME_SELECTOR = "div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h2:nth-child(2)"
 
@@ -17,13 +17,13 @@ internal class GearSetSelectors(val icon: Byte) {
         const val CREATOR_NAME = "div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > a:nth-child(1)"
     }
 
-    val ITEM = ".icon-c--$icon > .db-tooltip"
+    val ITEM = ".icon-c--$slot > .db-tooltip"
 
-    val DYE = ".icon-c--$icon > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(3) > div:nth-child(1) > a:nth-child(1)"
+    val DYE = ".icon-c--$slot > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(3) > div:nth-child(1) > a:nth-child(1)"
 
-    val MATERIA_1 = ".icon-c--$icon > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > ul:nth-of-type(2) > li:nth-child(1) > div:nth-child(2)"
-    val MATERIA_2 = ".icon-c--$icon > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > ul:nth-of-type(2) > li:nth-child(2) > div:nth-child(2)"
-    val MATERIA_3 = ".icon-c--$icon > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > ul:nth-of-type(2) > li:nth-child(3) > div:nth-child(2)"
-    val MATERIA_4 = ".icon-c--$icon > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > ul:nth-of-type(2) > li:nth-child(4) > div:nth-child(2)"
-    val MATERIA_5 = ".icon-c--$icon > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > ul:nth-of-type(2) > li:nth-child(5) > div:nth-child(2)"
+    val MATERIA_1 = ".icon-c--$slot > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > ul:nth-of-type(2) > li:nth-child(1) > div:nth-child(2)"
+    val MATERIA_2 = ".icon-c--$slot > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > ul:nth-of-type(2) > li:nth-child(2) > div:nth-child(2)"
+    val MATERIA_3 = ".icon-c--$slot > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > ul:nth-of-type(2) > li:nth-child(3) > div:nth-child(2)"
+    val MATERIA_4 = ".icon-c--$slot > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > ul:nth-of-type(2) > li:nth-child(4) > div:nth-child(2)"
+    val MATERIA_5 = ".icon-c--$slot > .db-tooltip > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > ul:nth-of-type(2) > li:nth-child(5) > div:nth-child(2)"
 }

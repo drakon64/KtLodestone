@@ -490,7 +490,7 @@ private suspend fun getGearSetItem(
         val creatorName: Deferred<String?>?
         val hq: Deferred<Boolean>
 
-        if (selector.icon != 13.toByte()) {
+        if (selector.slot != 13.toByte()) { // The 13th slot is the Soul Crystal which cannot be customised
             glamour = async {
                 it.select(GearSetSelectors.GLAMOUR).first()?.let {
                     it.select(GearSetSelectors.GLAMOUR_NAME).let {
