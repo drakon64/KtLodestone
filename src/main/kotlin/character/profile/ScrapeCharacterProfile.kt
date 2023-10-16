@@ -9,7 +9,6 @@ import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
 import cloud.drakon.ktlodestone.character.profile.gearset.GearSet
 import cloud.drakon.ktlodestone.character.profile.gearset.Glamour
 import cloud.drakon.ktlodestone.character.profile.gearset.Item
-import cloud.drakon.ktlodestone.character.profile.gearset.items.Slot
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
 import cloud.drakon.ktlodestone.selectors.character.profile.AttributesSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
@@ -157,57 +156,55 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
         val gearSet = async {
             val mainHand = async {
-                getGearSetItem(
-                    it, Slot.MAIN_HAND
-                )!! // A character always has a main hand item
+                getGearSetItem(it, GearSetSelectors(0))!! // A character always has a main hand item
             }
 
             val offHand = async {
-                getGearSetItem(it, Slot.OFF_HAND)
+                getGearSetItem(it, GearSetSelectors(1))
             }
 
             val head = async {
-                getGearSetItem(it, Slot.HEAD)
+                getGearSetItem(it, GearSetSelectors(2))
             }
 
             val body = async {
-                getGearSetItem(it, Slot.BODY)
+                getGearSetItem(it, GearSetSelectors(3))
             }
 
             val hands = async {
-                getGearSetItem(it, Slot.HANDS)
+                getGearSetItem(it, GearSetSelectors(4))
             }
 
             val legs = async {
-                getGearSetItem(it, Slot.LEGS)
+                getGearSetItem(it, GearSetSelectors(6))
             }
 
             val feet = async {
-                getGearSetItem(it, Slot.FEET)
+                getGearSetItem(it, GearSetSelectors(7))
             }
 
             val earrings = async {
-                getGearSetItem(it, Slot.EARRINGS)
+                getGearSetItem(it, GearSetSelectors(8))
             }
 
             val necklace = async {
-                getGearSetItem(it, Slot.NECKLACE)
+                getGearSetItem(it, GearSetSelectors(9))
             }
 
             val bracelets = async {
-                getGearSetItem(it, Slot.BRACELETS)
+                getGearSetItem(it, GearSetSelectors(10))
             }
 
             val ring1 = async {
-                getGearSetItem(it, Slot.RING1)
+                getGearSetItem(it, GearSetSelectors(11))
             }
 
             val ring2 = async {
-                getGearSetItem(it, Slot.RING2)
+                getGearSetItem(it, GearSetSelectors(12))
             }
 
             val soulCrystal = async {
-                getGearSetItem(it, Slot.SOUL_CRYSTAL)
+                getGearSetItem(it, GearSetSelectors(13))
             }
 
             GearSet(
@@ -474,24 +471,8 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
 private suspend fun getGearSetItem(
     document: Document,
-    slot: Slot,
+    selector: GearSetSelectors,
 ) = coroutineScope {
-    val selector = when (slot) {
-        Slot.MAIN_HAND -> GearSetSelectors(0)
-        Slot.OFF_HAND -> GearSetSelectors(1)
-        Slot.HEAD -> GearSetSelectors(2)
-        Slot.BODY -> GearSetSelectors(3)
-        Slot.HANDS -> GearSetSelectors(4)
-        Slot.LEGS -> GearSetSelectors(6)
-        Slot.FEET -> GearSetSelectors(7)
-        Slot.EARRINGS -> GearSetSelectors(8)
-        Slot.NECKLACE -> GearSetSelectors(9)
-        Slot.BRACELETS -> GearSetSelectors(10)
-        Slot.RING1 -> GearSetSelectors(11)
-        Slot.RING2 -> GearSetSelectors(12)
-        Slot.SOUL_CRYSTAL -> GearSetSelectors(13)
-    }
-
     document.select(selector.ITEM).first()?.let {
         val name = async {
             it.select(GearSetSelectors.NAME_SELECTOR).text().replace("", "")
@@ -509,7 +490,7 @@ private suspend fun getGearSetItem(
         val creatorName: Deferred<String?>
         val hq: Deferred<Boolean>
 
-        if (slot != Slot.SOUL_CRYSTAL) {
+        if (selector.icon != 13.toByte()) {
             glamour = async {
                 it.select(GearSetSelectors.GLAMOUR).first()?.let {
                     it.select(GearSetSelectors.GLAMOUR_NAME).let {

@@ -1,6 +1,6 @@
 package cloud.drakon.ktlodestone.selectors.character.profile
 
-internal class GearSetSelectors(icon: Byte) {
+internal class GearSetSelectors(val icon: Byte) {
     companion object {
         const val NAME_SELECTOR = "div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h2:nth-child(2)"
 
