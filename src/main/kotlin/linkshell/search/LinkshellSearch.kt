@@ -4,7 +4,7 @@ import cloud.drakon.ktlodestone.exception.LodestoneException
 import cloud.drakon.ktlodestone.ktorClient
 import cloud.drakon.ktlodestone.search.ActiveMembers
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
-import cloud.drakon.ktlodestone.selectors.cwls.search.LinkshellSearchSelectors
+import cloud.drakon.ktlodestone.selectors.linkshell.search.LinkshellSearchSelectors
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
 import io.ktor.client.call.body

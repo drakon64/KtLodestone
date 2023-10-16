@@ -1,4 +1,4 @@
-package cloud.drakon.ktlodestone.selectors.cwls.search
+package cloud.drakon.ktlodestone.selectors.linkshell.search
 
 // https://github.com/xivapi/lodestone-css-selectors/blob/main/search/linkshell.json
 internal object LinkshellSearchSelectors {
