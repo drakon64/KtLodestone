@@ -133,7 +133,7 @@ internal suspend fun scrapeCharacterClassJob(response: String) = coroutineScope 
             scrapeClassJob(it, ClassJob.FISHER)
         }
 
-        with(mutableMapOf<ClassJob, ClassJobLevel>()) {
+        buildMap {
             arrayOf(
                 paladin, warrior, darkKnight, gunbreaker,
                 whiteMage, scholar, astrologian, sage,
@@ -145,11 +145,9 @@ internal suspend fun scrapeCharacterClassJob(response: String) = coroutineScope 
                 miner, botanist, fisher
             ).forEach {
                 it.await()?.let {
-                    this[it.unlockState] = ClassJobLevel(it.level, it.experience)
+                    put(it.unlockState, ClassJobLevel(it.level, it.experience))
                 }
             }
-
-            this.toMap()
         }
     }
 }
