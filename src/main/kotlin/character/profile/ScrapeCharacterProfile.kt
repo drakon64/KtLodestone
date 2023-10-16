@@ -484,10 +484,10 @@ private suspend fun getGearSetItem(
                         .attr(GearSetSelectors.DB_LINK_ATTR)
         }
 
-        val glamour: Deferred<Glamour?>
-        val dye: Deferred<String?>
+        val glamour: Deferred<Glamour?>?
+        val dye: Deferred<String?>?
         val materia: Deferred<List<String>>
-        val creatorName: Deferred<String?>
+        val creatorName: Deferred<String?>?
         val hq: Deferred<Boolean>
 
         if (selector.icon != 13.toByte()) {
@@ -546,21 +546,15 @@ private suspend fun getGearSetItem(
                 it.select(GearSetSelectors.NAME_SELECTOR).text().contains('')
             }
         } else {
-            glamour = async {
-                null
-            }
+            glamour = null
 
-            dye = async {
-                null
-            }
+            dye = null
 
             materia = async {
                 emptyList()
             }
 
-            creatorName = async {
-                null
-            }
+            creatorName = null
 
             hq = async {
                 false
@@ -570,10 +564,10 @@ private suspend fun getGearSetItem(
         Item(
             name.await(),
             dbLink.await(),
-            glamour.await(),
-            dye.await(),
+            glamour?.await(),
+            dye?.await(),
             materia.await(),
-            creatorName.await(),
+            creatorName?.await(),
             hq.await(),
         )
     }

@@ -98,13 +98,11 @@ internal class LinkshellSearch {
                                         .split("/")[3]
                                 }
 
-                                val world: Deferred<World?>
+                                val world: Deferred<World>?
                                 val dataCenter: Deferred<DataCenter>
 
                                 if (crossWorld) {
-                                    world = async {
-                                        null
-                                    }
+                                    world = null
 
                                     dataCenter = async {
                                         DataCenter.valueOf(
@@ -143,7 +141,7 @@ internal class LinkshellSearch {
                                     LinkshellSearchResult(
                                         name.await(),
                                         id.await(),
-                                        world.await(),
+                                        world?.await(),
                                         dataCenter.await(),
                                         region.await(),
                                         activeMembers.await(),
