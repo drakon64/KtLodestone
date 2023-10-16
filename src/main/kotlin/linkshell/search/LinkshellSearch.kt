@@ -64,8 +64,8 @@ internal class LinkshellSearch {
 
                 if (communityFinder) parameters.append("cf_public", "1")
 
-                // If both [world] and [dataCenter] or just [world] are provided, use [world] as it's more specific, otherwise use [dataCenter]
-                if ((world != null && dataCenter != null) || world != null) {
+                // If [world] is provided, use it as it's more specific, otherwise use [dataCenter]
+                if (world != null) {
                     parameters.append("worldname", world.name)
                 } else if (dataCenter != null) {
                     parameters.append("worldname", "_dc_${dataCenter.name}")
