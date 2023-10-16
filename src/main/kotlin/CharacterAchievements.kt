@@ -13,11 +13,11 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
 /**
- * Returns the achievements unlocked by a character with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character/achievement` endpoint.
+ * Returns the achievements unlocked by a character with ID [id] from The Lodestone. This matches what is found on The Lodestone's `/character/achievement` endpoint.
 
- * @throws LodestoneNotFoundException Thrown when the character isn't found on *The Lodestone*.
+ * @throws LodestoneNotFoundException Thrown when the character isn't found on The Lodestone.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1.
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 suspend fun getLodestoneCharacterAchievements(
     id: Int,
@@ -28,11 +28,11 @@ suspend fun getLodestoneCharacterAchievements(
 ) else throw InvalidParameterException("`pages` must be at least 1.")
 
 /**
- * Returns the achievements unlocked by a character with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character/achievement` endpoint.
+ * Returns the achievements unlocked by a character with ID [id] from The Lodestone. This matches what is found on The Lodestone's `/character/achievement` endpoint.
 
- * @throws LodestoneNotFoundException Thrown when the character isn't found on *The Lodestone*.
+ * @throws LodestoneNotFoundException Thrown when the character isn't found on The Lodestone.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1.
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 @JvmName("getLodestoneCharacterAchievements")
 @JvmOverloads

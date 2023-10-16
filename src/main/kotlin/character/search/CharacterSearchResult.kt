@@ -7,7 +7,7 @@ import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.Region
 import cloud.drakon.ktlodestone.world.World
 
-/** A search result from *The Lodestone*'s `/character` endpoint. */
+/** A search result from The Lodestone's `/character` endpoint. */
 data class CharacterSearchResult(
     /** The character's avatar. */
     val avatar: String,

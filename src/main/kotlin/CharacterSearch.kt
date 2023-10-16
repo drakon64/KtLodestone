@@ -19,7 +19,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
 /**
- * Searches for a character on *The Lodestone*.
+ * Searches for a character on The Lodestone.
  *
  * @param name The name of the character to search for.
  * @param world Search this [World] for characters. Takes priority over [dataCenter].
@@ -31,7 +31,7 @@ import kotlinx.coroutines.future.future
  * @param languages Search for characters with this [Set] of [Language] selected.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 suspend fun searchLodestoneCharacter(
     name: String? = null,
@@ -56,7 +56,7 @@ suspend fun searchLodestoneCharacter(
 ) else throw InvalidParameterException("`pages` must be at least 1 and less than or equal to 20.")
 
 /**
- * Searches for a character on *The Lodestone*.
+ * Searches for a character on The Lodestone.
  *
  * @param name The name of the character to search for.
  * @param world Search this [World] for characters. Takes priority over [dataCenter].
@@ -68,7 +68,7 @@ suspend fun searchLodestoneCharacter(
  * @param languages Search for characters with this [Set] of [Language] selected.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1.
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 @JvmName("searchLodestoneCharacter")
 @JvmOverloads

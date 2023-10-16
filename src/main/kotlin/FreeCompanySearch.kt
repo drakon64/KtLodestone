@@ -21,7 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
 /**
- * Searches for a Free Company on *The Lodestone*.
+ * Searches for a Free Company on The Lodestone.
  *
  * @param name The name of the Free Company to search for.
  * @param communityFinder Search for Free Company that are recruiting via the Community Finder.
@@ -35,7 +35,7 @@ import kotlinx.coroutines.future.future
  * @param housing Search for Free Companies with this housing state.
  * @param grandCompany Search for Free Companies associated with this Grand Company.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 suspend fun searchLodestoneFreeCompany(
     name: String? = null,
@@ -66,7 +66,7 @@ suspend fun searchLodestoneFreeCompany(
 ) else throw InvalidParameterException("`pages` must be at least 1 and less than or equal to 20.")
 
 /**
- * Searches for a Free Company on *The Lodestone*.
+ * Searches for a Free Company on The Lodestone.
  *
  * @param name The name of the Free Company to search for.
  * @param communityFinder Search for Free Company that are recruiting via the Community Finder.
@@ -80,7 +80,7 @@ suspend fun searchLodestoneFreeCompany(
  * @param housing Search for Free Companies with this housing state.
  * @param grandCompany Search for Free Companies associated with this Grand Company.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 @JvmName("searchLodestoneFreeCompany")
 @JvmOverloads

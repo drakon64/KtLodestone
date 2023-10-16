@@ -14,7 +14,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
 /**
- * Searches for a Cross-world Linkshell on *The Lodestone*.
+ * Searches for a Cross-world Linkshell on The Lodestone.
  *
  * @param name The name of the Cross-world Linkshell to search for.
  * @param communityFinder Search for Cross-world Linkshells that are recruiting via the Community Finder.
@@ -22,7 +22,7 @@ import kotlinx.coroutines.future.future
  * @param activeMembers Search for Cross-world Linkshells with this many members.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 suspend fun searchLodestoneCrossWorldLinkshell(
     name: String? = null,
@@ -39,7 +39,7 @@ suspend fun searchLodestoneCrossWorldLinkshell(
 ) else throw InvalidParameterException("`pages` must be at least 1 and less than or equal to 20.")
 
 /**
- * Searches for a Cross-world Linkshell on *The Lodestone*.
+ * Searches for a Cross-world Linkshell on The Lodestone.
  *
  * @param name The name of the Cross-world Linkshell to search for.
  * @param communityFinder Search for Cross-world Linkshells that are recruiting via the Community Finder.
@@ -47,7 +47,7 @@ suspend fun searchLodestoneCrossWorldLinkshell(
  * @param activeMembers Search for Cross-world Linkshells with this many members.
  * @param pages The number of pages of characters to return. One page contains twenty characters.
  * @throws InvalidParameterException Thrown when [pages] is a value less than 1 or greater than 20.
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 @JvmName("searchLodestoneCrossWorldLinkshell")
 @JvmOverloads

@@ -4,7 +4,7 @@ import cloud.drakon.ktlodestone.iconlayers.IconLayers
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
 
-/** A search result from *The Lodestone*'s `/freecompany` endpoint. */
+/** A search result from The Lodestone's `/freecompany` endpoint. */
 data class FreeCompanySearchResult(
     /** The Free Company's name. */
     val name: String,

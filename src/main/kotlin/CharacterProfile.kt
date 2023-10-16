@@ -15,10 +15,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
 /**
- * Returns a [CharacterProfile] with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character` endpoint.
+ * Returns a [CharacterProfile] with ID [id] from The Lodestone. This matches what is found on The Lodestone's `/character` endpoint.
 
- * @throws LodestoneNotFoundException Thrown when the character isn't found on *The Lodestone*.
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ * @throws LodestoneNotFoundException Thrown when the character isn't found on The Lodestone.
+ * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 suspend fun getLodestoneCharacterProfile(id: Int) = ktorClient.get("character/$id/").let {
     when (it.status.value) {
@@ -29,10 +29,10 @@ suspend fun getLodestoneCharacterProfile(id: Int) = ktorClient.get("character/$i
 }
 
 /**
- * Returns a [CharacterProfile] with ID [id] from *The Lodestone*. This matches what is found on *The Lodestone*'s `/character` endpoint.
+ * Returns a [CharacterProfile] with ID [id] from The Lodestone. This matches what is found on The Lodestone's `/character` endpoint.
 
- * @throws LodestoneNotFoundException Thrown when the character isn't found on *The Lodestone*.
- * @throws LodestoneException Thrown when *The Lodestone* returns an unknown error.
+ * @throws LodestoneNotFoundException Thrown when the character isn't found on The Lodestone.
+ * @throws LodestoneException Thrown when The Lodestone returns an unknown error.
  */
 @JvmName("getLodestoneCharacter")
 @Throws(LodestoneNotFoundException::class, LodestoneException::class)

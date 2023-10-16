@@ -3,7 +3,7 @@ package cloud.drakon.ktlodestone.cwls.search
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.Region
 
-/** A search result from *The Lodestone*'s `/crossworld_linkshell` endpoint. */
+/** A search result from The Lodestone's `/crossworld_linkshell` endpoint. */
 data class CrossWorldLinkshellSearchResult(
     /** The Cross-world Linkshell's name. */
     val name: String,
