@@ -9,24 +9,12 @@ import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
 import cloud.drakon.ktlodestone.character.profile.gearset.GearSet
 import cloud.drakon.ktlodestone.character.profile.gearset.Glamour
 import cloud.drakon.ktlodestone.character.profile.gearset.Item
+import cloud.drakon.ktlodestone.character.profile.gearset.items.Slot
 import cloud.drakon.ktlodestone.iconlayers.IconLayers
 import cloud.drakon.ktlodestone.selectors.character.profile.AttributesSelectors
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.BodySelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.BraceletsSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.EarringsSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.FeetSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.GearSetSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.HandsSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.HeadSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.LegsSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.MainHandSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.NecklaceSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.OffHandSelectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.Ring1Selectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.Ring2Selectors
-import cloud.drakon.ktlodestone.selectors.character.profile.gearset.SoulCrystalSelectors
+import cloud.drakon.ktlodestone.selectors.character.profile.GearSetSelectors
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
 import kotlinx.coroutines.Deferred
@@ -170,56 +158,56 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         val gearSet = async {
             val mainHand = async {
                 getGearSetItem(
-                    it, MainHandSelectors
+                    it, Slot.MAIN_HAND
                 )!! // A character always has a main hand item
             }
 
             val offHand = async {
-                getGearSetItem(it, OffHandSelectors)
+                getGearSetItem(it, Slot.OFF_HAND)
             }
 
             val head = async {
-                getGearSetItem(it, HeadSelectors)
+                getGearSetItem(it, Slot.HEAD)
             }
 
             val body = async {
-                getGearSetItem(it, BodySelectors)
+                getGearSetItem(it, Slot.BODY)
             }
 
             val hands = async {
-                getGearSetItem(it, HandsSelectors)
+                getGearSetItem(it, Slot.HANDS)
             }
 
             val legs = async {
-                getGearSetItem(it, LegsSelectors)
+                getGearSetItem(it, Slot.LEGS)
             }
 
             val feet = async {
-                getGearSetItem(it, FeetSelectors)
+                getGearSetItem(it, Slot.FEET)
             }
 
             val earrings = async {
-                getGearSetItem(it, EarringsSelectors)
+                getGearSetItem(it, Slot.EARRINGS)
             }
 
             val necklace = async {
-                getGearSetItem(it, NecklaceSelectors)
+                getGearSetItem(it, Slot.NECKLACE)
             }
 
             val bracelets = async {
-                getGearSetItem(it, BraceletsSelectors)
+                getGearSetItem(it, Slot.BRACELETS)
             }
 
             val ring1 = async {
-                getGearSetItem(it, Ring1Selectors)
+                getGearSetItem(it, Slot.RING1)
             }
 
             val ring2 = async {
-                getGearSetItem(it, Ring2Selectors)
+                getGearSetItem(it, Slot.RING2)
             }
 
             val soulCrystal = async {
-                getGearSetItem(it, SoulCrystalSelectors)
+                getGearSetItem(it, Slot.SOUL_CRYSTAL)
             }
 
             GearSet(
@@ -486,17 +474,33 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
 private suspend fun getGearSetItem(
     document: Document,
-    selector: GearSetSelectors,
+    slot: Slot,
 ) = coroutineScope {
+    val selector = when (slot) {
+        Slot.MAIN_HAND -> GearSetSelectors(0)
+        Slot.OFF_HAND -> GearSetSelectors(1)
+        Slot.HEAD -> GearSetSelectors(2)
+        Slot.BODY -> GearSetSelectors(3)
+        Slot.HANDS -> GearSetSelectors(4)
+        Slot.LEGS -> GearSetSelectors(6)
+        Slot.FEET -> GearSetSelectors(7)
+        Slot.EARRINGS -> GearSetSelectors(8)
+        Slot.NECKLACE -> GearSetSelectors(9)
+        Slot.BRACELETS -> GearSetSelectors(10)
+        Slot.RING1 -> GearSetSelectors(11)
+        Slot.RING2 -> GearSetSelectors(12)
+        Slot.SOUL_CRYSTAL -> GearSetSelectors(13)
+    }
+
     document.select(selector.ITEM).first()?.let {
         val name = async {
-            it.select(selector.NAME_SELECTOR).text().replace("", "")
+            it.select(GearSetSelectors.NAME_SELECTOR).text().replace("", "")
         }
 
         val dbLink = async {
             "https://eu.finalfantasyxiv.com" +
-                    it.select(MainHandSelectors.DB_LINK)
-                        .attr(selector.DB_LINK_ATTR)
+                    it.select(GearSetSelectors.DB_LINK)
+                        .attr(GearSetSelectors.DB_LINK_ATTR)
         }
 
         val glamour: Deferred<Glamour?>
@@ -505,18 +509,18 @@ private suspend fun getGearSetItem(
         val creatorName: Deferred<String?>
         val hq: Deferred<Boolean>
 
-        if (selector != SoulCrystalSelectors) {
+        if (slot != Slot.SOUL_CRYSTAL) {
             glamour = async {
-                it.select(selector.GLAMOUR).first()?.let {
-                    it.select(selector.GLAMOUR_NAME).let {
+                it.select(GearSetSelectors.GLAMOUR).first()?.let {
+                    it.select(GearSetSelectors.GLAMOUR_NAME).let {
                         val name = async {
                             it.text()
                         }
 
                         val dbLink = async {
                             "https://eu.finalfantasyxiv.com" +
-                                    it.select(selector.GLAMOUR_DB_LINK)
-                                        .attr(selector.GLAMOUR_DB_LINK_ATTR)
+                                    it.select(GearSetSelectors.GLAMOUR_DB_LINK)
+                                        .attr(GearSetSelectors.GLAMOUR_DB_LINK_ATTR)
                         }
 
                         Glamour(name.await(), dbLink.await())
@@ -532,33 +536,33 @@ private suspend fun getGearSetItem(
                 buildList {
                     // Search materia in sequence and stop if we find a `null`
                     document.select(selector.MATERIA_1).first()?.html()?.let {
-                        add(selector.MATERIA_REGEX.find(it)!!.value)
+                        add(GearSetSelectors.MATERIA_REGEX.find(it)!!.value)
                     }?.let {
                         document.select(selector.MATERIA_2).first()?.html()?.let {
-                            add(selector.MATERIA_REGEX.find(it)!!.value)
+                            add(GearSetSelectors.MATERIA_REGEX.find(it)!!.value)
                         }
                     }?.let {
                         document.select(selector.MATERIA_3).first()?.html()?.let {
-                            add(selector.MATERIA_REGEX.find(it)!!.value)
+                            add(GearSetSelectors.MATERIA_REGEX.find(it)!!.value)
                         }
                     }?.let {
                         document.select(selector.MATERIA_4).first()?.html()?.let {
-                            add(selector.MATERIA_REGEX.find(it)!!.value)
+                            add(GearSetSelectors.MATERIA_REGEX.find(it)!!.value)
                         }
                     }?.let {
                         document.select(selector.MATERIA_5).first()?.html()?.let {
-                            add(selector.MATERIA_REGEX.find(it)!!.value)
+                            add(GearSetSelectors.MATERIA_REGEX.find(it)!!.value)
                         }
                     }
                 }
             }
 
             creatorName = async {
-                it.select(selector.CREATOR_NAME).first()?.text()
+                it.select(GearSetSelectors.CREATOR_NAME).first()?.text()
             }
 
             hq = async {
-                it.select(selector.NAME_SELECTOR).text().contains('')
+                it.select(GearSetSelectors.NAME_SELECTOR).text().contains('')
             }
         } else {
             glamour = async {
