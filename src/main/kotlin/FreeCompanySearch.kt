@@ -21,7 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 
 /**
- * Searches for a Cross-world Linkshell on *The Lodestone*.
+ * Searches for a Free Company on *The Lodestone*.
  *
  * @param name The name of the Free Company to search for.
  * @param communityFinder Search for Free Company that are recruiting via the Community Finder.
@@ -66,7 +66,7 @@ suspend fun searchLodestoneFreeCompany(
 ) else throw InvalidParameterException("`pages` must be at least 1 and less than or equal to 20.")
 
 /**
- * Searches for a Cross-world Linkshell on *The Lodestone*.
+ * Searches for a Free Company on *The Lodestone*.
  *
  * @param name The name of the Free Company to search for.
  * @param communityFinder Search for Free Company that are recruiting via the Community Finder.
