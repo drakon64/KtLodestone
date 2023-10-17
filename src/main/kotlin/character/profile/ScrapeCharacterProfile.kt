@@ -154,74 +154,35 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
             it.select(CharacterProfileSelectors.NAMEDAY).text()
         }
 
-        val gearSet = async {
-            val mainHand = async {
-                getGearSetItem(it, GearSetSelectors(0))!! // A character always has a main hand item
+        val gearSet = Array(13) { slot ->
+            async {
+                getGearSetItem(
+                    it, GearSetSelectors(
+                        byteArrayOf(
+                            0, 1, 2, 3, 4, 6,
+                            7, 8, 9, 10, 11, 12, 13
+                        )[slot]
+                    )
+                )
             }
-
-            val offHand = async {
-                getGearSetItem(it, GearSetSelectors(1))
+        }.let {
+            async {
+                GearSet(
+                    it[0].await()!!, // A character always has a main hand item
+                    it[1].await(),
+                    it[2].await(),
+                    it[3].await(),
+                    it[4].await(),
+                    it[5].await(),
+                    it[6].await(),
+                    it[7].await(),
+                    it[8].await(),
+                    it[9].await(),
+                    it[10].await(),
+                    it[11].await(),
+                    it[12].await(),
+                )
             }
-
-            val head = async {
-                getGearSetItem(it, GearSetSelectors(2))
-            }
-
-            val body = async {
-                getGearSetItem(it, GearSetSelectors(3))
-            }
-
-            val hands = async {
-                getGearSetItem(it, GearSetSelectors(4))
-            }
-
-            val legs = async {
-                getGearSetItem(it, GearSetSelectors(6))
-            }
-
-            val feet = async {
-                getGearSetItem(it, GearSetSelectors(7))
-            }
-
-            val earrings = async {
-                getGearSetItem(it, GearSetSelectors(8))
-            }
-
-            val necklace = async {
-                getGearSetItem(it, GearSetSelectors(9))
-            }
-
-            val bracelets = async {
-                getGearSetItem(it, GearSetSelectors(10))
-            }
-
-            val ring1 = async {
-                getGearSetItem(it, GearSetSelectors(11))
-            }
-
-            val ring2 = async {
-                getGearSetItem(it, GearSetSelectors(12))
-            }
-
-            val soulCrystal = async {
-                getGearSetItem(it, GearSetSelectors(13))
-            }
-
-            GearSet(
-                mainHand.await(),
-                offHand.await(),
-                head.await(),
-                body.await(),
-                hands.await(),
-                legs.await(),
-                feet.await(),
-                earrings.await(),
-                necklace.await(),
-                bracelets.await(),
-                ring1.await(),
-                ring2.await(),
-                soulCrystal.await(),
-            )
         }
 
         val portrait = async {
