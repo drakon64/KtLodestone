@@ -154,11 +154,16 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
             it.select(CharacterProfileSelectors.NAMEDAY).text()
         }
 
-        val gearSet = buildList {
-            byteArrayOf(0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13).forEach { slot ->
-                add(async {
-                    getGearSetItem(it, GearSetSelectors(slot))
-                })
+        val gearSet = Array(13) { slot ->
+            async {
+                getGearSetItem(
+                    it, GearSetSelectors(
+                        byteArrayOf(
+                            0, 1, 2, 3, 4,
+                            6, 7, 8, 9, 10, 11, 12, 13
+                        )[slot]
+                    )
+                )
             }
         }.let {
             async {
