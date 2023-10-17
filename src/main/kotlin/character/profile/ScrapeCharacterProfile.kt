@@ -23,17 +23,17 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
-    Jsoup.parse(response).let {
+    with(Jsoup.parse(response)) {
         val classJob = async {
             CharacterProfileMaps.CLASS_JOB_MAP.getValue(
-                it.select(CharacterProfileSelectors.ACTIVE_CLASSJOB)
+                this@with.select(CharacterProfileSelectors.ACTIVE_CLASSJOB)
                     .attr(CharacterProfileSelectors.ACTIVE_CLASSJOB_ATTR)
             )
         }
 
         val level = async {
             CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL_REGEX.find(
-                it.select(CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL).text()
+                this@with.select(CharacterProfileSelectors.ACTIVE_CLASSJOB_LEVEL).text()
             )!!.value.toByte()
         }
 
@@ -50,7 +50,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         val classJobMap = async {
-            it.select(CharacterProfileSelectors.CLASSJOB_CLEARFIX)
+            this@with.select(CharacterProfileSelectors.CLASSJOB_CLEARFIX)
                 .flatMap {
                     it.select(CharacterProfileSelectors.CLASSJOB_ENTRIES)
                 }.flatMap {
@@ -68,16 +68,16 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         val avatar = async {
-            it.select(CharacterProfileSelectors.AVATAR)
+            this@with.select(CharacterProfileSelectors.AVATAR)
                 .attr(CharacterProfileSelectors.AVATAR_ATTR)
         }
 
         val bio = async {
-            it.select(CharacterProfileSelectors.BIO).text()
+            this@with.select(CharacterProfileSelectors.BIO).text()
         }
 
         val freeCompany = async {
-            it.select(CharacterProfileSelectors.FREE_COMPANY).first()?.let {
+            this@with.select(CharacterProfileSelectors.FREE_COMPANY).first()?.let {
                 val freeCompanyName = async {
                     it.text()
                 }
@@ -117,7 +117,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         val grandCompany = async {
             val grandCompanyName = async {
                 GrandCompanyName.valueOf(
-                    it.select(CharacterProfileSelectors.GRAND_COMPANY)
+                    this@with.select(CharacterProfileSelectors.GRAND_COMPANY)
                         .text()
                         .split("/")[0]
                         .trim()
@@ -128,7 +128,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
             val grandCompanyRank = async {
                 GrandCompanyRank.valueOf(
-                    it.select(CharacterProfileSelectors.GRAND_COMPANY)
+                    this@with.select(CharacterProfileSelectors.GRAND_COMPANY)
                         .text()
                         .split("/")[1]
                         .trim()
@@ -142,26 +142,26 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
         val guardian = async {
             CharacterProfileMaps.GUARDIAN_MAP.getValue(
-                it.select(CharacterProfileSelectors.GUARDIAN_NAME).text()
+                this@with.select(CharacterProfileSelectors.GUARDIAN_NAME).text()
             )
         }
 
         val name = async {
-            it.select(CharacterProfileSelectors.NAME).text()
+            this@with.select(CharacterProfileSelectors.NAME).text()
         }
 
         val nameday = async {
-            it.select(CharacterProfileSelectors.NAMEDAY).text()
+            this@with.select(CharacterProfileSelectors.NAMEDAY).text()
         }
 
-        val gearSet = Array(13) { slot ->
+        val gearSet = Array(13) {
             async {
                 getGearSetItem(
-                    it, GearSetSelectors(
+                    this@with, GearSetSelectors(
                         byteArrayOf(
                             0, 1, 2, 3, 4, 6,
                             7, 8, 9, 10, 11, 12, 13
-                        )[slot]
+                        )[it]
                     )
                 )
             }
@@ -186,12 +186,12 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         val portrait = async {
-            it.select(CharacterProfileSelectors.PORTRAIT)
+            this@with.select(CharacterProfileSelectors.PORTRAIT)
                 .attr(CharacterProfileSelectors.PORTRAIT_ATTR)
         }
 
         val pvpTeam = async {
-            it.select(CharacterProfileSelectors.PVP_TEAM).first()?.let {
+            this@with.select(CharacterProfileSelectors.PVP_TEAM).first()?.let {
                 val pvpTeamName = async {
                     it.text()
                 }
@@ -229,7 +229,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         val raceClanGender = async {
-            it.select(CharacterProfileSelectors.RACE_CLAN_GENDER).html()
+            this@with.select(CharacterProfileSelectors.RACE_CLAN_GENDER).html()
         }
 
         val race = async {
@@ -262,7 +262,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
         val world = async {
             World.valueOf(
-                it.select(CharacterProfileSelectors.WORLD)
+                this@with.select(CharacterProfileSelectors.WORLD)
                     .text()
                     .split("[")[0]
                     .trim()
@@ -271,7 +271,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
         val dataCenter = async {
             DataCenter.valueOf(
-                it.select(CharacterProfileSelectors.WORLD)
+                this@with.select(CharacterProfileSelectors.WORLD)
                     .text()
                     .split("[")[1]
                     .replace("]", "")
@@ -283,12 +283,12 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         val title = async {
-            it.select(CharacterProfileSelectors.TITLE).text()
+            this@with.select(CharacterProfileSelectors.TITLE).text()
         }
 
         val town = async {
             Town.valueOf(
-                it.select(CharacterProfileSelectors.TOWN)
+                this@with.select(CharacterProfileSelectors.TOWN)
                     .text()
                     .replace(" ", "_")
                     .uppercase()
@@ -297,86 +297,86 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
 
         val attributes = async {
             val strength = async {
-                it.select(AttributesSelectors.STRENGTH).text().toShort()
+                this@with.select(AttributesSelectors.STRENGTH).text().toShort()
             }
 
             val dexterity = async {
-                it.select(AttributesSelectors.DEXTERITY).text().toShort()
+                this@with.select(AttributesSelectors.DEXTERITY).text().toShort()
             }
 
             val vitality = async {
-                it.select(AttributesSelectors.VITALITY).text().toShort()
+                this@with.select(AttributesSelectors.VITALITY).text().toShort()
             }
 
             val intelligence = async {
-                it.select(AttributesSelectors.INTELLIGENCE).text().toShort()
+                this@with.select(AttributesSelectors.INTELLIGENCE).text().toShort()
             }
 
             val mind = async {
-                it.select(AttributesSelectors.MIND).text().toShort()
+                this@with.select(AttributesSelectors.MIND).text().toShort()
             }
 
             val criticalHitRate = async {
-                it.select(AttributesSelectors.CRITICAL_HIT_RATE).text().toShort()
+                this@with.select(AttributesSelectors.CRITICAL_HIT_RATE).text().toShort()
             }
 
             val determination = async {
-                it.select(AttributesSelectors.DETERMINATION).text().toShort()
+                this@with.select(AttributesSelectors.DETERMINATION).text().toShort()
             }
 
             val directHitRate = async {
-                it.select(AttributesSelectors.DIRECT_HIT_RATE).text().toShort()
+                this@with.select(AttributesSelectors.DIRECT_HIT_RATE).text().toShort()
             }
 
             val defense = async {
-                it.select(AttributesSelectors.DEFENSE).text().toShort()
+                this@with.select(AttributesSelectors.DEFENSE).text().toShort()
             }
 
             val magicDefense = async {
-                it.select(AttributesSelectors.MAGIC_DEFENSE).text().toShort()
+                this@with.select(AttributesSelectors.MAGIC_DEFENSE).text().toShort()
             }
 
             val attackPower = async {
-                it.select(AttributesSelectors.ATTACK_POWER).text().toShort()
+                this@with.select(AttributesSelectors.ATTACK_POWER).text().toShort()
             }
 
             val skillSpeed = async {
-                it.select(AttributesSelectors.SKILL_SPEED).text().toShort()
+                this@with.select(AttributesSelectors.SKILL_SPEED).text().toShort()
             }
 
             val attackMagicPotency = async {
-                it.select(AttributesSelectors.ATTACK_MAGIC_POTENCY).text().toShort()
+                this@with.select(AttributesSelectors.ATTACK_MAGIC_POTENCY).text().toShort()
             }
 
             val healingMagicPotency = async {
-                it.select(AttributesSelectors.HEALING_MAGIC_POTENCY).text().toShort()
+                this@with.select(AttributesSelectors.HEALING_MAGIC_POTENCY).text().toShort()
             }
 
             val spellSpeed = async {
-                it.select(AttributesSelectors.SPELL_SPEED).text().toShort()
+                this@with.select(AttributesSelectors.SPELL_SPEED).text().toShort()
             }
 
             val tenacity = async {
-                it.select(AttributesSelectors.TENACITY).text().toShort()
+                this@with.select(AttributesSelectors.TENACITY).text().toShort()
             }
 
             val piety = async {
-                it.select(AttributesSelectors.PIETY).text().toShort()
+                this@with.select(AttributesSelectors.PIETY).text().toShort()
             }
 
             val hp = async {
-                it.select(AttributesSelectors.HP).text().toInt()
+                this@with.select(AttributesSelectors.HP).text().toInt()
             }
 
             val cp = async {
                 if (disciple.await() == Discipline.DISCIPLE_OF_THE_HAND) {
-                    it.select(AttributesSelectors.CP_GP).text().toShort()
+                    this@with.select(AttributesSelectors.CP_GP).text().toShort()
                 } else null
             }
 
             val gp = async {
                 if (disciple.await() == Discipline.DISCIPLE_OF_THE_LAND) {
-                    it.select(AttributesSelectors.CP_GP).text().toShort()
+                    this@with.select(AttributesSelectors.CP_GP).text().toShort()
                 } else null
             }
 
