@@ -56,13 +56,13 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
                 }.flatMap {
                     it.select(CharacterProfileSelectors.CLASSJOB)
                 }.mapNotNull {
-                    val classJob = CharacterProfileMaps.CLASS_JOB_MAP.getValue(
-                        it.select(CharacterProfileSelectors.CLASSJOB_ICON)
-                            .attr(CharacterProfileSelectors.CLASSJOB_ICON_ATTR)
-                    )
-
-                    it.text().let {
-                        if (it != "-") classJob to it.toByte() else null
+                    with(it.text()) {
+                        if (this != "-") {
+                            CharacterProfileMaps.CLASS_JOB_MAP.getValue(
+                                it.select(CharacterProfileSelectors.CLASSJOB_ICON)
+                                    .attr(CharacterProfileSelectors.CLASSJOB_ICON_ATTR)
+                            ) to this.toByte()
+                        } else null
                     }
                 }.toMap()
         }
