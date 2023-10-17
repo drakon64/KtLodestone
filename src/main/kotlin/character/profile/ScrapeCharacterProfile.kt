@@ -61,7 +61,10 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
                             .attr(CharacterProfileSelectors.CLASSJOB_ICON_ATTR)
                     )
 
-                    val level = it.text().toByte()
+                    // TODO: Locked classes/jobs shouldn't appear in the Map
+                    val level = it.text().let {
+                        if (it != "-") it.toByte() else 0
+                    }
 
                     classJob to level
                 }
