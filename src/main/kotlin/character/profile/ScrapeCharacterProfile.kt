@@ -118,29 +118,21 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         val grandCompany = async {
-            val grandCompanyName = async {
-                GrandCompanyName.valueOf(
-                    this@with.select(CharacterProfileSelectors.GRAND_COMPANY)
-                        .text()
-                        .split("/")[0]
-                        .trim()
-                        .replace(" ", "_")
-                        .uppercase()
-                )
-            }
+            this@with.select(CharacterProfileSelectors.GRAND_COMPANY).first()?.let {
+                val grandCompanyName = async {
+                    GrandCompanyName.valueOf(
+                        it.text().split("/")[0].trim().replace(" ", "_").uppercase()
+                    )
+                }
 
-            val grandCompanyRank = async {
-                GrandCompanyRank.valueOf(
-                    this@with.select(CharacterProfileSelectors.GRAND_COMPANY)
-                        .text()
-                        .split("/")[1]
-                        .trim()
-                        .replace(" ", "_")
-                        .uppercase()
-                )
-            }
+                val grandCompanyRank = async {
+                    GrandCompanyRank.valueOf(
+                        it.text().split("/")[1].trim().replace(" ", "_").uppercase()
+                    )
+                }
 
-            GrandCompany(grandCompanyName.await(), grandCompanyRank.await())
+                GrandCompany(grandCompanyName.await(), grandCompanyRank.await())
+            }
         }
 
         val guardian = async {
