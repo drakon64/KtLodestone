@@ -43,16 +43,15 @@ internal class ScrapeLinkshell {
 
             val members = async {
                 getLinkshellMembers(it)
+                linkshellMembers
             }
-
-            members.await()
 
             Linkshell(
                 name.await(),
                 formed.await(),
                 dataCenter.await(),
                 region.await(),
-                linkshellMembers.toList(),
+                members.await().toList(),
             )
         }
     }
