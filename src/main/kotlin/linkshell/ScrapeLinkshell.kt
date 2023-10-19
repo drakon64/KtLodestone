@@ -15,7 +15,6 @@ import org.jsoup.nodes.Document
 
 internal class ScrapeLinkshell {
     private val linkshellMembers = mutableListOf<LinkshellMember>()
-    private var nextPage = true
 
     suspend fun scrapeLinkshell(response: String) = coroutineScope {
         Jsoup.parse(response).let {
