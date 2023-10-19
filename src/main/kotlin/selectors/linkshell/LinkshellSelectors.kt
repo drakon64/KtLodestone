@@ -8,4 +8,7 @@ internal object LinkshellSelectors {
     val FORMED_REGEX = """(?<=ldst_strftime\()\d+""".toRegex()
 
     const val DATACENTER = ".heading__cwls__dcname"
+
+    const val ACTIVE_MEMBERS = ".parts__total"
+    val ACTIVE_MEMBERS_REGEX = """\d+""".toRegex()
 }

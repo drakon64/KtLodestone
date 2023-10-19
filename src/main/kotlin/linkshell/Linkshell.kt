@@ -13,6 +13,8 @@ data class Linkshell(
     val dataCenter: DataCenter?,
     /** The Linkshell's region. Always `null` if this is not a Cross-world Linkshell, otherwise never `null`. */
     val region: Region?,
+    /** How many active members the Linkshell has. */
+    val activeMembers: Short,
     /** The Linkshells members. */
     val members: List<LinkshellMember>,
 )

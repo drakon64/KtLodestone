@@ -45,6 +45,12 @@ internal class ScrapeLinkshell(private val id: String) {
                 }
             }
 
+            val activeMembers = async {
+                LinkshellSelectors.ACTIVE_MEMBERS_REGEX.find(
+                    it.select(LinkshellSelectors.ACTIVE_MEMBERS).text()
+                )!!.value.toShort()
+            }
+
             val members = async {
                 getLinkshellMembers(it)
                 linkshellMembers
@@ -55,6 +61,7 @@ internal class ScrapeLinkshell(private val id: String) {
                 formed.await(),
                 dataCenter.await(),
                 region.await(),
+                activeMembers.await(),
                 members.await().toList(),
             )
         }
