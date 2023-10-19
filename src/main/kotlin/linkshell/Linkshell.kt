@@ -1,6 +1,5 @@
 package cloud.drakon.ktlodestone.linkshell
 
-import cloud.drakon.ktlodestone.character.search.CharacterSearchResult
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.Region
 
