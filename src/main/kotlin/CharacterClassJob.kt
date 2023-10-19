@@ -22,7 +22,7 @@ import kotlinx.coroutines.future.future
 suspend fun getLodestoneCharacterClassJob(id: Int) = ktorClient.get("character/$id/class_job/").let {
     when (it.status.value) {
         200 -> scrapeCharacterClassJob(it.body())
-        404 -> throw LodestoneNotFoundException("Character", id)
+        404 -> throw LodestoneNotFoundException("Character", id.toString())
         else -> throw LodestoneException()
     }
 }
