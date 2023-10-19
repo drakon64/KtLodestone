@@ -36,9 +36,9 @@ internal class ScrapeLinkshell {
             }
 
             val formed = async {
-                LinkshellSelectors.FORMED_REGEX.find(
-                    it.select(LinkshellSelectors.FORMED).html()
-                )!!.value.toLong()
+                it.select(LinkshellSelectors.FORMED).first()?.html()?.let {
+                    LinkshellSelectors.FORMED_REGEX.find(it)!!.value.toLong()
+                }
             }
 
             val members = async {

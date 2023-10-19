@@ -7,6 +7,15 @@ import org.junit.jupiter.api.assertDoesNotThrow
 
 class GetLodestoneLinkshellTest {
     @Test
+    fun getLodestoneLinkshellTest() = assertDoesNotThrow {
+        runBlocking {
+            println(
+                getLodestoneLinkshell("19703248369768955")
+            )
+        }
+    }
+
+    @Test
     fun getLodestoneCrossWorldLinkshellTest() = assertDoesNotThrow {
         runBlocking {
             println(
