@@ -33,7 +33,7 @@ suspend fun getLodestoneCharacterMinions(id: Int): List<String> = ktorClient.get
             }
         }
 
-        404 -> throw LodestoneNotFoundException("Character", id)
+        404 -> throw LodestoneNotFoundException("Character", id.toString())
         else -> throw LodestoneException()
     }
 }

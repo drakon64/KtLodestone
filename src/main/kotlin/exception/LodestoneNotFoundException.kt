@@ -5,5 +5,5 @@ package cloud.drakon.ktlodestone.exception
  */
 class LodestoneNotFoundException(
     selection: String,
-    id: Int,
+    id: String,
 ) : Throwable("The requested $selection `$id` was not found on The Lodestone.")
