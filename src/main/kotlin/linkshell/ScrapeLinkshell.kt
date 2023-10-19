@@ -3,17 +3,22 @@ package cloud.drakon.ktlodestone.linkshell
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompany
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyName
 import cloud.drakon.ktlodestone.character.grandcompany.GrandCompanyRank
+import cloud.drakon.ktlodestone.exception.LodestoneException
+import cloud.drakon.ktlodestone.exception.LodestoneNotFoundException
+import cloud.drakon.ktlodestone.ktorClient
 import cloud.drakon.ktlodestone.selectors.character.profile.CharacterProfileMaps
 import cloud.drakon.ktlodestone.selectors.linkshell.LinkshellMemberSelectors
 import cloud.drakon.ktlodestone.selectors.linkshell.LinkshellSelectors
 import cloud.drakon.ktlodestone.world.DataCenter
 import cloud.drakon.ktlodestone.world.World
+import io.ktor.client.call.body
+import io.ktor.client.request.get
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-internal class ScrapeLinkshell {
+internal class ScrapeLinkshell(private val id: String) {
     private val linkshellMembers = mutableListOf<LinkshellMember>()
 
     suspend fun scrapeLinkshell(response: String) = coroutineScope {
@@ -55,7 +60,7 @@ internal class ScrapeLinkshell {
         }
     }
 
-    private suspend fun getLinkshellMembers(response: Document) = coroutineScope {
+    private suspend fun getLinkshellMembers(response: Document): Unit = coroutineScope {
         response.select(LinkshellMemberSelectors.ROOT).let {
             it.select(LinkshellMemberSelectors.ENTRY_ROOT).forEach {
                 val avatar = async {
@@ -138,5 +143,16 @@ internal class ScrapeLinkshell {
                 )
             }
         }
+
+        response.select(LinkshellMemberSelectors.LIST_NEXT_BUTTON)
+            .attr(LinkshellMemberSelectors.LIST_NEXT_BUTTON_ATTR).let {
+                if (it != "javascript:void(0);") ktorClient.get(it).let {
+                    when (it.status.value) {
+                        200 -> getLinkshellMembers(Jsoup.parse(it.body<String>()))
+                        404 -> throw LodestoneNotFoundException(id, "Linkshell")
+                        else -> throw LodestoneException()
+                    }
+                }
+            }
     }
 }

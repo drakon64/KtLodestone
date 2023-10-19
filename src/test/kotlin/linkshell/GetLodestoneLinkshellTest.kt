@@ -10,7 +10,7 @@ class GetLodestoneLinkshellTest {
     fun getLodestoneLinkshellTest() = assertDoesNotThrow {
         runBlocking {
             println(
-                getLodestoneLinkshell("19703248369768955")
+                getLodestoneLinkshell("18858823439650456")
             )
         }
     }
@@ -20,7 +20,7 @@ class GetLodestoneLinkshellTest {
         runBlocking {
             println(
                 getLodestoneLinkshell(
-                    "307846eb43875f693b5fa713f2cdf57e79b8e74e", crossWorld = true
+                    "840904981f91106fd9412595bc9b4f097a876296", crossWorld = true
                 )
             )
         }

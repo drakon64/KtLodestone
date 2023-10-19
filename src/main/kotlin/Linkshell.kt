@@ -30,7 +30,7 @@ suspend fun getLodestoneLinkshell(
     } + "/$id/"
 ).let {
     when (it.status.value) {
-        200 -> ScrapeLinkshell().scrapeLinkshell(it.body())
+        200 -> ScrapeLinkshell(id).scrapeLinkshell(it.body())
         404 -> throw LodestoneNotFoundException("Linkshell", id)
         else -> throw LodestoneException()
     }
