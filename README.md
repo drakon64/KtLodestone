@@ -1,5 +1,3 @@
-Due to [JetBrains abandoning Kotlin Multiplatform for anything more than cross-platform UI apps](https://youtrack.jetbrains.com/issue/KTIJ-27727/disappeared-new-kotlin-multiplatform-project-wizard-with-kotlin-plugin1.9.20#focus=Comments-27-8340985.0-0), I have no further interest in developing in Kotlin.
-
 # KtLodestone
 
 ![Kotlin Beta](https://kotl.in/badges/beta.svg)
