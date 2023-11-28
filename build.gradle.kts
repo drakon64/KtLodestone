@@ -9,7 +9,7 @@ plugins {
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     signing
 
-    id("org.jetbrains.kotlinx.kover") version "0.7.4"
+    id("org.jetbrains.kotlinx.kover") version "0.7.5"
     id("org.sonarqube") version "4.4.1.3373"
 }
 
