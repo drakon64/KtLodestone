@@ -54,8 +54,8 @@ Javadocs: [![javadoc](https://javadoc.io/badge2/cloud.drakon/ktlodestone/javadoc
 Kotlin:
 ```kotlin
 val character: CharacterProfile = getLodestoneCharacter(27545492) // Must be called from a coroutine or a suspendable function
-val activeClassJob: ClassJob = character.activeClassJob.name // returns `ClassJob.RED_MAGE`
-val activeClassJob: String = character.activeClassJob.name.toString() // returns "Red Mage"
+val activeClassJob: ClassJob = character.activeClassJob.classJob // returns `ClassJob.RED_MAGE`
+val activeClassJob: String = character.activeClassJob.classJob.toString() // returns "Red Mage"
 val activeClassJobLevel: Byte = character.activeClassJob.level // returns `90`
 val title: String = character.title // returns "Hope's Legacy"
 ```
@@ -63,8 +63,8 @@ val title: String = character.title // returns "Hope's Legacy"
 Java:
 ```java
 CharacterProfile character = KtLodestone.getCharacter(27545492).get(); // Async functions return a `CompletableFuture`
-ClassJob activeClassJob = character.getActiveClassJob().getName(); // returns `ClassJob.RED_MAGE`
-String activeClassJobName = character.getActiveClassJob().getName().toString(); // returns "Red Mage"
+ClassJob activeClassJob = character.getActiveClassJob().getClassJob(); // returns `ClassJob.RED_MAGE`
+String activeClassJobName = character.getActiveClassJob().getClassJob().toString(); // returns "Red Mage"
 Byte activeClassJobLevel = character.getActiveClassJob().getLevel(); // returns `90`
 String title = character.getTitle(); // returns "Hope's Legacy"
 ```
