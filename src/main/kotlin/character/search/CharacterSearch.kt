@@ -198,21 +198,14 @@ internal class CharacterSearch {
 
                             val activeClassJob = it.select(CharacterSearchSelectors.ENTRY_CHARA_INFO)
                                 .let {
-                                    val classJob = CharacterProfileMaps.CLASS_JOB_MAP.getValue(
-                                        it.select(CharacterSearchSelectors.ENTRY_ACTIVE_CLASSJOB)
-                                            .attr(CharacterSearchSelectors.ENTRY_ACTIVE_CLASSJOB_ATTR)
-                                    )
-
-                                    val disciple = CharacterProfileMaps.DISCIPLINE_MAP.getValue(
-                                        classJob
-                                    )
-
                                     ActiveClassJob(
-                                        classJob,
+                                        CharacterProfileMaps.CLASS_JOB_MAP.getValue(
+                                            it.select(CharacterSearchSelectors.ENTRY_ACTIVE_CLASSJOB)
+                                                .attr(CharacterSearchSelectors.ENTRY_ACTIVE_CLASSJOB_ATTR)
+                                        ),
                                         it.select(CharacterSearchSelectors.ENTRY_ACTIVE_CLASSJOB_LEVEL)
                                             .text()
-                                            .toByte(),
-                                        disciple
+                                            .toByte()
                                     )
                                 }
 
