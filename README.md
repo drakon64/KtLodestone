@@ -1,7 +1,7 @@
 # KtLodestone
 
 ![Kotlin Beta](https://kotl.in/badges/beta.svg)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.9.10-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.9-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![License](https://img.shields.io/github/license/drakon64/KtLodestone)](hhttps://opensource.org/license/mit/)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=KtLodestone&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=KtLodestone)
 
