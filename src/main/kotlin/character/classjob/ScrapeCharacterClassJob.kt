@@ -2,157 +2,67 @@ package cloud.drakon.ktlodestone.character.classjob
 
 import cloud.drakon.ktlodestone.character.ClassJob
 import cloud.drakon.ktlodestone.selectors.character.classjob.ClassJobSelectors
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-internal suspend fun scrapeCharacterClassJob(response: String) = coroutineScope {
-    Jsoup.parse(response).let {
-        val paladin = async {
-            scrapeClassJob(it, ClassJob.PALADIN)
-        }
+internal fun scrapeCharacterClassJob(response: String) = Jsoup.parse(response).let {
+    val paladin = scrapeClassJob(it, ClassJob.PALADIN)
+    val warrior = scrapeClassJob(it, ClassJob.WARRIOR)
+    val darkKnight = scrapeClassJob(it, ClassJob.DARK_KNIGHT)
+    val gunbreaker = scrapeClassJob(it, ClassJob.GUNBREAKER)
 
-        val warrior = async {
-            scrapeClassJob(it, ClassJob.WARRIOR)
-        }
+    val whiteMage = scrapeClassJob(it, ClassJob.WHITE_MAGE)
+    val scholar = scrapeClassJob(it, ClassJob.SCHOLAR)
+    val astrologian = scrapeClassJob(it, ClassJob.ASTROLOGIAN)
+    val sage = scrapeClassJob(it, ClassJob.SAGE)
 
-        val darkKnight = async {
-            scrapeClassJob(it, ClassJob.DARK_KNIGHT)
-        }
+    val monk = scrapeClassJob(it, ClassJob.MONK)
+    val dragoon = scrapeClassJob(it, ClassJob.DRAGOON)
+    val ninja = scrapeClassJob(it, ClassJob.NINJA)
+    val samurai = scrapeClassJob(it, ClassJob.SAMURAI)
+    val reaper = scrapeClassJob(it, ClassJob.REAPER)
 
-        val gunbreaker = async {
-            scrapeClassJob(it, ClassJob.GUNBREAKER)
-        }
+    val bard = scrapeClassJob(it, ClassJob.BARD)
+    val machinist = scrapeClassJob(it, ClassJob.MACHINIST)
+    val dancer = scrapeClassJob(it, ClassJob.DANCER)
 
-        val whiteMage = async {
-            scrapeClassJob(it, ClassJob.WHITE_MAGE)
-        }
+    val blackMage = scrapeClassJob(it, ClassJob.BLACK_MAGE)
+    val summoner = scrapeClassJob(it, ClassJob.SUMMONER)
+    val redMage = scrapeClassJob(it, ClassJob.RED_MAGE)
+    val blueMage = scrapeClassJob(it, ClassJob.BLUE_MAGE)
 
-        val scholar = async {
-            scrapeClassJob(it, ClassJob.SCHOLAR)
-        }
+    val carpenter = scrapeClassJob(it, ClassJob.CARPENTER)
+    val blacksmith = scrapeClassJob(it, ClassJob.BLACKSMITH)
+    val armorer = scrapeClassJob(it, ClassJob.ARMORER)
+    val goldsmith = scrapeClassJob(it, ClassJob.GOLDSMITH)
+    val leatherworker = scrapeClassJob(it, ClassJob.LEATHERWORKER)
+    val weaver = scrapeClassJob(it, ClassJob.WEAVER)
+    val alchemist = scrapeClassJob(it, ClassJob.ALCHEMIST)
+    val culinarian = scrapeClassJob(it, ClassJob.CULINARIAN)
 
-        val astrologian = async {
-            scrapeClassJob(it, ClassJob.ASTROLOGIAN)
-        }
+    val miner = scrapeClassJob(it, ClassJob.MINER)
+    val botanist = scrapeClassJob(it, ClassJob.BOTANIST)
+    val fisher = scrapeClassJob(it, ClassJob.FISHER)
 
-        val sage = async {
-            scrapeClassJob(it, ClassJob.SAGE)
-        }
-
-        val monk = async {
-            scrapeClassJob(it, ClassJob.MONK)
-        }
-
-        val dragoon = async {
-            scrapeClassJob(it, ClassJob.DRAGOON)
-        }
-
-        val ninja = async {
-            scrapeClassJob(it, ClassJob.NINJA)
-        }
-
-        val samurai = async {
-            scrapeClassJob(it, ClassJob.SAMURAI)
-        }
-
-        val reaper = async {
-            scrapeClassJob(it, ClassJob.REAPER)
-        }
-
-        val bard = async {
-            scrapeClassJob(it, ClassJob.BARD)
-        }
-
-        val machinist = async {
-            scrapeClassJob(it, ClassJob.MACHINIST)
-        }
-
-        val dancer = async {
-            scrapeClassJob(it, ClassJob.DANCER)
-        }
-
-        val blackMage = async {
-            scrapeClassJob(it, ClassJob.BLACK_MAGE)
-        }
-
-        val summoner = async {
-            scrapeClassJob(it, ClassJob.SUMMONER)
-        }
-
-        val redMage = async {
-            scrapeClassJob(it, ClassJob.RED_MAGE)
-        }
-
-        val blueMage = async {
-            scrapeClassJob(it, ClassJob.BLUE_MAGE)
-        }
-
-        val carpenter = async {
-            scrapeClassJob(it, ClassJob.CARPENTER)
-        }
-
-        val blacksmith = async {
-            scrapeClassJob(it, ClassJob.BLACKSMITH)
-        }
-
-        val armorer = async {
-            scrapeClassJob(it, ClassJob.ARMORER)
-        }
-
-        val goldsmith = async {
-            scrapeClassJob(it, ClassJob.GOLDSMITH)
-        }
-
-        val leatherworker = async {
-            scrapeClassJob(it, ClassJob.LEATHERWORKER)
-        }
-
-        val weaver = async {
-            scrapeClassJob(it, ClassJob.WEAVER)
-        }
-
-        val alchemist = async {
-            scrapeClassJob(it, ClassJob.ALCHEMIST)
-        }
-
-        val culinarian = async {
-            scrapeClassJob(it, ClassJob.CULINARIAN)
-        }
-
-        val miner = async {
-            scrapeClassJob(it, ClassJob.MINER)
-        }
-
-        val botanist = async {
-            scrapeClassJob(it, ClassJob.BOTANIST)
-        }
-
-        val fisher = async {
-            scrapeClassJob(it, ClassJob.FISHER)
-        }
-
-        buildMap {
-            arrayOf(
-                paladin, warrior, darkKnight, gunbreaker,
-                whiteMage, scholar, astrologian, sage,
-                monk, dragoon, ninja, samurai, reaper,
-                bard, machinist, dancer,
-                blackMage, summoner, redMage, blueMage,
-                carpenter, blacksmith, armorer, goldsmith, leatherworker, weaver,
-                alchemist, culinarian,
-                miner, botanist, fisher
-            ).forEach {
-                it.await()?.let {
-                    put(it.unlockState, ClassJobLevel(it.level, it.experience))
-                }
+    buildMap {
+        arrayOf(
+            paladin, warrior, darkKnight, gunbreaker,
+            whiteMage, scholar, astrologian, sage,
+            monk, dragoon, ninja, samurai, reaper,
+            bard, machinist, dancer,
+            blackMage, summoner, redMage, blueMage,
+            carpenter, blacksmith, armorer, goldsmith, leatherworker, weaver,
+            alchemist, culinarian,
+            miner, botanist, fisher
+        ).forEach {
+            it?.let {
+                put(it.unlockState, ClassJobLevel(it.level, it.experience))
             }
         }
     }
 }
 
-private suspend fun scrapeClassJob(document: Document, job: ClassJob) = coroutineScope {
+private fun scrapeClassJob(document: Document, job: ClassJob): ClassLevel? {
     val levelSelector: String
     val unlockStateSelector: String
     val expSelector: String
@@ -349,37 +259,24 @@ private suspend fun scrapeClassJob(document: Document, job: ClassJob) = coroutin
         if (it == "-") null else it.toByte()
     }
 
-    if (level != null) {
-        val unlockState = async {
-            ClassJob.valueOf(
-                document.select(unlockStateSelector)
-                    .text()
-                    .replace(" ", "_")
-                    .uppercase()
+    return if (level != null) {
+        val unlockState = ClassJob.valueOf(
+            document.select(unlockStateSelector)
+                .text()
+                .replace(" ", "_")
+                .uppercase()
+        )
+
+        val experience = document.select(expSelector).text().let {
+            if (it == "-- / --") null else it.split('/')
+        }?.let {
+            Experience(
+                it[0].trim().replace(",", "").toInt(),
+                it[1].trim().replace(",", "").toInt()
             )
         }
 
-        val experience = async {
-            document.select(expSelector).text().let {
-                if (it == "-- / --") null else it.split('/')
-            }?.let {
-                val currentExp = async {
-                    it[0].trim().replace(",", "").toInt()
-                }
-
-                val expToNextLevel = async {
-                    it[1].trim().replace(",", "").toInt()
-                }
-
-                Experience(currentExp.await(), expToNextLevel.await())
-            }
-        }
-
-        ClassLevel(
-            unlockState.await(),
-            level,
-            experience.await(),
-        )
+        ClassLevel(unlockState, level, experience)
     } else null
 }
 
