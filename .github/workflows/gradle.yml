@@ -1,8 +1,8 @@
 name: Build and publish
 on:
-  release:
-    types:
-      - released
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -40,6 +40,10 @@ jobs:
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SONATYPE_SIGNING_PASSWORD }}
         with:
           arguments: publish publishToSonatype closeSonatypeStagingRepository
+      - name: Dokka
+        uses: gradle/gradle-build-action@v2.4.2
+        with:
+          arguments: dokkaHtml dokkaJavadoc
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v1.0.4
         with:
