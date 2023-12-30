@@ -42,11 +42,7 @@ internal suspend fun scrapeCharacterProfile(response: String) = coroutineScope {
         }
 
         val activeClassJob = async {
-            ActiveClassJob(
-                classJob.await(),
-                level.await(),
-                disciple.await()
-            )
+            ActiveClassJob(classJob.await(), level.await())
         }
 
         val classJobMap = async {
