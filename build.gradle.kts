@@ -23,7 +23,7 @@ repositories {
 dependencies {
     val ktorVersion = "2.3.7"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-java:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
 
     implementation("org.jsoup:jsoup:1.17.2")
 
@@ -34,7 +34,7 @@ tasks.test {
     useJUnitPlatform()
 }
 
-val jvmVersion = 11
+val jvmVersion = 8
 
 kotlin {
     jvmToolchain(jvmVersion)

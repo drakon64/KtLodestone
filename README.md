@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/github/license/drakon64/KtLodestone)](hhttps://opensource.org/license/mit/)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=KtLodestone&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=KtLodestone)
 
-KtLodestone is a parser for The Lodestone for the JVM platform (JDK 11+).
+KtLodestone is a parser for The Lodestone for the JVM platform (JDK 8+).
 
 # Features
 
