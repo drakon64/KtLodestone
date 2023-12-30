@@ -14,7 +14,7 @@ internal class AchievementsSearch {
     private var achievementPoints: Short = 0
     private var totalAchievements: Short = 0
 
-    suspend fun scrapeCharacterAchievements(id: Int, pages: Byte) {
+    suspend fun scrapeCharacterAchievements(id: Int, pages: Byte): Achievements {
         var page: Byte = 1
 
         val achievements = buildList {
@@ -25,7 +25,7 @@ internal class AchievementsSearch {
             }
         }.flatten()
 
-        Achievements(achievements, achievementPoints, totalAchievements)
+        return Achievements(achievements, achievementPoints, totalAchievements)
     }
 
     private suspend fun getLodestoneCharacterAchievementsPaginated(
